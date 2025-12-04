@@ -1,0 +1,49 @@
+# HRM Configuration File
+# This file contains settings for the HRM system
+
+[general]
+# General HRM settings
+compaction_directory=./hrm_compactions
+cloud_storage_directory=./hrm_cloud_storage
+default_cloud_provider=LOCAL_STORAGE
+
+[memory_compaction]
+# Memory compaction settings
+default_level=MEDIUM
+preferred_algorithm=LZ4
+max_memory_before_compaction_mb=1024
+target_memory_after_compaction_mb=512
+auto_compaction_enabled=true
+compaction_interval_hours=6
+preserve_recent_conversations=true
+recent_conversation_window_hours=24
+
+[cloud_providers]
+# Cloud storage provider settings
+# To enable a provider, set enabled=true and provide the required credentials
+
+[google_drive]
+enabled=false
+client_id=your_google_client_id
+client_secret=your_google_client_secret
+refresh_token=your_google_refresh_token
+root_folder_id=your_google_root_folder
+
+[dropbox]
+enabled=false
+api_key=your_dropbox_api_key
+refresh_token=your_dropbox_refresh_token
+root_folder_id=your_dropbox_root_folder
+
+[onedrive]
+enabled=false
+client_id=your_onedrive_client_id
+client_secret=your_onedrive_client_secret
+refresh_token=your_onedrive_refresh_token
+root_folder_id=your_onedrive_root_folder
+
+[mega]
+enabled=false
+api_key=your_mega_api_key
+refresh_token=your_mega_refresh_token
+root_folder_id=your_mega_root_folder

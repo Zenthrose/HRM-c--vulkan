@@ -222,7 +222,18 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 # Build the complete system (parallel compilation recommended)
 make -j$(nproc)
 
-# Run the ultimate AI system
+# Run the HRM system with different interfaces:
+
+# CLI Mode
+./src/hrm_system --cli
+
+# GUI Mode (default)
+./src/hrm_system --gui
+
+# Test Mode
+./src/hrm_system --test
+
+# Original Vulkan test (for comparison)
 ./src/hrm_vulkan
 ```
 
@@ -888,7 +899,174 @@ The HRM now includes comprehensive **real-time resource monitoring** and **adapt
 - **Command Execution**: Controlled execution of system commands with safety validation
 - **Service Management**: Integration with system service management for continuous operation
 
-### **Usage Examples - System Integration**
+#### **User Interfaces**
+- **Command-Line Interface (CLI)**: Full-featured terminal interface with auto-completion
+- **Graphical User Interface (GUI)**: Intuitive visual interface for system interaction
+- **Interactive Chat**: Real-time conversation with the autonomous AI
+- **System Monitoring Dashboard**: Live resource usage and performance metrics
+- **Memory Management Console**: Control over compaction and cloud storage operations
+
+### **🚀 User Interface Usage**
+
+#### **Command-Line Interface**
+
+Start the HRM in CLI mode:
+
+```bash
+# Build the system first
+cd build && make hrm_system
+
+# Start CLI mode
+./src/hrm_system --cli
+```
+
+**Available CLI Commands:**
+```
+HRM> chat "Hello, how are you?"          # Start interactive chat
+HRM> status                               # View system status
+HRM> memory compact                       # Trigger memory compaction
+HRM> memory status                        # View memory statistics
+HRM> settings colors true                 # Enable colored output
+HRM> settings history 1000                # Set command history size
+HRM> help                                 # Show available commands
+HRM> exit                                 # Exit the CLI
+```
+
+#### **Graphical User Interface**
+
+Start the HRM in GUI mode:
+
+```bash
+# Start GUI mode (default if no arguments)
+./src/hrm_system --gui
+# or simply:
+./src/hrm_system
+```
+
+**GUI Features:**
+- **Main Menu**: Navigate between different system functions
+- **Chat Interface**: Interactive conversation with real-time responses
+- **System Status**: Live monitoring of CPU, memory, and resource usage
+- **Memory Management**: Control compaction levels and cloud storage
+- **Settings**: Configure themes, window titles, and system preferences
+
+**GUI Navigation:**
+- Use arrow keys to navigate menus
+- Press Enter to select options
+- Press ESC to return to previous menu
+- Type directly in chat interface for conversations
+
+#### **Testing Mode**
+
+Run built-in functionality tests:
+
+```bash
+./src/hrm_system --test
+```
+
+This will test:
+- Memory compaction and decompression
+- Cloud storage upload/download
+- System resource monitoring
+- Configuration loading
+
+#### **Configuration**
+
+The HRM system uses a configuration file located at `./config/hrm_config.txt`. This file allows you to customize:
+
+- Memory compaction settings (levels, algorithms, thresholds)
+- Cloud storage providers (Google Drive, Dropbox, OneDrive, Mega)
+- System directories and file paths
+- Auto-compaction intervals and cleanup policies
+
+**Example Configuration:**
+```ini
+[general]
+compaction_directory=./hrm_compactions
+cloud_storage_directory=./hrm_cloud_storage
+default_cloud_provider=LOCAL_STORAGE
+
+[memory_compaction]
+default_level=MEDIUM
+preferred_algorithm=LZ4
+max_memory_before_compaction_mb=1024
+target_memory_after_compaction_mb=512
+auto_compaction_enabled=true
+compaction_interval_hours=6
+
+[google_drive]
+enabled=false
+client_id=your_google_client_id
+client_secret=your_google_client_secret
+refresh_token=your_google_refresh_token
+```
+
+**Note:** Cloud storage providers require API credentials. See the configuration file for setup instructions.
+
+#### **Memory Compaction & Cloud Storage**
+- **Intelligent Memory Compaction**: Claude-style conversation compression with multiple levels
+- **Cloud Storage Integration**: Upload compressed memories to Google Drive, Dropbox, OneDrive, Mega
+- **Automatic Memory Management**: Smart compression and cloud offloading to prevent OOM
+- **Memory Retrieval**: Pull compressed memories back from cloud when needed
+- **Secure Memory Cleanup**: Safe deletion of cloud-stored memories after use
+- **Multi-Provider Support**: Choose between different cloud storage providers
+
+### **Usage Examples - User Interfaces & Memory Management**
+
+#### **Command-Line Interface**
+
+```bash
+# Start the HRM CLI
+./hrm_vulkan --cli
+
+# Interactive commands
+HRM> chat "Explain quantum computing"
+HRM> status
+HRM> memory compact
+HRM> settings colors true
+HRM> exit
+```
+
+#### **Memory Compaction & Cloud Storage**
+
+```cpp
+#include "memory_compaction_system.hpp"
+#include "cloud_storage_manager.hpp"
+
+// Initialize memory compaction
+MemoryCompactionConfig mem_config{
+    MemoryCompactionLevel::MEDIUM,
+    CompressionAlgorithm::LZ4,
+    500 * 1024 * 1024,  // 500MB max before compaction
+    100 * 1024 * 1024,  // 100MB target after compaction
+    true,               // Auto-compaction enabled
+    std::chrono::hours(1), // Compact every hour
+    "./memory_compactions"
+};
+
+MemoryCompactionSystem memory_system(mem_config);
+
+// Compact conversation history
+std::vector<ConversationEntry> conversations = get_recent_conversations();
+MemoryCompactionResult result = memory_system.compact_memory(conversations);
+
+// Upload to cloud storage
+CloudStorageManager cloud_manager;
+UploadResult upload = cloud_manager.upload_compacted_memory(
+    result.compaction_id,
+    get_compacted_data(),
+    CloudProvider::GOOGLE_DRIVE
+);
+
+// Later, retrieve from cloud
+DownloadResult download = cloud_manager.download_compacted_memory(
+    result.compaction_id,
+    CloudProvider::GOOGLE_DRIVE
+);
+
+// Clean up when done
+cloud_manager.delete_compacted_memory(result.compaction_id, CloudProvider::GOOGLE_DRIVE);
+```
 
 #### **Complete Autonomous System Setup**
 
