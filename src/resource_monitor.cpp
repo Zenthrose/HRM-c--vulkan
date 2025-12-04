@@ -174,7 +174,7 @@ double ResourceMonitor::predict_memory_usage_mb(int seconds_ahead) const {
     if (usage_history_.size() < 2) return 0.0;
 
     // Simple linear regression for prediction
-    size_t n = std::min(size_t(10), usage_history_.size());
+    size_t n = usage_history_.size() < 10 ? usage_history_.size() : 10;
     double sum_x = 0, sum_y = 0, sum_xy = 0, sum_x2 = 0;
 
     for (size_t i = usage_history_.size() - n; i < usage_history_.size(); ++i) {
@@ -198,7 +198,7 @@ double ResourceMonitor::predict_cpu_usage_percent(int seconds_ahead) const {
     if (usage_history_.size() < 2) return 0.0;
 
     // Simple moving average prediction
-    size_t n = std::min(size_t(5), usage_history_.size());
+    size_t n = usage_history_.size() < 5 ? usage_history_.size() : 5;
     double recent_avg = 0.0;
 
     for (size_t i = usage_history_.size() - n; i < usage_history_.size(); ++i) {
@@ -359,15 +359,23 @@ ResourceUsage ResourceMonitor::get_memory_info() {
 
 ResourceUsage ResourceMonitor::get_disk_info() {
     ResourceUsage usage;
+#ifdef _WIN32
+    ULARGE_INTEGER freeBytesAvailable, totalNumberOfBytes, totalNumberOfFreeBytes;
+    if (GetDiskFreeSpaceExA("C:\\", &freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes)) {
+        usage.total_disk_bytes = totalNumberOfBytes.QuadPart;
+        usage.available_disk_bytes = freeBytesAvailable.QuadPart;
+        usage.used_disk_bytes = usage.total_disk_bytes - usage.available_disk_bytes;
+        usage.disk_usage_percent = (usage.used_disk_bytes * 100.0) / usage.total_disk_bytes;
+    }
+#else
     struct statvfs stat;
-
     if (statvfs("/", &stat) == 0) {
         usage.total_disk_bytes = stat.f_blocks * stat.f_frsize;
         usage.available_disk_bytes = stat.f_bavail * stat.f_frsize; // Use f_bavail for available blocks
         usage.used_disk_bytes = usage.total_disk_bytes - usage.available_disk_bytes;
         usage.disk_usage_percent = (usage.used_disk_bytes * 100.0) / usage.total_disk_bytes;
     }
-
+#endif
     return usage;
 }
 

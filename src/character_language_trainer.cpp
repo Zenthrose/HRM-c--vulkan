@@ -402,7 +402,7 @@ float CharacterLanguageTrainer::apply_lr_scheduler(size_t step) const {
         // Cosine decay
         float progress = (step - config_.warmup_steps) /
                         static_cast<float>(config_.total_steps - config_.warmup_steps);
-        lr = lr * 0.5f * (1.0f + std::cos(M_PI * progress));
+        lr = lr * 0.5f * (1.0f + std::cos(std::acos(-1.0) * progress));
     }
 
     return std::max(lr, config_.min_lr);

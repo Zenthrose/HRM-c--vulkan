@@ -569,7 +569,7 @@ double HardwareAbstractionLayer::calculate_backend_score(ComputeBackend backend,
             break;
     }
 
-    return std::max(0.0, std::min(1.0, score));
+    return std::max<double>(0.0, std::min<double>(1.0, score));
 }
 
 bool HardwareAbstractionLayer::check_resource_availability(ComputeBackend backend, const ComputationTask& task) {

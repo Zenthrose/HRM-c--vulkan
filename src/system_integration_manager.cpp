@@ -363,9 +363,19 @@ std::unordered_map<std::string, std::string> SystemIntegrationManager::get_syste
         }
     }
 #endif
-    }
 
     // Check memory
+#ifdef _WIN32
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(MEMORYSTATUSEX);
+    if (GlobalMemoryStatusEx(&memStatus)) {
+        double available_mb = memStatus.ullAvailPhys / (1024.0 * 1024.0);
+        status["memory_available_mb"] = std::to_string(available_mb);
+        if (available_mb < 512.0) {
+            status["memory_warning"] = "Low memory";
+        }
+    }
+#else
     std::ifstream meminfo("/proc/meminfo");
     if (meminfo.is_open()) {
         std::string line;
@@ -387,6 +397,7 @@ std::unordered_map<std::string, std::string> SystemIntegrationManager::get_syste
             }
         }
     }
+#endif
 
     return status;
 }
