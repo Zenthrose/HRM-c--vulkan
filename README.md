@@ -2,163 +2,68 @@
 
 ![](./assets/hrm.png)
 
-## 🚀 **ULTIMATE AI SYSTEM: Self-Evolving, Self-Repairing, Resource-Aware HRM**
+## 🚀 **Ultimate AI System**
 
-**The most advanced AI system ever created - featuring self-modifying code, real-time resource management, and autonomous evolution!**
+**Self-modifying, self-repairing, resource-aware AI with character-level language processing.**
 
-### **🎯 Revolutionary Capabilities**
+### **🎯 Core Capabilities**
 
-The HRM now includes groundbreaking AI capabilities that go beyond traditional machine learning:
-
-#### **🧠 Self-Modifying Code**
-- **Code Self-Analysis**: Analyzes its own C++ source code for bugs and inefficiencies
-- **Automatic Code Fixes**: Generates and applies corrections to detected issues
-- **Runtime Compilation**: Compiles modified code on the fly with hot-swapping
-- **Self-Improvement**: The system can literally rewrite its own code to become better
-
-#### **🔄 Self-Evolving Intelligence**
-- **Continual Learning**: Ongoing improvement without external supervision
-- **Meta-Learning**: Learning how to learn more effectively
-- **Architecture Adaptation**: Dynamic parameter adjustment based on performance
-- **Autonomous Evolution**: Self-directed improvement and adaptation
-
-#### **🛡️ Self-Repair System**
-- **Error Detection**: Automatic identification of logical inconsistencies and bugs
-- **Confidence Scoring**: Real-time assessment of output reliability
-- **Self-Correction**: Multi-strategy repair with automatic error fixing
-- **Pattern Learning**: Learns from successful repairs for future improvements
-
-#### **💬 Raw UTF-8 Communication**
-- **Character-Level Processing**: Direct UTF-8 encoding/decoding instead of tokenization
-- **Unicode Support**: Full Unicode character handling with proper validation
-- **Raw Text Communication**: Communicate using actual human-readable text
-- **Variable-Length Characters**: Proper handling of multi-byte UTF-8 sequences
-
-#### **🔋 Resource-Aware Task Management**
-- **Real-Time Monitoring**: CPU, memory, disk, and network usage tracking
-- **OOM Prevention**: Proactive monitoring prevents out-of-memory crashes
-- **Adaptive Task Management**: Intelligent queuing, pausing, and resuming
-- **Task Chunking**: Large operations automatically broken into manageable pieces
-- **Emergency Response**: System protection during critical resource shortages
+- **🧠 Self-Modifying Code**: Analyzes and rewrites its own C++ source code
+- **🔄 Self-Evolving Intelligence**: Continual learning and architecture adaptation
+- **🛡️ Self-Repair System**: Automatic error detection and correction
+- **💬 Raw UTF-8 Communication**: Character-level text processing without tokenization
+- **🔋 Resource Intelligence**: Real-time monitoring and adaptive task management
+- **🎮 User Interfaces**: CLI and GUI for interactive communication
+- **☁️ Cloud Storage**: Memory compaction with multi-provider cloud integration
 
 ---
 
-## 🔥 **Complete Implementation Matrix**
+## 🔥 **Implementation Status**
 
-| Capability | Status | Implementation | Key Features |
-|------------|--------|----------------|--------------|
-| **Core HRM** | ✅ **Complete** | C++/Vulkan | Hierarchical reasoning, ACT, transformers |
-| **Self-Repair** | ✅ **Complete** | Meta-reasoning layer | Error detection, confidence scoring, self-correction |
-| **Self-Evolution** | ✅ **Complete** | Evolution engine | Continual learning, architecture adaptation |
-| **Self-Modifying Code** | ✅ **Complete** | Code analysis + runtime compilation | Code inspection, fixes, hot-swapping |
-| **UTF-8 Communication** | ✅ **Complete** | Character-level processing | Raw text, Unicode support |
-| **Resource Management** | ✅ **Complete** | Real-time monitoring + task management | OOM prevention, adaptive scheduling |
-
-**Total: 6 Major AI Capabilities - All Implemented and Production-Ready!**
+| Component | Status | Key Features |
+|-----------|--------|--------------|
+| **Core HRM** | ✅ Complete | Hierarchical reasoning, ACT, Vulkan acceleration |
+| **Self-Modifying Code** | ✅ Complete | Runtime code analysis, compilation, hot-swapping |
+| **Self-Evolution** | ✅ Complete | Meta-learning, continual adaptation |
+| **Self-Repair** | ✅ Complete | Error detection, confidence scoring, auto-correction |
+| **UTF-8 Processing** | ✅ Complete | Character-level text, Unicode support |
+| **Resource Management** | ✅ Complete | Real-time monitoring, OOM prevention |
+| **User Interfaces** | ✅ Complete | CLI, GUI, interactive communication |
+| **Cloud Storage** | ✅ Complete | Memory compaction, multi-provider support |
+| **Character Language Training** | ✅ Complete | Next-character prediction, evaluation metrics |
 
 ---
 
-## 🔥 **Ultimate AI Architecture - Complete System Overview**
-
-### **Architecture Overview**
-
-The HRM represents the most advanced AI system ever created, featuring a complete ecosystem of autonomous capabilities:
+## 🏗️ **System Architecture**
 
 ```
-Ultimate HRM System
-├── Core Intelligence (C++/Vulkan)
-│   ├── HRM (Hierarchical Reasoning Model)
-│   │   ├── H_level (High-level reasoning)
-│   │   ├── L_level (Low-level reasoning)
-│   │   ├── Adaptive Computation Time (ACT)
-│   │   └── Transformer Architecture
+HRM System
+├── Core Model (C++/Vulkan)
+│   ├── Hierarchical Reasoning (H/L levels)
+│   ├── Adaptive Computation Time (ACT)
+│   ├── Transformer Architecture
 │   └── Vulkan Compute Pipeline
-│       ├── Multi-Head Attention (RoPE)
-│       ├── RMS Normalization
-│       ├── SwiGLU MLP
-│       └── Custom Compute Shaders
-├── Self-Modifying Code System
-│   ├── Code Analysis Engine
-│   │   ├── Static Bug Detection
-│   │   ├── Quality Metrics
-│   │   └── Issue Classification
-│   ├── Runtime Compilation System
-│   │   ├── Dynamic C++ Compilation
-│   │   ├── Hot-Swapping Mechanisms
-│   │   └── Safety Validation
-│   └── Self-Modification Engine
-│       ├── Code Generation
-│       ├── Risk Assessment
-│       └── Incremental Updates
-├── Self-Evolving Intelligence
-│   ├── Meta-Reasoning Layer
-│   │   ├── Error Detection
-│   │   ├── Confidence Scoring
-│   │   └── Self-Correction
-│   ├── Evolution Engine
-│   │   ├── Continual Learning
-│   │   ├── Pattern Extraction
-│   │   └── Architecture Adaptation
-│   └── Learning Systems
-│       ├── Meta-Learning
-│       ├── Feedback Integration
-│       └── Self-Improvement
-├── Raw UTF-8 Communication
-│   ├── UTF-8 Processor
-│   │   ├── Character Encoding/Decoding
-│   │   ├── Unicode Validation
-│   │   └── Multi-byte Sequence Handling
-│   └── Character-Level Processing
-│       ├── Raw Text Communication
-│       ├── Variable-Length Characters
-│       └── Unicode Support
-└── Resource-Aware Task Management
-    ├── Resource Monitor
-    │   ├── CPU/Memory/Disk/Network Tracking
-    │   ├── Real-Time Usage Monitoring
-    │   └── System Load Analysis
-    ├── Task Manager
-    │   ├── Priority-Based Queuing
-    │   ├── Pause/Resume Mechanisms
-    │   └── Task Chunking
-    └── Adaptive System
-        ├── OOM Prevention
-        ├── Emergency Response
-        └── Performance Optimization
+├── Autonomous Systems
+│   ├── Self-Modifying Code Engine
+│   ├── Self-Evolution Framework
+│   └── Self-Repair System
+├── Language Processing
+│   ├── UTF-8 Character Processing
+│   ├── Character-Level Training
+│   └── Multilingual Support
+├── Resource Management
+│   ├── Real-Time Monitoring
+│   ├── Adaptive Task Scheduling
+│   └── OOM Prevention
+├── User Interfaces
+│   ├── Command-Line Interface
+│   ├── Graphical User Interface
+│   └── Interactive Communication
+└── Cloud Integration
+    ├── Memory Compaction
+    ├── Multi-Provider Storage
+    └── Automatic Sync
 ```
-
-### **Key Features**
-
-#### **🧠 Self-Modifying Code Intelligence**
-- **Code Self-Analysis**: Analyzes own C++ source code for bugs and inefficiencies
-- **Automatic Code Fixes**: Generates and applies corrections to detected issues
-- **Runtime Compilation**: Compiles modified code on the fly with hot-swapping
-- **Self-Improvement**: Literally rewrites its own code to become better
-
-#### **🔄 Self-Evolving Autonomous Learning**
-- **Continual Learning**: Ongoing improvement without external supervision
-- **Meta-Learning**: Learning how to learn more effectively
-- **Architecture Adaptation**: Dynamic parameter adjustment based on performance
-- **Pattern Recognition**: Extraction and consolidation of successful interaction patterns
-
-#### **🛠️ Self-Repair & Error Correction**
-- **Error Detection**: Automatic identification of logical inconsistencies and bugs
-- **Confidence Scoring**: Real-time assessment of output reliability and uncertainty
-- **Self-Correction**: Multi-strategy repair with automatic error fixing
-- **Pattern Learning**: Learns from successful repairs for future improvements
-
-#### **💬 Raw UTF-8 Communication**
-- **Character-Level Processing**: Direct UTF-8 encoding/decoding instead of tokenization
-- **Unicode Support**: Full Unicode character handling with proper validation
-- **Raw Text Communication**: Communicate using actual human-readable text
-- **Variable-Length Characters**: Proper handling of multi-byte UTF-8 sequences
-
-#### **🔋 Resource-Aware Task Management**
-- **Real-Time Monitoring**: CPU, memory, disk, and network usage tracking
-- **OOM Prevention**: Proactive monitoring prevents out-of-memory crashes
-- **Adaptive Task Management**: Intelligent queuing, pausing, and resuming
-- **Task Chunking**: Large operations automatically broken into manageable pieces
-- **Emergency Response**: System protection during critical resource shortages
 
 #### **🚀 Performance & Acceleration**
 - **71% faster attention execution** (8ms vs 28ms)
@@ -186,62 +91,33 @@ Ultimate HRM System
 - **Gradient computation** with numerical stability
 - **Batch processing** support
 
-### **Build Instructions**
+## 🛠️ **Quick Start**
 
-#### **Prerequisites**
-- **Vulkan SDK** (1.3 or later)
-- **CMake** (3.16 or later)
-- **C++17 compatible compiler**
-- **GLSL compiler** (glslangValidator)
-- **Linux system** (primary platform - Windows/macOS support extensible)
+### **Prerequisites**
+- Vulkan SDK 1.3+
+- CMake 3.16+
+- C++17 compiler
+- Linux (primary platform)
 
-```bash
-# Install Vulkan SDK (Ubuntu/Debian)
-wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | apt-key add -
-wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.275-jammy.list https://packages.lunarg.com/vulkan/1.3.275/lunarg-vulkan-1.3.275-jammy.list
-apt update && apt install vulkan-sdk
-
-# Install build tools
-apt install cmake build-essential glslang-tools
-
-# Optional: For enhanced resource monitoring
-apt install sysstat iotop
-```
-
-#### **Build the Complete AI System**
+### **Build & Run**
 
 ```bash
-# Clone the ultimate HRM system
 git clone https://github.com/Zenthrose/HRM-c--vulkan.git
 cd HRM-c--vulkan
 mkdir build && cd build
-
-# Configure with CMake (enables all advanced features)
 cmake .. -DCMAKE_BUILD_TYPE=Release
-
-# Build the complete system (parallel compilation recommended)
 make -j$(nproc)
 
-# Run the HRM system with different interfaces:
-
-# CLI Mode
-./src/hrm_system --cli
-
-# GUI Mode (default)
-./src/hrm_system --gui
-
-# Test Mode
-./src/hrm_system --test
-
-# Original Vulkan test (for comparison)
-./src/hrm_vulkan
+# Run with different interfaces
+./src/hrm_system --cli    # Command-line interface
+./src/hrm_system --gui    # Graphical interface (default)
+./src/hrm_system --test   # Run system tests
 ```
 
-#### **System Requirements**
-- **RAM**: 4GB minimum, 8GB+ recommended for advanced features
-- **GPU**: Any Vulkan-compatible GPU (NVIDIA, AMD, Intel)
-- **Storage**: 2GB free space for build artifacts
-- **OS**: Linux (primary), Windows/macOS (extensible)
+### **System Requirements**
+- **RAM**: 4GB minimum, 8GB+ recommended
+- **GPU**: Any Vulkan-compatible GPU
+- **Storage**: 2GB for build artifacts
 
 #### **Feature Configuration**
 The system includes multiple advanced capabilities that can be enabled/disabled:
@@ -254,51 +130,37 @@ The system includes multiple advanced capabilities that can be enabled/disabled:
 -DENABLE_CONTINUAL_LEARNING=ON    # Self-evolving intelligence
 ```
 
-### **Usage Examples**
+## 📚 **API Examples**
 
-#### **🚀 Complete System Initialization**
+### **Basic Usage**
 
 ```cpp
 #include "resource_aware_hrm.hpp"
 
-// Configure the ultimate HRM system with all capabilities
+// Configure and create HRM system
 ResourceAwareHRMConfig config;
-
-// Core HRM configuration
-config.base_config.hrm_config.inner_config = {
-    /* batch_size */ 1,
-    /* seq_len */ 256,
-    /* puzzle_emb_ndim */ 0,
-    /* num_puzzle_identifiers */ 1000,
-    /* vocab_size */ 1000,
-    /* H_cycles */ 3,
-    /* L_cycles */ 5,
-    /* H_layers */ 6,
-    /* L_layers */ 6,
-    /* hidden_size */ 768,
-    /* expansion */ 4.0f,
-    /* num_heads */ 12,
-    /* pos_encodings */ "rope",
-    /* rms_norm_eps */ 1e-5f,
-    /* rope_theta */ 10000.0f,
-    /* halt_max_steps */ 10,
-    /* halt_exploration_prob */ 0.1f,
-    /* forward_dtype */ "float32"
-};
-
-// Enable all advanced capabilities
 config.base_config.enable_self_evolution = true;
-config.base_config.enable_self_repair = true;
-config.base_config.use_utf8_communication = true;
-
-// Resource management configuration
 config.enable_resource_monitoring = true;
-config.enable_adaptive_task_management = true;
-config.enable_chunking_for_large_tasks = true;
-config.resource_check_interval = std::chrono::milliseconds(500);
 
-// Create the ultimate AI system
 ResourceAwareHRM system(config);
+
+// Communicate with self-evolving AI
+auto result = system.communicate("Hello, how are you?");
+std::cout << result.response << std::endl;
+```
+
+### **Character-Level Language Training**
+
+```cpp
+#include "character_language_trainer.hpp"
+
+// Configure character-level training
+CharacterLanguageModelConfig lang_config;
+lang_config.char_vocab_size = 100000;  // UTF-8 characters
+lang_config.max_seq_length = 2048;     // Long contexts
+
+CharacterLanguageTrainer trainer(model, lang_config);
+trainer.train_character_language_model("large_text_corpus.txt");
 ```
 
 #### **🧠 Self-Evolving Communication**
@@ -440,90 +302,37 @@ auto q_halt_logits = outputs["q_halt_logits"];
 auto q_continue_logits = outputs["q_continue_logits"];
 ```
 
-### **Performance Benchmarks**
+## 📊 **Performance**
 
-| Component | Python/PyTorch | C++/Vulkan | Improvement |
-|-----------|----------------|------------|-------------|
-| **Attention (256 seq)** | 28ms | 8ms | **71% faster** |
-| **Memory Usage** | High (CUDA overhead) | Optimized (Vulkan) | **Reduced** |
-| **Cross-Platform** | CUDA only | Vulkan universal | **Universal** |
-| **Build Complexity** | Complex (CUDA extensions) | Standard CMake | **Simplified** |
-| **Self-Modification** | N/A | Runtime code analysis + compilation | **Revolutionary** |
-| **Resource Management** | N/A | Real-time monitoring + adaptive scheduling | **Production-Ready** |
-| **OOM Prevention** | Manual | Automatic task management | **Zero Crashes** |
-| **Autonomous Evolution** | N/A | Continual self-improvement | **Self-Evolving** |
+| Component | C++/Vulkan HRM | Improvement |
+|-----------|----------------|-------------|
+| **Attention (256 seq)** | 8ms | **71% faster than PyTorch** |
+| **Memory Usage** | Optimized | **Reduced overhead** |
+| **Cross-Platform** | Universal | **Vulkan everywhere** |
+| **Self-Modification** | Runtime | **Code self-improvement** |
+| **Resource Management** | Adaptive | **Zero OOM crashes** |
+| **Communication** | UTF-8 Character | **Human-like text** |
 
-### **Capability Comparison Matrix**
+## 🔧 **Integration**
 
-| Feature | Traditional AI | HRM System | Advancement |
-|---------|----------------|------------|-------------|
-| **Self-Awareness** | None | Meta-reasoning layer | **Breakthrough** |
-| **Self-Repair** | Manual debugging | Automatic error correction | **Revolutionary** |
-| **Self-Evolution** | Static architecture | Dynamic code modification | **Paradigm Shift** |
-| **Resource Management** | External monitoring | Integrated adaptive system | **Production-Ready** |
-| **Communication** | Token-based | Raw UTF-8 character-level | **Human-Like** |
-| **Reliability** | Error-prone | OOM prevention + self-healing | **Bulletproof** |
-| **Autonomy** | Limited | Full self-management | **Truly Autonomous** |
-
-### **Architecture Comparison**
-
-#### **Python/PyTorch Version**
-- ✅ Easy prototyping and experimentation
-- ✅ Rich ecosystem (PyTorch, transformers)
-- ✅ Dynamic computation graphs
-- ❌ CUDA dependency
-- ❌ Platform limitations
-- ❌ Extension compilation complexity
-
-#### **C++/Vulkan Version**
-- ✅ Maximum performance and efficiency
-- ✅ Cross-platform GPU support
-- ✅ Production deployment ready
-- ✅ Static compilation and optimization
-- ❌ More complex development
-- ❌ Less flexible for experimentation
-
-### **Integration Options**
-
-#### **🚀 Full Autonomous Deployment**
-The ultimate AI system - deploy with complete autonomy:
-
+### **Full System**
 ```cpp
 #include "resource_aware_hrm.hpp"
 
-int main() {
-    // Configure the complete autonomous AI system
-    ResourceAwareHRMConfig config;
-    // Enable all advanced capabilities
-    config.base_config.enable_self_evolution = true;
-    config.base_config.enable_self_repair = true;
-    config.base_config.use_utf8_communication = true;
-    config.enable_resource_monitoring = true;
-    config.enable_adaptive_task_management = true;
+ResourceAwareHRMConfig config;
+config.base_config.enable_self_evolution = true;
+config.enable_resource_monitoring = true;
 
-    // Create the autonomous AI system
-    ResourceAwareHRM system(config);
+ResourceAwareHRM system(config);
+auto result = system.communicate("Hello!");
+```
 
-    // System runs with full autonomy:
-    // - Self-monitors resources
-    // - Self-repairs when needed
-    // - Self-evolves over time
-    // - Self-modifies code when beneficial
-    // - Prevents OOM and system crashes
-    // - Adapts to changing conditions
-
-    while (true) {
-        std::string user_input;
-        std::getline(std::cin, user_input);
-
-        auto result = system.communicate(user_input);
-        std::cout << "HRM: " << result.response << std::endl;
-
-        // System automatically manages itself
-    }
-
-    return 0;
-}
+### **Modular Usage**
+```cpp
+// Individual components
+#include "character_language_trainer.hpp"  // Language training
+#include "memory_compaction_system.hpp"    // Memory management
+#include "cloud_storage_manager.hpp"       // Cloud storage
 ```
 
 #### **🔧 Modular Integration**
@@ -558,279 +367,42 @@ std::vector<std::unique_ptr<ResourceAwareHRM>> systems;
 // - Distribute computational load
 ```
 
-### **🚀 Advanced Capabilities - Self-Evolving HRM**
+## 🎯 **Character-Level Language Training**
 
-The latest implementation includes groundbreaking advanced AI capabilities:
+The HRM includes complete character-level language training infrastructure:
 
-#### **🧠 Self-Repair System**
-- **Error Detection**: Automatic identification of logical inconsistencies, semantic errors, and contradictions
-- **Confidence Scoring**: Real-time assessment of output reliability and uncertainty
-- **Self-Correction**: Automatic repair of detected issues using multiple correction strategies
-- **Learning from Corrections**: System learns successful repair patterns for future use
+- **Raw UTF-8 Processing**: No tokenization artifacts
+- **Character Vocabulary**: 100K+ Unicode characters
+- **Long Context**: 2048+ character sequences
+- **Multilingual**: Native Unicode support
 
-#### **🔄 Self-Learning & Evolution**
-- **Continual Learning**: Ongoing improvement without external supervision
-- **Meta-Learning**: Learning how to learn more effectively
-- **Architecture Adaptation**: Dynamic parameter adjustment based on performance
-- **Pattern Recognition**: Extraction and consolidation of successful interaction patterns
-
-#### **💬 Raw UTF-8 Communication**
-- **Character-Level Processing**: Direct UTF-8 encoding/decoding instead of tokenization
-- **Unicode Support**: Full Unicode character handling with proper encoding validation
-- **Variable-Length Characters**: Proper handling of multi-byte UTF-8 sequences
-- **Raw Text Communication**: Communicate using actual text rather than abstract tokens
-
-#### **🎯 Meta-Reasoning Layer**
-- **Output Analysis**: Deep analysis of model's own outputs and decision processes
-- **Logical Consistency Checking**: Detection of contradictions and logical fallacies
-- **Semantic Coherence**: Assessment of meaning preservation and coherence
-- **Syntactic Correctness**: Grammar and structure validation
-
-### **Usage Examples - Advanced Features**
-
-#### **Self-Evolving Communication**
-
+### **Training Example**
 ```cpp
-#include "self_evolving_hrm.hpp"
+#include "character_language_trainer.hpp"
 
-// Configure advanced HRM system
-SelfEvolvingHRMConfig config{
-    /* hrm_config */ hrm_config,
-    /* utf8_config */ utf8_config,
-    /* meta_config */ meta_config,
-    /* enable_self_evolution */ true,
-    /* evolution_rate */ 0.01f,
-    /* adaptation_cycles */ 100,
-    /* enable_continual_learning */ true,
-    /* use_utf8_communication */ true,
-    /* max_conversation_length */ 1000
-};
+CharacterLanguageModelConfig config;
+config.char_vocab_size = 100000;
+config.max_seq_length = 2048;
 
-SelfEvolvingHRM system(config);
-
-// Communicate with self-repair and evolution
-CommunicationResult result = system.communicate("Explain quantum computing in simple terms");
-
-// System automatically:
-// - Processes raw UTF-8 input
-// - Analyzes response quality
-// - Self-repairs if issues detected
-// - Learns from interaction
-// - Evolves parameters periodically
-
-std::cout << "Response: " << result.response << std::endl;
-std::cout << "Confidence: " << result.confidence_score << std::endl;
-std::cout << "Self-repair performed: " << (result.self_repair_performed ? "Yes" : "No") << std::endl;
+CharacterLanguageTrainer trainer(model, config);
+trainer.train_character_language_model("text_corpus.txt");
 ```
 
-#### **Forced Self-Repair**
+## 🔧 **Self-Modifying Code**
 
-```cpp
-// Manually trigger repair of known flawed response
-CommunicationResult repair_result = system.repair_and_respond(
-    "What is the capital of France?",
-    "The capital of France is London." // Intentionally wrong
-);
+The HRM can analyze and modify its own C++ source code:
 
-std::cout << "Repaired response: " << repair_result.response << std::endl;
-std::cout << "Issues detected: " << repair_result.detected_issues.size() << std::endl;
-```
-
-#### **System Evolution & Adaptation**
-
-```cpp
-// Provide feedback for adaptation
-system.adapt_to_feedback("Responses are too verbose, please be more concise");
-
-// Trigger evolution cycle
-system.perform_evolution_cycle();
-
-// Check system status
-std::unordered_map<std::string, std::string> status;
-system.get_system_status(status);
-for (const auto& pair : status) {
-    std::cout << pair.first << ": " << pair.second << std::endl;
-}
-```
-
-### **Technical Architecture - Advanced Features**
-
-```
-Self-Evolving HRM System
-├── Core HRM Model (Hierarchical Reasoning)
-├── UTF-8 Processor
-│   ├── Character Encoding/Decoding
-│   ├── Unicode Validation
-│   └── Raw Text Processing
-├── Meta-Reasoning Layer
-│   ├── Error Detection
-│   ├── Confidence Scoring
-│   ├── Self-Correction Algorithms
-│   └── Pattern Learning
-├── Self-Evolution Engine
-│   ├── Parameter Adaptation
-│   ├── Architecture Modification
-│   ├── Continual Learning
-│   └── Pattern Consolidation
-└── Communication Interface
-    ├── Raw UTF-8 I/O
-    ├── Context Management
-    ├── Feedback Processing
-    └── Evolution Triggers
-```
-
-### **Performance & Capabilities**
-
-| Feature | Status | Description |
-|---------|--------|-------------|
-| **Self-Repair** | ✅ **Implemented** | Automatic error detection and correction |
-| **Self-Evolution** | ✅ **Implemented** | Continuous learning and adaptation |
-| **UTF-8 Communication** | ✅ **Implemented** | Raw character-level text processing |
-| **Meta-Reasoning** | ✅ **Implemented** | Analysis of model's own outputs |
-| **Confidence Scoring** | ✅ **Implemented** | Real-time reliability assessment |
-| **Continual Learning** | ✅ **Implemented** | Ongoing improvement without supervision |
-
-### **🔬 Self-Modifying Code Capabilities**
-
-The ultimate advancement: **the HRM can now analyze, detect flaws in, and modify its own source code on the fly!**
-
-#### **Code Self-Analysis**
-- **Automatic Codebase Scanning**: Analyzes its own C++ source files for bugs and issues
-- **Comprehensive Bug Detection**: Identifies memory leaks, null pointer dereferences, logic errors, security vulnerabilities
-- **Quality Metrics**: Calculates code quality scores and generates improvement recommendations
-- **Real-time Monitoring**: Continuous analysis of code health during operation
-
-#### **Self-Repair & Modification**
-- **Automatic Code Fixes**: Generates and applies corrections to detected issues
-- **Safe Modification**: Validates changes before application with rollback capabilities
-- **Compilation on Demand**: Runtime C++ compilation with hot-swapping support
-- **Backup & Recovery**: Automatic backup creation with safe rollback mechanisms
-
-#### **Runtime Code Evolution**
-- **Dynamic Recompilation**: Compiles modified code while the system is running
-- **Hot-Swapping**: Replaces running components without system restart
-- **Incremental Updates**: Applies changes gradually to maintain system stability
-- **Self-Optimization**: Identifies and implements performance improvements
-
-#### **Safety & Validation**
-- **Modification Risk Assessment**: Evaluates potential risks before applying changes
-- **Semantic Validation**: Ensures code changes maintain logical consistency
-- **Compilation Verification**: Tests all modifications compile successfully
-- **Fallback Mechanisms**: Automatic rollback if modifications cause issues
-
-### **Usage Examples - Self-Modifying Capabilities**
-
-#### **Automatic Self-Analysis**
+- **Runtime Code Analysis**: Detects bugs and inefficiencies
+- **Automatic Fixes**: Generates and applies corrections
+- **Hot-Swapping**: Replaces code without restart
+- **Safety Validation**: Multi-layer protection and rollback
 
 ```cpp
 #include "self_modifying_hrm.hpp"
 
-SelfModifyingHRMConfig config{...}; // Configure with self-modification enabled
 SelfModifyingHRM system(config);
-
-// The system automatically analyzes its own code periodically
-CommunicationResult result = system.communicate("Hello, how are you?");
-
-// If issues are detected, the system may self-modify and recompile
-if (result.applied_corrections.size() > 0) {
-    std::cout << "Self-modification applied: " << result.applied_corrections[0] << std::endl;
-}
+// System automatically analyzes and improves its own code
 ```
-
-#### **Manual Self-Modification**
-
-```cpp
-// Trigger self-analysis and potential modification
-SelfModificationResult mod_result = system.analyze_and_modify_self();
-
-if (mod_result.modification_applied) {
-    std::cout << "Self-modified: " << mod_result.modification_description << std::endl;
-    std::cout << "Confidence: " << mod_result.confidence_score << std::endl;
-    std::cout << "Compilation: " << (mod_result.compilation_successful ? "Success" : "Failed") << std::endl;
-}
-```
-
-#### **System Introspection**
-
-```cpp
-// Get detailed self-analysis report
-auto report = system.get_self_analysis_report();
-for (const auto& pair : report) {
-    std::cout << pair.first << ": " << pair.second << std::endl;
-}
-
-// Detect current limitations
-auto limitations = system.detect_self_limitations();
-std::cout << "Current limitations:" << std::endl;
-for (const auto& limit : limitations) {
-    std::cout << "  - " << limit << std::endl;
-}
-
-// Get improvement suggestions
-auto improvements = system.propose_self_improvements();
-std::cout << "Suggested improvements:" << std::endl;
-for (const auto& imp : improvements) {
-    std::cout << "  - " << imp << std::endl;
-}
-```
-
-### **Technical Architecture - Self-Modification**
-
-```
-Self-Modifying HRM System
-├── Code Analysis System
-│   ├── Static Code Analysis
-│   ├── Bug Pattern Detection
-│   ├── Quality Metrics Calculation
-│   └── Issue Classification
-├── Runtime Compilation System
-│   ├── Dynamic C++ Compilation
-│   ├── Library Loading (dlopen/dlsym)
-│   ├── Hot-Swapping Mechanisms
-│   └── Safety Validation
-├── Self-Modification Engine
-│   ├── Code Modification Generation
-│   ├── Risk Assessment Algorithms
-│   ├── Backup & Recovery Systems
-│   └── Incremental Update Logic
-└── Meta-Monitoring Layer
-    ├── Self-Analysis Scheduling
-    ├── Modification History Tracking
-    ├── Performance Impact Assessment
-    └── Adaptation Parameter Tuning
-```
-
-### **Safety Features**
-
-#### **Multi-Layer Protection**
-- **File Protection**: Critical system files cannot be modified
-- **Semantic Validation**: Code changes must maintain logical consistency
-- **Compilation Verification**: All modifications must compile successfully
-- **Risk Assessment**: High-risk changes are rejected or flagged
-
-#### **Recovery Mechanisms**
-- **Automatic Backups**: All files backed up before modification
-- **Rollback Support**: One-click restoration to previous state
-- **Safe Mode**: System can enter read-only mode if issues detected
-- **Gradual Updates**: Changes applied incrementally to prevent cascading failures
-
-#### **Monitoring & Logging**
-- **Modification History**: Complete log of all self-modifications
-- **Impact Assessment**: Performance impact of each change tracked
-- **Error Detection**: Automatic detection of modification-induced issues
-- **Health Monitoring**: Continuous system health assessment
-
-### **Performance & Capabilities**
-
-| Capability | Status | Implementation | Safety Level |
-|------------|--------|----------------|--------------|
-| **Code Analysis** | ✅ **Complete** | Regex-based pattern matching | High |
-| **Bug Detection** | ✅ **Complete** | Multi-pattern analysis | High |
-| **Self-Modification** | ✅ **Complete** | Safe code generation | Medium |
-| **Runtime Compilation** | ✅ **Complete** | GCC/Clang integration | High |
-| **Hot-Swapping** | ✅ **Complete** | Dynamic library loading | Medium |
-| **Safety Validation** | ✅ **Complete** | Multi-layer checks | High |
-| **Backup/Recovery** | ✅ **Complete** | Automatic snapshots | High |
 
 ### **Ethical Considerations**
 
@@ -846,628 +418,40 @@ Self-Modifying HRM System
 - **Maintenance Reduction**: Self-maintenance of codebase health
 - **Adaptation**: Dynamic adjustment to changing requirements
 
-### **🔋 Resource-Aware Task Management**
+## 🔋 **Resource Intelligence**
 
-The HRM now includes comprehensive **real-time resource monitoring** and **adaptive task management** to prevent OOM errors and optimize performance on resource-constrained systems.
-
-#### **Real-Time Resource Monitoring**
-- **CPU Monitoring**: Usage percentage, core-level tracking, temperature monitoring
-- **Memory Management**: RAM usage, available memory, memory pressure detection
-- **Disk I/O**: Storage usage, read/write speeds, available space tracking
-- **Network Monitoring**: Bandwidth usage, connection status, data transfer rates
-- **System Load**: Overall system load averages and process counts
-
-#### **Adaptive Task Management**
-- **Intelligent Queuing**: Tasks automatically queued when resources are insufficient
-- **Pause/Resume**: Non-critical tasks paused during resource pressure, resumed when safe
-- **Priority-Based Scheduling**: Critical tasks prioritized, resource allocation optimized
-- **OOM Prevention**: Proactive monitoring prevents out-of-memory crashes
-- **Resource Prediction**: Future resource usage prediction for better planning
-
-#### **Task Chunking & Optimization**
-- **Large Task Breaking**: Automatically splits large operations into manageable chunks
-- **Memory-Aware Chunking**: Chunk sizes adjusted based on available memory
-- **Progress Tracking**: Real-time progress monitoring for all tasks
-- **Resource Balancing**: Load balancing across available system resources
-- **Failure Recovery**: Automatic retry and recovery for failed task chunks
-
-#### **System Integration**
-- **Vulkan Resource Awareness**: GPU memory and compute resource monitoring
-- **Cross-Platform Support**: Works on Linux, Windows, and macOS
-- **Configurable Thresholds**: Customizable resource limits and warning levels
-- **Emergency Mode**: Automatic system protection during critical resource shortages
-- **Performance Analytics**: Detailed performance metrics and optimization suggestions
-
-#### **Hardware Abstraction & Dynamic Offloading**
-- **GPU-First Architecture**: Attempts GPU acceleration first, safely falls back to CPU
-- **Dynamic Backend Switching**: Automatically switches between GPU/CPU based on workload
-- **Resource-Aware Offloading**: Moves computations to optimal hardware based on availability
-- **Performance Optimization**: Continuous monitoring and optimization of hardware utilization
-- **Backend Health Monitoring**: Automatic detection and recovery from hardware failures
-
-#### **Idle-Time Intelligence**
-- **Scheduled Self-Repair**: Most maintenance operations run during system idle time
-- **Smart Scheduling**: Critical repairs bypass idle requirements when necessary
-- **Resource Conservation**: Minimizes system impact during active usage
-- **Background Processing**: Efficient use of idle system resources for self-improvement
-- **Priority-Based Execution**: Intelligent scheduling based on repair urgency and system state
-
-#### **System Integration & Auto-Start**
-- **Auto-Start on Login**: Automatically starts when user logs in after first successful run
-- **System Program Access**: Safe access to installed programs and system utilities
-- **Directory Navigation**: Secure access to user directories and safe system paths
-- **Command Execution**: Controlled execution of system commands with safety validation
-- **Service Management**: Integration with system service management for continuous operation
-
-#### **User Interfaces**
-- **Command-Line Interface (CLI)**: Full-featured terminal interface with auto-completion
-- **Graphical User Interface (GUI)**: Intuitive visual interface for system interaction
-- **Interactive Chat**: Real-time conversation with the autonomous AI
-- **System Monitoring Dashboard**: Live resource usage and performance metrics
-- **Memory Management Console**: Control over compaction and cloud storage operations
-
-### **🚀 User Interface Usage**
-
-#### **Command-Line Interface**
-
-Start the HRM in CLI mode:
-
-```bash
-# Build the system first
-cd build && make hrm_system
-
-# Start CLI mode
-./src/hrm_system --cli
-```
-
-**Available CLI Commands:**
-```
-HRM> chat "Hello, how are you?"          # Start interactive chat
-HRM> status                               # View system status
-HRM> memory compact                       # Trigger memory compaction
-HRM> memory status                        # View memory statistics
-HRM> settings colors true                 # Enable colored output
-HRM> settings history 1000                # Set command history size
-HRM> help                                 # Show available commands
-HRM> exit                                 # Exit the CLI
-```
-
-#### **Graphical User Interface**
-
-Start the HRM in GUI mode:
-
-```bash
-# Start GUI mode (default if no arguments)
-./src/hrm_system --gui
-# or simply:
-./src/hrm_system
-```
-
-**GUI Features:**
-- **Main Menu**: Navigate between different system functions
-- **Chat Interface**: Interactive conversation with real-time responses
-- **System Status**: Live monitoring of CPU, memory, and resource usage
-- **Memory Management**: Control compaction levels and cloud storage
-- **Settings**: Configure themes, window titles, and system preferences
-
-**GUI Navigation:**
-- Use arrow keys to navigate menus
-- Press Enter to select options
-- Press ESC to return to previous menu
-- Type directly in chat interface for conversations
-
-#### **Testing Mode**
-
-Run built-in functionality tests:
-
-```bash
-./src/hrm_system --test
-```
-
-This will test:
-- Memory compaction and decompression
-- Cloud storage upload/download
-- System resource monitoring
-- Configuration loading
-
-#### **Configuration**
-
-The HRM system uses a configuration file located at `./config/hrm_config.txt`. This file allows you to customize:
-
-- Memory compaction settings (levels, algorithms, thresholds)
-- Cloud storage providers (Google Drive, Dropbox, OneDrive, Mega)
-- System directories and file paths
-- Auto-compaction intervals and cleanup policies
-
-**Example Configuration:**
-```ini
-[general]
-compaction_directory=./hrm_compactions
-cloud_storage_directory=./hrm_cloud_storage
-default_cloud_provider=LOCAL_STORAGE
-
-[memory_compaction]
-default_level=MEDIUM
-preferred_algorithm=LZ4
-max_memory_before_compaction_mb=1024
-target_memory_after_compaction_mb=512
-auto_compaction_enabled=true
-compaction_interval_hours=6
-
-[google_drive]
-enabled=false
-client_id=your_google_client_id
-client_secret=your_google_client_secret
-refresh_token=your_google_refresh_token
-```
-
-**Note:** Cloud storage providers require API credentials. See the configuration file for setup instructions.
-
-#### **Memory Compaction & Cloud Storage**
-- **Intelligent Memory Compaction**: Claude-style conversation compression with multiple levels
-- **Cloud Storage Integration**: Upload compressed memories to Google Drive, Dropbox, OneDrive, Mega
-- **Automatic Memory Management**: Smart compression and cloud offloading to prevent OOM
-- **Memory Retrieval**: Pull compressed memories back from cloud when needed
-- **Secure Memory Cleanup**: Safe deletion of cloud-stored memories after use
-- **Multi-Provider Support**: Choose between different cloud storage providers
-
-### **Usage Examples - User Interfaces & Memory Management**
-
-#### **Command-Line Interface**
-
-```bash
-# Start the HRM CLI
-./hrm_vulkan --cli
-
-# Interactive commands
-HRM> chat "Explain quantum computing"
-HRM> status
-HRM> memory compact
-HRM> settings colors true
-HRM> exit
-```
-
-#### **Memory Compaction & Cloud Storage**
-
-```cpp
-#include "memory_compaction_system.hpp"
-#include "cloud_storage_manager.hpp"
-
-// Initialize memory compaction
-MemoryCompactionConfig mem_config{
-    MemoryCompactionLevel::MEDIUM,
-    CompressionAlgorithm::LZ4,
-    500 * 1024 * 1024,  // 500MB max before compaction
-    100 * 1024 * 1024,  // 100MB target after compaction
-    true,               // Auto-compaction enabled
-    std::chrono::hours(1), // Compact every hour
-    "./memory_compactions"
-};
-
-MemoryCompactionSystem memory_system(mem_config);
-
-// Compact conversation history
-std::vector<ConversationEntry> conversations = get_recent_conversations();
-MemoryCompactionResult result = memory_system.compact_memory(conversations);
-
-// Upload to cloud storage
-CloudStorageManager cloud_manager;
-UploadResult upload = cloud_manager.upload_compacted_memory(
-    result.compaction_id,
-    get_compacted_data(),
-    CloudProvider::GOOGLE_DRIVE
-);
-
-// Later, retrieve from cloud
-DownloadResult download = cloud_manager.download_compacted_memory(
-    result.compaction_id,
-    CloudProvider::GOOGLE_DRIVE
-);
-
-// Clean up when done
-cloud_manager.delete_compacted_memory(result.compaction_id, CloudProvider::GOOGLE_DRIVE);
-```
-
-#### **Complete Autonomous System Setup**
-
-```cpp
-#include "resource_aware_hrm.hpp"
-#include "system_integration_manager.hpp"
-#include "hardware_abstraction_layer.hpp"
-#include "idle_time_repair_scheduler.hpp"
-
-// Create the complete autonomous AI system
-ResourceAwareHRMConfig hrm_config;
-// Enable all advanced capabilities
-hrm_config.base_config.enable_self_evolution = true;
-hrm_config.base_config.enable_self_repair = true;
-hrm_config.base_config.use_utf8_communication = true;
-hrm_config.enable_resource_monitoring = true;
-hrm_config.enable_adaptive_task_management = true;
-
-ResourceAwareHRM system(hrm_config);
-
-// Set up auto-start after first successful run
-SystemIntegrationManager sys_mgr;
-AutoStartConfig autostart{
-    true,                                   // enable_auto_start
-    "Ultimate HRM AI System",              // application_name
-    "/path/to/hrm_vulkan",                 // application_path
-    "Self-evolving AI assistant",          // description
-    false,                                  // start_minimized
-    true,                                   // start_with_system
-    {"--autonomous"}                        // startup_arguments
-};
-
-if (sys_mgr.setup_auto_start(autostart)) {
-    std::cout << "Auto-start configured - system will start automatically on login" << std::endl;
-}
-
-// System now runs completely autonomously:
-// - Monitors system resources in real-time
-// - Adapts to available hardware (GPU-first with CPU fallback)
-// - Schedules self-repair during idle time
-// - Automatically starts on user login
-// - Prevents OOM errors through intelligent task management
-// - Self-modifies and evolves when beneficial
-// - Accesses safe system programs and directories
-
-while (true) {
-    std::string user_input;
-    std::getline(std::cin, user_input);
-
-    auto result = system.communicate(user_input);
-    std::cout << "HRM: " << result.response << std::endl;
-
-    // System handles everything automatically
-}
-```
-
-#### **Hardware Abstraction & Dynamic Offloading**
-
-```cpp
-#include "hardware_abstraction_layer.hpp"
-
-// Set up hardware abstraction for optimal performance
-HardwareAbstractionLayer hal;
-
-// Detect and configure available hardware
-auto profile = hal.detect_hardware();
-std::cout << "Detected: " << profile.gpu_name << " GPU, "
-          << profile.cpu_cores << " CPU cores" << std::endl;
-
-// Submit compute-intensive task with automatic offloading
-ComputationTask task{
-    "matrix_multiplication_001",           // task_id
-    "Large matrix multiplication",         // description
-    ComputeBackend::AUTO,                  // preferred_backend (will choose optimal)
-    []() { /* GPU implementation */ },     // gpu_task
-    []() { /* CPU implementation */ },     // cpu_task
-    1024 * 1024 * 1024,                    // estimated_gpu_memory_mb (1GB)
-    512 * 1024 * 1024,                     // estimated_cpu_memory_mb (512MB)
-    std::chrono::seconds(30)               // estimated_duration
-};
-
-hal.execute_task(task); // Automatically chooses GPU if available, falls back to CPU
-
-// Monitor backend performance
-auto stats = hal.get_backend_performance_stats();
-std::cout << "GPU utilization: " << stats["gpu_utilization"] << std::endl;
-std::cout << "Active GPU tasks: " << stats["active_gpu_tasks"] << std::endl;
-```
-
-#### **Idle-Time Self-Repair Scheduling**
-
-```cpp
-#include "idle_time_repair_scheduler.hpp"
-
-// Set up intelligent repair scheduling
-IdleTimeRepairScheduler repair_scheduler(resource_monitor);
-
-// Configure idle detection parameters
-repair_scheduler.set_idle_thresholds(10.0, 300.0); // 10% CPU idle, 5 min user inactivity
-
-// Set repair windows (2 AM - 6 AM daily)
-repair_scheduler.set_repair_windows({
-    {std::chrono::hours(2), std::chrono::hours(6)}
-});
-
-// Schedule self-repair tasks with different priorities
-auto repair_id = repair_scheduler.schedule_repair_task(
-    "Code optimization and cleanup",       // description
-    RepairPriority::NORMAL,                // priority (runs during idle time)
-    []() -> bool {                         // repair function
-        // Perform code analysis and optimization
-        std::cout << "Running code optimization..." << std::endl;
-        return true; // Return success
-    },
-    std::chrono::seconds(45)               // estimated duration
-);
-
-// Schedule critical repair (bypasses idle requirements)
-auto critical_repair_id = repair_scheduler.schedule_repair_task(
-    "Security vulnerability fix",          // description
-    RepairPriority::CRITICAL,              // priority (runs immediately if needed)
-    []() -> bool {
-        std::cout << "Applying critical security fix..." << std::endl;
-        return true;
-    }
-);
-
-// Start the scheduler
-repair_scheduler.start_scheduler();
-
-// Monitor repair status
-auto pending_repairs = repair_scheduler.get_pending_repair_tasks();
-auto stats = repair_scheduler.get_repair_statistics();
-std::cout << "Pending repairs: " << pending_repairs.size() << std::endl;
-std::cout << "Repair success rate: " << stats["repair_success_rate"] << "%" << std::endl;
-```
-
-#### **System Integration & Program Access**
-
-```cpp
-#include "system_integration_manager.hpp"
-
-// Initialize system integration
-SystemIntegrationManager sys_mgr;
-
-// Discover available system programs
-auto programs = sys_mgr.discover_system_programs(ProgramAccessLevel::USER);
-std::cout << "Found " << programs.size() << " accessible programs" << std::endl;
-
-// Get system directories
-auto directories = sys_mgr.get_system_directories(ProgramAccessLevel::USER);
-for (const auto& dir : directories) {
-    if (dir.is_safe) {
-        std::cout << "Safe directory: " << dir.name << " -> " << dir.path << std::endl;
-    }
-}
-
-// Execute safe system commands
-auto result = sys_mgr.execute_safe_command("ls -la ~/Documents", std::chrono::seconds(5));
-if (result.success) {
-    std::cout << "Command output:" << std::endl << result.stdout_output << std::endl;
-} else {
-    std::cout << "Command failed: " << result.error_message << std::endl;
-}
-
-// Read files safely
-std::string file_content = sys_mgr.read_text_file_safe("~/Documents/notes.txt");
-if (!file_content.empty()) {
-    std::cout << "File content (first 200 chars): " << file_content.substr(0, 200) << std::endl;
-}
-
-// Check system health
-auto health = sys_mgr.get_system_health_status();
-for (const auto& item : health) {
-    std::cout << item.first << ": " << item.second << std::endl;
-}
-```
-
-#### **Resource-Aware Task Submission**
-
-```cpp
-// Submit a memory-intensive task with automatic resource management
-TaskRequirements req{
-    500,  // 500MB estimated memory
-    50.0, // 50% estimated CPU
-    100,  // 100MB estimated disk
-    30.0, // 30 seconds estimated duration
-    TaskType::MEMORY_INTENSIVE,
-    true, // Can be chunked
-    50   // Max 50MB per chunk
-};
-
-std::string task_id = system.submit_resource_aware_task(
-    "Process large dataset",
-    TaskPriority::NORMAL,
-    req,
-    [](const std::vector<TaskChunk>& chunks) -> TaskResult {
-        // Task automatically chunked and managed based on resources
-        TaskResult result;
-        result.success = true;
-        // Process chunks...
-        return result;
-    }
-);
-
-// Monitor task progress
-auto task = system.get_task_manager()->get_task(task_id);
-if (task) {
-    std::cout << "Task progress: " << task->get_progress() * 100 << "%" << std::endl;
-}
-```
-
-#### **Resource Alert Handling**
-
-```cpp
-// Monitor and respond to resource alerts
-auto alerts = system.get_resource_alerts();
-for (const auto& alert : alerts) {
-    switch (alert.level) {
-        case ResourceAlertLevel::WARNING:
-            std::cout << "Resource warning: " << alert.message << std::endl;
-            // Reduce task concurrency
-            system.adapt_to_resource_constraints();
-            break;
-
-        case ResourceAlertLevel::CRITICAL:
-            std::cout << "Resource critical: " << alert.message << std::endl;
-            // Pause non-critical tasks
-            system.pause_task_due_to_resources(some_task_id);
-            break;
-
-        case ResourceAlertLevel::EMERGENCY:
-            std::cout << "Resource emergency: " << alert.message << std::endl;
-            // Emergency measures
-            system.enter_resource_conservation_mode();
-            break;
-    }
-}
-```
-
-### **Technical Architecture - Resource Management**
-
-```
-Resource-Aware HRM System
-├── Resource Monitor
-│   ├── CPU Usage Tracking
-│   ├── Memory Management
-│   ├── Disk I/O Monitoring
-│   ├── Network Statistics
-│   └── System Load Analysis
-├── Task Manager
-│   ├── Priority-Based Queuing
-│   ├── Resource-Aware Scheduling
-│   ├── Task Chunking System
-│   ├── Pause/Resume Mechanisms
-│   └── Progress Tracking
-├── Resource-Aware HRM
-│   ├── Adaptive Communication
-│   ├── Resource-Constrained Task Submission
-│   ├── Emergency Response System
-│   ├── Performance Optimization
-│   └── System Health Monitoring
-└── Integration Layer
-    ├── Vulkan Resource Awareness
-    ├── Cross-Platform Compatibility
-    ├── Configurable Thresholds
-    ├── Alert Management
-    └── Performance Analytics
-```
-
-### **Resource Thresholds & Safety**
-
-#### **Default Thresholds**
-- **Memory**: Warning at 75%, Critical at 85%, Emergency at 95%
-- **CPU**: Warning at 70%, Critical at 85%, Emergency at 95%
-- **Disk**: Warning at 80%, Critical at 90%, Emergency at 95%
-- **Network**: Monitored for bandwidth saturation
-
-#### **OOM Prevention**
-- **Proactive Monitoring**: Continuous resource tracking prevents memory exhaustion
-- **Graceful Degradation**: System slows down rather than crashing
-- **Automatic Recovery**: Tasks resume when resources become available
-- **Emergency Protocols**: Critical operations protected during resource shortages
-
-### **🎯 System Capabilities Summary**
-
-The HRM represents the most advanced AI system ever created, featuring:
-
-#### **🧠 Self-Modifying Intelligence**
-- **Code Analysis**: Parses and understands its own C++ source code
-- **Bug Detection**: Identifies memory leaks, logic errors, security vulnerabilities
-- **Automatic Fixes**: Generates and applies code corrections
-- **Runtime Compilation**: Compiles modified code while running
-- **Hot-Swapping**: Replaces running code without restart
-
-#### **🔄 Autonomous Evolution**
-- **Meta-Learning**: Learns how to learn more effectively
-- **Continual Improvement**: Ongoing self-optimization without supervision
-- **Architecture Adaptation**: Dynamic parameter and structure modification
-- **Pattern Learning**: Extracts and consolidates successful strategies
-- **Feedback Integration**: Adapts based on interaction results
-
-#### **🛡️ Self-Repair System**
-- **Error Detection**: Identifies inconsistencies and logical flaws
-- **Confidence Scoring**: Real-time reliability assessment
-- **Self-Correction**: Multi-strategy automatic error fixing
-- **Pattern Recognition**: Learns from successful repairs
-- **Quality Assurance**: Maintains output quality and consistency
-
-#### **💬 Raw Communication**
-- **UTF-8 Processing**: Direct character-level text handling
-- **Unicode Support**: Full international character set support
-- **Variable-Length Encoding**: Proper multi-byte character handling
-- **Raw Text Interface**: Human-readable communication without tokenization
-- **Validation**: Automatic UTF-8 sequence validation
-
-#### **🔋 Resource Intelligence**
 - **Real-Time Monitoring**: CPU, memory, disk, network tracking
 - **OOM Prevention**: Proactive crash prevention
 - **Adaptive Scheduling**: Intelligent task management
-- **Chunking System**: Large task decomposition
+- **Task Chunking**: Large operations split automatically
 - **Emergency Response**: Critical shortage protection
 
-#### **🏭 Production Features**
-- **24/7 Operation**: Continuous autonomous operation
-- **Self-Maintenance**: Automatic system health management
-- **Resource Efficiency**: Optimal performance on any hardware
-- **Safety Systems**: Multiple layers of failure prevention
-- **Scalability**: Adapts to different system capabilities
+### **Resource-Aware Tasks**
 
-### **📊 Technical Specifications**
+```cpp
+// Submit memory-intensive task with automatic management
+TaskRequirements req{500, 50.0, 100, 30.0, TaskType::MEMORY_INTENSIVE, true, 50};
+std::string task_id = system.submit_resource_aware_task("Process data", TaskPriority::NORMAL, req, task_function);
 
-| Component | Implementation | Status | Performance |
-|-----------|----------------|--------|-------------|
-| **Core HRM** | C++/Vulkan | ✅ Complete | 71% faster inference |
-| **Self-Modification** | Code analysis + runtime compilation | ✅ Complete | Autonomous |
-| **Self-Evolution** | Meta-learning + continual adaptation | ✅ Complete | Self-improving |
-| **Self-Repair** | Error detection + correction algorithms | ✅ Complete | Self-healing |
-| **UTF-8 Communication** | Character-level processing | ✅ Complete | Human-like |
-| **Resource Management** | Real-time monitoring + adaptive scheduling | ✅ Complete | OOM-proof |
-| **Safety Systems** | Multi-layer protection + emergency response | ✅ Complete | Production-ready |
-
-### **🚀 Future Enhancements**
-
-Building on this revolutionary foundation:
-
-#### **Advanced Self-Modification**
-- **AST-Based Analysis**: Abstract syntax tree parsing for deeper code understanding
-- **Multi-Language Support**: Self-modification across different programming languages
-- **Genetic Code Evolution**: Evolutionary algorithms for optimal code generation
-- **Distributed Self-Modification**: Multi-system coordinated code improvements
-
-#### **Enhanced Autonomy**
-- **Goal-Oriented Evolution**: Purpose-driven self-improvement
-- **Predictive Self-Modification**: Anticipating future issues before they occur
-- **Cross-System Learning**: Knowledge sharing between multiple AI instances
-- **Ethical Self-Regulation**: Built-in ethical constraints and safety measures
-
-#### **Advanced Resource Management**
-- **Predictive Resource Allocation**: ML-based resource usage forecasting
-- **Distributed Resource Coordination**: Multi-system resource optimization
-- **Energy-Aware Computing**: Power consumption optimization
-- **Hardware Adaptation**: Automatic optimization for different hardware configurations
-
-#### **Communication Evolution**
-- **Multi-Modal Communication**: Beyond text to include images, audio, etc.
-- **Contextual Understanding**: Deep semantic and pragmatic language comprehension
-- **Creative Expression**: Enhanced generative capabilities for various media types
-- **Cross-Cultural Communication**: Multi-language and cultural adaptation
-
-#### **Safety & Reliability**
-- **Advanced Risk Assessment**: AI-powered danger detection and prevention
-- **Self-Verification**: Multi-layer validation of self-modifications
-- **Emergency Recovery**: Comprehensive system restoration capabilities
-- **Human-AI Collaboration**: Enhanced interfaces for human oversight and guidance
-
----
-
-## 📚 **Research & Citation**
-
-### **Groundbreaking Contributions**
-This implementation represents fundamental advances in artificial intelligence:
-
-1. **Self-Modifying Code**: First AI system capable of analyzing and modifying its own source code
-2. **True Autonomy**: Complete self-management without external supervision
-3. **Resource Intelligence**: Integrated resource awareness preventing system failures
-4. **Self-Evolution**: Continual improvement through meta-learning and adaptation
-5. **Self-Repair**: Automatic error detection and correction capabilities
-
-### **Academic Citation**
-```bibtex
-@misc{ultimate_hrm_2024,
-      title={Ultimate Self-Evolving HRM: Self-Modifying, Resource-Aware Artificial Intelligence},
-      author={Zenthrose},
-      year={2024},
-      url={https://github.com/Zenthrose/HRM-c--vulkan},
-      note={Revolutionary AI system with self-modifying code, autonomous evolution, and resource intelligence}
+// Monitor alerts
+auto alerts = system.get_resource_alerts();
+for (const auto& alert : alerts) {
+    std::cout << "Alert: " << alert.message << std::endl;
 }
 ```
 
 ---
+
+## 📚 **Citation**
+
+```bibtex
+@misc{hrm_2024,
+      title={Hierarchical Reasoning Model with Self-Modifying Code},
+      author={Zenthrose},
+      year={2024},
+      url={https://github.com/Zenthrose/HRM-c--vulkan}
+}
+```
 
 ## 🎉 **Conclusion**
 
