@@ -51,13 +51,28 @@ SystemIdleState IdleTimeRepairScheduler::get_current_idle_state() const {
 }
 
 double IdleTimeRepairScheduler::get_current_idle_percentage() const {
-    if (!resource_monitor_) return 0.0;
-
     auto usage = resource_monitor_->get_current_usage();
     double cpu_idle = 100.0 - usage.cpu_usage_percent;
 
+#ifdef _WIN32
+    // Windows idle time detection
+    LASTINPUTINFO lii;
+    lii.cbSize = sizeof(LASTINPUTINFO);
+    if (GetLastInputInfo(&lii)) {
+        DWORD idle_time = GetTickCount() - lii.dwTime;
+        double idle_seconds = idle_time / 1000.0;
+
+        // If user has been idle for more than 60 seconds, consider system idle
+        if (idle_seconds > 60.0) {
+            return 100.0; // Fully idle
+        } else {
+            // Combine CPU idle with user activity
+            return (cpu_idle + (idle_seconds / 60.0 * 100.0)) / 2.0;
+        }
+    }
+#endif
+
     // Simplified: just return CPU idle percentage
-    // In a real implementation, this would factor in memory, disk, network, etc.
     return cpu_idle;
 }
 

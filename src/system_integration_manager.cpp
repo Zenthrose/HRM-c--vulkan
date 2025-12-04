@@ -531,8 +531,42 @@ std::vector<SystemProgram> SystemIntegrationManager::discover_programs_linux(Pro
 }
 
 std::vector<SystemProgram> SystemIntegrationManager::discover_programs_windows(ProgramAccessLevel access_level) {
-    // Windows implementation
-    return {};
+    std::vector<SystemProgram> programs;
+
+    // Scan Program Files directories
+    std::vector<std::string> program_dirs = {
+        "C:\\Program Files",
+        "C:\\Program Files (x86)"
+    };
+
+    for (const auto& dir_path : program_dirs) {
+        WIN32_FIND_DATAA findData;
+        std::string search_path = dir_path + "\\*";
+
+        HANDLE hFind = FindFirstFileA(search_path.c_str(), &findData);
+        if (hFind != INVALID_HANDLE_VALUE) {
+            do {
+                if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                    std::string name = findData.cFileName;
+                    if (name != "." && name != "..") {
+                        // Look for .exe files in the directory
+                        std::string exe_path = dir_path + "\\" + name + "\\" + name + ".exe";
+                        if (GetFileAttributesA(exe_path.c_str()) != INVALID_FILE_ATTRIBUTES) {
+                            SystemProgram program;
+                            program.name = name;
+                            program.path = exe_path;
+                            program.description = "Installed program from " + dir_path;
+                            program.access_level = access_level;
+                            programs.push_back(program);
+                        }
+                    }
+                }
+            } while (FindNextFileA(hFind, &findData));
+            FindClose(hFind);
+        }
+    }
+
+    return programs;
 }
 
 std::vector<SystemProgram> SystemIntegrationManager::discover_programs_macos(ProgramAccessLevel access_level) {
@@ -580,8 +614,75 @@ ProgramExecutionResult SystemIntegrationManager::execute_program_linux(const std
 ProgramExecutionResult SystemIntegrationManager::execute_program_windows(const std::string& program_path,
                                                                        const std::vector<std::string>& arguments,
                                                                        std::chrono::seconds timeout) {
-    // Windows implementation
-    return {false, -1, "", "", std::chrono::milliseconds(0), "Not implemented for Windows"};
+    // Windows implementation using CreateProcess
+    std::string command = build_command_string(program_path, arguments);
+
+    STARTUPINFOA si;
+    PROCESS_INFORMATION pi;
+    SECURITY_ATTRIBUTES sa;
+    HANDLE hReadPipe, hWritePipe;
+
+    ZeroMemory(&si, sizeof(si));
+    ZeroMemory(&pi, sizeof(pi));
+    ZeroMemory(&sa, sizeof(sa));
+
+    sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+    sa.bInheritHandle = TRUE;
+    sa.lpSecurityDescriptor = NULL;
+
+    // Create pipe for stdout
+    if (!CreatePipe(&hReadPipe, &hWritePipe, &sa, 0)) {
+        return {false, -1, "", "", std::chrono::milliseconds(0), "Failed to create pipe"};
+    }
+
+    si.cb = sizeof(STARTUPINFOA);
+    si.hStdError = hWritePipe;
+    si.hStdOutput = hWritePipe;
+    si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    si.dwFlags |= STARTF_USESTDHANDLES;
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    // Create the process
+    if (!CreateProcessA(NULL, const_cast<char*>(command.c_str()), NULL, NULL, TRUE,
+                       0, NULL, NULL, &si, &pi)) {
+        CloseHandle(hReadPipe);
+        CloseHandle(hWritePipe);
+        return {false, -1, "", "", std::chrono::milliseconds(0), "Failed to create process"};
+    }
+
+    // Close write end of pipe
+    CloseHandle(hWritePipe);
+
+    // Wait for process with timeout
+    DWORD waitResult = WaitForSingleObject(pi.hProcess, static_cast<DWORD>(timeout.count() * 1000));
+    bool timedOut = (waitResult == WAIT_TIMEOUT);
+
+    DWORD exitCode = 0;
+    GetExitCodeProcess(pi.hProcess, &exitCode);
+
+    // Read output
+    std::string output;
+    char buffer[4096];
+    DWORD bytesRead;
+    while (ReadFile(hReadPipe, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
+        buffer[bytesRead] = '\0';
+        output += buffer;
+    }
+
+    // Cleanup
+    CloseHandle(hReadPipe);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+    if (timedOut) {
+        return {false, -1, output, "", duration, "Process timed out"};
+    }
+
+    return {true, static_cast<int>(exitCode), output, "", duration, ""};
 }
 
 ProgramExecutionResult SystemIntegrationManager::execute_program_macos(const std::string& program_path,

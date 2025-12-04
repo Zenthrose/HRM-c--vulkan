@@ -452,7 +452,27 @@ ResourceUsage ResourceMonitor::get_network_info() {
 
 double ResourceMonitor::get_system_load() {
 #ifdef _WIN32
-    // Windows load average not implemented
+    // Windows CPU usage using PDH
+    static PDH_HQUERY hQuery = NULL;
+    static PDH_HCOUNTER hCounter = NULL;
+    static bool initialized = false;
+
+    if (!initialized) {
+        if (PdhOpenQueryA(NULL, 0, &hQuery) == ERROR_SUCCESS) {
+            if (PdhAddCounterA(hQuery, "\\Processor(_Total)\\% Processor Time", 0, &hCounter) == ERROR_SUCCESS) {
+                initialized = true;
+            }
+        }
+    }
+
+    if (initialized) {
+        PDH_FMT_COUNTERVALUE counterValue;
+        if (PdhCollectQueryData(hQuery) == ERROR_SUCCESS &&
+            PdhGetFormattedCounterValue(hCounter, PDH_FMT_DOUBLE, NULL, &counterValue) == ERROR_SUCCESS) {
+            return counterValue.doubleValue / 100.0; // Return as fraction 0-1
+        }
+    }
+
     return 0.0;
 #else
     double load[3];
