@@ -38,6 +38,23 @@
 | **Scientific Training** | ✅ Complete | ArXiv research paper academic learning |
 | **Academic Text Generation** | ✅ Complete | Research paper writing capabilities |
 
+### **Windows Compatibility Status**
+- ✅ CMake configuration works
+- ✅ Vulkan SDK detection works
+- ✅ Shader compilation works
+- ✅ Basic Windows API integration added
+- ✅ System monitoring implemented (memory/disk/CPU)
+- ✅ GUI terminal functions use Windows Console API
+- ✅ Dynamic library loading (LoadLibrary/FreeLibrary)
+- ✅ Directory operations (FindFirstFile/FindNextFile)
+- ✅ Process execution (_popen/_pclose)
+- ✅ Cross-platform conditional compilation
+- ✅ Type conversion warnings fixed (double→float, size_t→int)
+- ✅ Security warnings fixed (localtime_s, _dupenv_s)
+- ⚠️ Network monitoring simplified (basic implementation)
+- ⚠️ Minor STL warnings remain (intentional conversions)
+- ✅ Build completes successfully with minimal warnings
+
 ---
 
 ## 🏗️ **System Architecture**
@@ -711,6 +728,32 @@ This represents the **culmination of AI autonomy** - a system that can **live, l
 ---
 
 *Built with ❤️ for the advancement of artificial intelligence*
+
+---
+
+## 📝 **Code Style Guidelines**
+
+### **C++ Style**
+- Use C++17 standard with `<iostream>`, `<vector>`, `<string>` etc.
+- Include order: standard library, then local headers with quotes
+- Naming: PascalCase for classes/types, camelCase for functions/variables
+- Error handling: throw `std::runtime_error` with descriptive messages
+- Use smart pointers (`std::unique_ptr`, `std::shared_ptr`) over raw pointers
+- RAII pattern for resource management
+
+### **Python Style**
+- Type hints required for function parameters and return values
+- Import order: standard library, third-party packages, local modules
+- Naming: snake_case for functions/variables, PascalCase for classes
+- Use f-strings for string formatting
+- Exception handling with specific exception types
+- Docstrings for public functions and classes
+
+### **General**
+- No comments unless explaining complex logic
+- Consistent indentation (4 spaces for Python, tabs for C++)
+- Line length: 100 characters maximum
+- Use meaningful variable names over abbreviations
 
 ---
 
