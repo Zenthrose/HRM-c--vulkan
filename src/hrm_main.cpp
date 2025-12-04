@@ -68,7 +68,7 @@ VulkanResources initializeVulkan() {
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.pEngineName = "HRM Engine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.apiVersion = VK_API_VERSION_1_3;
+    appInfo.apiVersion = VK_API_VERSION_1_1;
 
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -112,11 +112,17 @@ VulkanResources initializeVulkan() {
     std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
     vkGetPhysicalDeviceQueueFamilyProperties(res.physicalDevice, &queueFamilyCount, queueFamilies.data());
 
+    bool foundCompute = false;
     for (uint32_t i = 0; i < queueFamilyCount; ++i) {
         if (queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT) {
             res.computeQueueFamilyIndex = i;
+            foundCompute = true;
             break;
         }
+    }
+
+    if (!foundCompute) {
+        throw std::runtime_error("No compute queue family found on this device");
     }
 
     // Create logical device
@@ -447,9 +453,9 @@ int main(int argc, char* argv[]) {
         return invalid_arg ? 1 : 0;
     }
 
-    // If no mode specified, default to GUI
+    // If no mode specified, default to CLI
     if (!cli_mode && !gui_mode && !train_mode && !test_mode) {
-        gui_mode = true;
+        cli_mode = true;
     }
 
     try {

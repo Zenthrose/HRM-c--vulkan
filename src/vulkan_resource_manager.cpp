@@ -47,7 +47,11 @@ void VulkanResourceManager::createBuffer(VkDeviceSize size, VkBufferUsageFlags u
         throw std::runtime_error("failed to allocate buffer memory!");
     }
 
-    vkBindBufferMemory(device, buffer, bufferMemory, 0);
+    if (vkBindBufferMemory(device, buffer, bufferMemory, 0) != VK_SUCCESS) {
+        vkDestroyBuffer(device, buffer, nullptr);
+        vkFreeMemory(device, bufferMemory, nullptr);
+        throw std::runtime_error("failed to bind buffer memory!");
+    }
 
     // Track the buffer for cleanup
     trackedBuffers.push_back({buffer, bufferMemory});
