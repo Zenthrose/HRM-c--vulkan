@@ -149,20 +149,6 @@ auto result = system.communicate("Hello, how are you?");
 std::cout << result.response << std::endl;
 ```
 
-### **Character-Level Language Training**
-
-```cpp
-#include "character_language_trainer.hpp"
-
-// Configure character-level training
-CharacterLanguageModelConfig lang_config;
-lang_config.char_vocab_size = 100000;  // UTF-8 characters
-lang_config.max_seq_length = 2048;     // Long contexts
-
-CharacterLanguageTrainer trainer(model, lang_config);
-trainer.train_character_language_model("large_text_corpus.txt");
-```
-
 #### **🧠 Self-Evolving Communication**
 
 ```cpp
