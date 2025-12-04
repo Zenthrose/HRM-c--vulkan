@@ -556,7 +556,7 @@ std::vector<SystemProgram> SystemIntegrationManager::discover_programs_windows(P
                             program.name = name;
                             program.path = exe_path;
                             program.description = "Installed program from " + dir_path;
-                            program.access_level = access_level;
+                            program.requires_admin = (access_level == ProgramAccessLevel::SYSTEM);
                             programs.push_back(program);
                         }
                     }

@@ -2,6 +2,7 @@
 #include <cstring>
 #include <limits>
 #include <iostream>
+#include <cstdint>
 
 // FP16 Implementation
 uint16_t FP16Utils::float_to_half(float value) {

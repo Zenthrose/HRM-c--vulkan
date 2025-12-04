@@ -57,9 +57,10 @@
 - ✅ Type conversion warnings fixed (double→float, size_t→int)
 - ✅ Network monitoring implemented (GetIfTable API)
 - ✅ All Unix-specific features fully ported to Windows
-- ✅ Build succeeds with Clang + Ninja (no MSVC required)
+- ✅ Build succeeds with MSYS2 MinGW GCC 15.2.0 + Ninja
 - ✅ Production-ready executables generated
 - ✅ Communication interfaces tested and functional
+- ✅ Character-level training infrastructure implemented
 
 ---
 
@@ -170,15 +171,40 @@ make -j$(nproc)
 ```batch
 git clone https://github.com/Zenthrose/HRM-c--vulkan.git
 cd HRM-c--vulkan
+# Ensure MSYS2 MinGW is in PATH or use full paths
+set PATH=C:\msys64\mingw64\bin;%PATH%
 mkdir build && cd build
-cmake ..
-cmake --build . --config Release
+cmake -G Ninja ..
+cmake --build . --config Release -j 4
 
 # Run with different interfaces
-.\src\Release\hrm_system.exe --cli    # Command-line interface
-.\src\Release\hrm_system.exe --gui    # Graphical interface (default)
-.\src\Release\hrm_system.exe --test   # Run system tests
+.\src\hrm_system.exe --cli    # Command-line interface
+.\src\hrm_system.exe --gui    # Graphical interface (default)
+.\src\hrm_system.exe --test   # Run system tests
+.\src\hrm_system.exe --train  # Run character-level training
 ```
+
+### **Training**
+
+The HRM system includes C++-based character-level language training:
+
+#### **Data Preparation**
+```bash
+# Prepare training data (example for literary text)
+mkdir -p data/text/processed
+# Place your training_corpus.txt and validation_corpus.txt in data/text/processed/
+```
+
+#### **Run Training**
+```bash
+# Linux/macOS
+./src/hrm_system --train
+
+# Windows
+.\src\hrm_system.exe --train
+```
+
+Training uses the `CharacterLanguageTrainer` with configurable parameters for epochs, batch size, and learning rate.
 
 ### **Testing**
 

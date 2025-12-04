@@ -3,6 +3,7 @@
 #include <random>
 #include <algorithm>
 #include <cmath>
+#include <tuple>
 
 HRM::HRM(const HRMConfig& config) : config_(config) {
     std::cout << "Initializing HRM..." << std::endl;
@@ -58,8 +59,12 @@ std::pair<HRMCarry, std::unordered_map<std::string, Tensor>> HRM::forward(
     }
 
     // Forward inner model
-    auto [final_inner_carry, logits, q_pair] = inner_->forward(new_inner_carry, new_current_data);
-    auto [q_halt_logits, q_continue_logits] = q_pair;
+    HRMInnerCarry final_inner_carry;
+    Tensor logits;
+    std::pair<Tensor, Tensor> q_pair;
+    std::tie(final_inner_carry, logits, q_pair) = inner_->forward(new_inner_carry, new_current_data);
+    Tensor q_halt_logits, q_continue_logits;
+    std::tie(q_halt_logits, q_continue_logits) = q_pair;
 
     // Prepare outputs
     std::unordered_map<std::string, Tensor> outputs;

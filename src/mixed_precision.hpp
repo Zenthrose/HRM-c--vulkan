@@ -7,6 +7,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <cstdint>
 
 /**
  * Mixed Precision Training Support

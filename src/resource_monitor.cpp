@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <psapi.h>
 #include <iphlpapi.h>
+#include <pdh.h>
 #pragma comment(lib, "pdh.lib")
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "ws2_32.lib")

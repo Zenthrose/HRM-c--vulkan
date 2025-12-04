@@ -373,7 +373,7 @@ void RuntimeCompilationSystem::unload_library(void* handle) {
 void* RuntimeCompilationSystem::get_symbol(void* handle, const std::string& symbol_name) {
     if (!handle) return nullptr;
 #ifdef _WIN32
-    return GetProcAddress(static_cast<HMODULE>(handle), symbol_name.c_str());
+    return reinterpret_cast<void*>(GetProcAddress(static_cast<HMODULE>(handle), symbol_name.c_str()));
 #else
     return dlsym(handle, symbol_name.c_str());
 #endif
