@@ -20,42 +20,28 @@ endif()
 
 add_custom_command(TARGET hrm_vulkan POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:hrm_vulkan>/shaders
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/attention.spv
-              $<TARGET_FILE_DIR:hrm_vulkan>/shaders/attention.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/swiglu.spv
-              $<TARGET_FILE_DIR:hrm_vulkan>/shaders/swiglu.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv
-              $<TARGET_FILE_DIR:hrm_vulkan>/shaders/rms_norm.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/linear.spv
-              $<TARGET_FILE_DIR:hrm_vulkan>/shaders/linear.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/embedding.spv
-              $<TARGET_FILE_DIR:hrm_vulkan>/shaders/embedding.spv
-    COMMENT "Copying generated shaders to runtime directory"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/attention.spv $<TARGET_FILE_DIR:hrm_vulkan>/shaders/attention.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/embedding.spv $<TARGET_FILE_DIR:hrm_vulkan>/shaders/embedding.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/linear.spv $<TARGET_FILE_DIR:hrm_vulkan>/shaders/linear.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv $<TARGET_FILE_DIR:hrm_vulkan>/shaders/rms_norm.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/swiglu.spv $<TARGET_FILE_DIR:hrm_vulkan>/shaders/swiglu.spv
+    # Copy MinGW runtime DLLs
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:hrm_vulkan>/libgcc_s_seh-1.dll
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll $<TARGET_FILE_DIR:hrm_vulkan>/libstdc++-6.dll
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:hrm_vulkan>/libwinpthread-1.dll
 )
 
 add_custom_command(TARGET hrm_system POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:hrm_system>/shaders
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/attention.spv
-              $<TARGET_FILE_DIR:hrm_system>/shaders/attention.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/swiglu.spv
-              $<TARGET_FILE_DIR:hrm_system>/shaders/swiglu.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv
-              $<TARGET_FILE_DIR:hrm_system>/shaders/rms_norm.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/linear.spv
-              $<TARGET_FILE_DIR:hrm_system>/shaders/linear.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              ${CMAKE_BINARY_DIR}/shaders/embedding.spv
-              $<TARGET_FILE_DIR:hrm_system>/shaders/embedding.spv
-    COMMENT "Copying generated shaders to HRM system runtime directory"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/attention.spv $<TARGET_FILE_DIR:hrm_system>/shaders/attention.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/embedding.spv $<TARGET_FILE_DIR:hrm_system>/shaders/embedding.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/linear.spv $<TARGET_FILE_DIR:hrm_system>/shaders/linear.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv $<TARGET_FILE_DIR:hrm_system>/shaders/rms_norm.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/swiglu.spv $<TARGET_FILE_DIR:hrm_system>/shaders/swiglu.spv
+    # Copy MinGW runtime DLLs
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:hrm_system>/libgcc_s_seh-1.dll
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll $<TARGET_FILE_DIR:hrm_system>/libstdc++-6.dll
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:hrm_system>/libwinpthread-1.dll
 )
 
 add_dependencies(hrm_vulkan compile_shaders)

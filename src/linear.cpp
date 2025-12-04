@@ -9,6 +9,9 @@ LinearVulkan::LinearVulkan(const LinearConfig& config, VkPhysicalDevice physical
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool),
       pipeline(VK_NULL_HANDLE), pipelineLayout(VK_NULL_HANDLE), descriptorSetLayout(VK_NULL_HANDLE), descriptorPool(VK_NULL_HANDLE) {
     std::cout << "Initializing LinearVulkan layer..." << std::endl;
+    if (!device) {
+        throw std::runtime_error("Vulkan device not available - cannot initialize LinearVulkan layer");
+    }
     init_vulkan_objects();
 }
 
@@ -97,20 +100,18 @@ Tensor LinearVulkan::forward(const Tensor& input) {
     vkDestroyBuffer(device, weightStagingBuffer, nullptr);
     vkFreeMemory(device, weightStagingBufferMemory, nullptr);
 
-    // Transfer bias if needed
-    if (config.bias) {
-        VkBuffer biasStagingBuffer;
-        VkDeviceMemory biasStagingBufferMemory;
-        createBuffer(bias_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, biasStagingBuffer, biasStagingBufferMemory);
-        std::vector<float> biases(config.out_features, 0.0f);
-        void* biasData;
-        vkMapMemory(device, biasStagingBufferMemory, 0, bias_size, 0, &biasData);
-        memcpy(biasData, biases.data(), bias_size);
-        vkUnmapMemory(device, biasStagingBufferMemory);
-        copyBuffer(biasStagingBuffer, biasBuffer, bias_size);
-        vkDestroyBuffer(device, biasStagingBuffer, nullptr);
-        vkFreeMemory(device, biasStagingBufferMemory, nullptr);
-    }
+    // Transfer bias (always create, even if not used)
+    VkBuffer biasStagingBuffer;
+    VkDeviceMemory biasStagingBufferMemory;
+    createBuffer(bias_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, biasStagingBuffer, biasStagingBufferMemory);
+    std::vector<float> biases(config.out_features, 0.0f);
+    void* biasData;
+    vkMapMemory(device, biasStagingBufferMemory, 0, bias_size, 0, &biasData);
+    memcpy(biasData, biases.data(), bias_size);
+    vkUnmapMemory(device, biasStagingBufferMemory);
+    copyBuffer(biasStagingBuffer, biasBuffer, bias_size);
+    vkDestroyBuffer(device, biasStagingBuffer, nullptr);
+    vkFreeMemory(device, biasStagingBufferMemory, nullptr);
 
     // Dispatch
     VkCommandBufferAllocateInfo cmdBufAllocInfo{};
@@ -125,6 +126,52 @@ Tensor LinearVulkan::forward(const Tensor& input) {
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+    // Update descriptor set with actual buffers
+    std::vector<VkWriteDescriptorSet> descriptorWrites;
+    std::vector<VkDescriptorBufferInfo> bufferInfos;
+
+    // Input buffer
+    bufferInfos.push_back({inputBuffer, 0, input_size});
+    descriptorWrites.push_back({
+        VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        nullptr, descriptorSet, 0, 0, 1,
+        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &bufferInfos.back(), nullptr
+    });
+
+    // Weight buffer
+    bufferInfos.push_back({weightBuffer, 0, weight_size});
+    descriptorWrites.push_back({
+        VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        nullptr, descriptorSet, 1, 0, 1,
+        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &bufferInfos.back(), nullptr
+    });
+
+    // Bias buffer
+    bufferInfos.push_back({biasBuffer, 0, bias_size});
+    descriptorWrites.push_back({
+        VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        nullptr, descriptorSet, 2, 0, 1,
+        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &bufferInfos.back(), nullptr
+    });
+
+    // Output buffer
+    bufferInfos.push_back({outputBuffer, 0, output_size});
+    descriptorWrites.push_back({
+        VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        nullptr, descriptorSet, 3, 0, 1,
+        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &bufferInfos.back(), nullptr
+    });
+
+    // Uniform buffer
+    bufferInfos.push_back({uniformBuffer, 0, sizeof(UniformData)});
+    descriptorWrites.push_back({
+        VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        nullptr, descriptorSet, 4, 0, 1,
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, nullptr, &bufferInfos.back(), nullptr
+    });
+
+    vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 
     vkBeginCommandBuffer(commandBuffer, &beginInfo);
     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline);
@@ -164,6 +211,24 @@ Tensor LinearVulkan::forward(const Tensor& input) {
 }
 
 void LinearVulkan::init_vulkan_objects() {
+    // Create descriptor set layout first - always include all bindings to match shader
+    std::vector<VkDescriptorSetLayoutBinding> bindings = {
+        {0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // input
+        {1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weights
+        {2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // bias
+        {3, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // output
+        {4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}  // params
+    };
+
+    VkDescriptorSetLayoutCreateInfo layoutCI{};
+    layoutCI.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutCI.bindingCount = static_cast<uint32_t>(bindings.size());
+    layoutCI.pBindings = bindings.data();
+
+    if (vkCreateDescriptorSetLayout(device, &layoutCI, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create descriptor set layout");
+    }
+
     createComputePipeline();
 
     // Create buffers with dummy sizes (will be resized in forward)
@@ -180,9 +245,9 @@ void LinearVulkan::init_vulkan_objects() {
     createBuffer(sizeof(uint32_t) * 4, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffer, uniformBufferMemory);
     
     // Descriptor pool
-    uint32_t buffer_count = config.bias ? 4 : 3;
+    uint32_t storage_count = 4; // input, weights, bias, output
     std::vector<VkDescriptorPoolSize> poolSizes = {
-        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, buffer_count},
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, storage_count},
         {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1}
     };
     VkDescriptorPoolCreateInfo poolInfo{};
@@ -192,24 +257,6 @@ void LinearVulkan::init_vulkan_objects() {
     poolInfo.maxSets = 1;
 
     vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool);
-
-    // Descriptor set layout
-    std::vector<VkDescriptorSetLayoutBinding> bindings = {
-        {0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // input
-        {1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weights
-        {2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // bias (optional)
-        {3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}  // params
-    };
-    if (!config.bias) {
-        bindings.erase(bindings.begin() + 2); // Remove bias binding
-    }
-
-    VkDescriptorSetLayoutCreateInfo layoutCI{};
-    layoutCI.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutCI.bindingCount = static_cast<uint32_t>(bindings.size());
-    layoutCI.pBindings = bindings.data();
-
-    vkCreateDescriptorSetLayout(device, &layoutCI, nullptr, &descriptorSetLayout);
 
     // Allocate descriptor set
     VkDescriptorSetAllocateInfo allocInfo{};
@@ -249,27 +296,19 @@ void LinearVulkan::createComputePipeline() {
     shaderModuleCI.pCode = reinterpret_cast<const uint32_t*>(shaderCode.data());
 
     VkShaderModule computeShaderModule;
-    vkCreateShaderModule(device, &shaderModuleCI, nullptr, &computeShaderModule);
-
-    VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCI{};
-    descriptorSetLayoutCI.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    std::vector<VkDescriptorSetLayoutBinding> bindings = {
-        {0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr},
-        {1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr},
-        {2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr},
-        {3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}
-    };
-    descriptorSetLayoutCI.bindingCount = static_cast<uint32_t>(bindings.size());
-    descriptorSetLayoutCI.pBindings = bindings.data();
-
-    vkCreateDescriptorSetLayout(device, &descriptorSetLayoutCI, nullptr, &descriptorSetLayout);
+    if (vkCreateShaderModule(device, &shaderModuleCI, nullptr, &computeShaderModule) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create shader module");
+    }
 
     VkPipelineLayoutCreateInfo pipelineLayoutCI{};
     pipelineLayoutCI.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutCI.setLayoutCount = 1;
     pipelineLayoutCI.pSetLayouts = &descriptorSetLayout;
 
-    vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &pipelineLayout);
+    if (vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &pipelineLayout) != VK_SUCCESS) {
+        vkDestroyShaderModule(device, computeShaderModule, nullptr);
+        throw std::runtime_error("Failed to create pipeline layout");
+    }
 
     VkComputePipelineCreateInfo pipelineCI{};
     pipelineCI.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
@@ -279,7 +318,11 @@ void LinearVulkan::createComputePipeline() {
     pipelineCI.stage.module = computeShaderModule;
     pipelineCI.stage.pName = "main";
 
-    vkCreateComputePipelines(device, VK_NULL_HANDLE, 1, &pipelineCI, nullptr, &pipeline);
+    if (vkCreateComputePipelines(device, VK_NULL_HANDLE, 1, &pipelineCI, nullptr, &pipeline) != VK_SUCCESS) {
+        vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+        vkDestroyShaderModule(device, computeShaderModule, nullptr);
+        throw std::runtime_error("Failed to create compute pipeline");
+    }
 
     vkDestroyShaderModule(device, computeShaderModule, nullptr);
 }

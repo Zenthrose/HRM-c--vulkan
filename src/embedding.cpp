@@ -9,6 +9,9 @@ EmbeddingVulkan::EmbeddingVulkan(const EmbeddingConfig& config, VkPhysicalDevice
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool),
       pipeline(VK_NULL_HANDLE), pipelineLayout(VK_NULL_HANDLE), descriptorSetLayout(VK_NULL_HANDLE), descriptorPool(VK_NULL_HANDLE) {
     std::cout << "Initializing EmbeddingVulkan layer..." << std::endl;
+    if (!device) {
+        throw std::runtime_error("Vulkan device not available - cannot initialize EmbeddingVulkan layer");
+    }
     init_vulkan_objects();
 }
 

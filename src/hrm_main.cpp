@@ -7,6 +7,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <algorithm>
+#include <vulkan/vulkan.h>
 
 #include "resource_aware_hrm.hpp"
 #include "memory_compaction_system.hpp"
@@ -46,6 +47,110 @@ ResourceAwareHRMConfig createDefaultHRMConfig() {
     config.max_cpu_per_task_percent = 80.0;
 
     return config;
+}
+
+struct VulkanResources {
+    VkInstance instance = VK_NULL_HANDLE;
+    VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+    VkDevice device = VK_NULL_HANDLE;
+    VkQueue computeQueue = VK_NULL_HANDLE;
+    uint32_t computeQueueFamilyIndex = 0;
+    VkCommandPool commandPool = VK_NULL_HANDLE;
+};
+
+VulkanResources initializeVulkan() {
+    VulkanResources res;
+
+    // Create Vulkan instance
+    VkApplicationInfo appInfo{};
+    appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    appInfo.pApplicationName = "HRM System";
+    appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+    appInfo.pEngineName = "HRM Engine";
+    appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+    appInfo.apiVersion = VK_API_VERSION_1_3;
+
+    VkInstanceCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    createInfo.pApplicationInfo = &appInfo;
+
+    // Enable validation layers if available
+    std::vector<const char*> layers;
+    uint32_t layerCount;
+    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+    std::vector<VkLayerProperties> availableLayers(layerCount);
+    vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+    for (const auto& layer : availableLayers) {
+        if (strcmp(layer.layerName, "VK_LAYER_KHRONOS_validation") == 0) {
+            layers.push_back("VK_LAYER_KHRONOS_validation");
+            break;
+        }
+    }
+
+    createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
+    createInfo.ppEnabledLayerNames = layers.data();
+
+    if (vkCreateInstance(&createInfo, nullptr, &res.instance) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create Vulkan instance");
+    }
+
+    // Select physical device
+    uint32_t deviceCount = 0;
+    vkEnumeratePhysicalDevices(res.instance, &deviceCount, nullptr);
+    if (deviceCount == 0) {
+        throw std::runtime_error("No Vulkan-compatible GPUs found");
+    }
+
+    std::vector<VkPhysicalDevice> devices(deviceCount);
+    vkEnumeratePhysicalDevices(res.instance, &deviceCount, devices.data());
+    res.physicalDevice = devices[0]; // Use first device
+
+    // Find compute queue family
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(res.physicalDevice, &queueFamilyCount, nullptr);
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(res.physicalDevice, &queueFamilyCount, queueFamilies.data());
+
+    for (uint32_t i = 0; i < queueFamilyCount; ++i) {
+        if (queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT) {
+            res.computeQueueFamilyIndex = i;
+            break;
+        }
+    }
+
+    // Create logical device
+    VkDeviceQueueCreateInfo queueCreateInfo{};
+    queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queueCreateInfo.queueFamilyIndex = res.computeQueueFamilyIndex;
+    queueCreateInfo.queueCount = 1;
+    float queuePriority = 1.0f;
+    queueCreateInfo.pQueuePriorities = &queuePriority;
+
+    VkDeviceCreateInfo deviceCI{};
+    deviceCI.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    deviceCI.queueCreateInfoCount = 1;
+    deviceCI.pQueueCreateInfos = &queueCreateInfo;
+    deviceCI.enabledLayerCount = static_cast<uint32_t>(layers.size());
+    deviceCI.ppEnabledLayerNames = layers.data();
+
+    if (vkCreateDevice(res.physicalDevice, &deviceCI, nullptr, &res.device) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create Vulkan device");
+    }
+
+    // Get compute queue
+    vkGetDeviceQueue(res.device, res.computeQueueFamilyIndex, 0, &res.computeQueue);
+
+    // Create command pool
+    VkCommandPoolCreateInfo poolInfo{};
+    poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    poolInfo.queueFamilyIndex = res.computeQueueFamilyIndex;
+
+    if (vkCreateCommandPool(res.device, &poolInfo, nullptr, &res.commandPool) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create command pool");
+    }
+
+    return res;
 }
 
 MemoryCompactionConfig createDefaultMemoryConfig(std::shared_ptr<CloudStorageManager> cloud_manager) {
@@ -359,8 +464,26 @@ int main(int argc, char* argv[]) {
         std::shared_ptr<ResourceAwareHRM> hrm = nullptr;
 
         if (!test_mode) {
+            // Initialize Vulkan resources
+            VulkanResources vulkan;
+            try {
+                vulkan = initializeVulkan();
+                std::cout << "Vulkan initialized successfully" << std::endl;
+            } catch (const std::exception& e) {
+                std::cerr << "Failed to initialize Vulkan: " << e.what() << std::endl;
+                std::cerr << "Falling back to CPU-only mode" << std::endl;
+                // Continue without Vulkan - HRM will use CPU fallbacks
+            }
+
             // Initialize HRM system only for CLI/GUI modes
             auto hrm_config = createDefaultHRMConfig();
+            // Set Vulkan resources in config
+            hrm_config.base_config.base_config.hrm_config.inner_config.physicalDevice = vulkan.physicalDevice;
+            hrm_config.base_config.base_config.hrm_config.inner_config.device = vulkan.device;
+            hrm_config.base_config.base_config.hrm_config.inner_config.computeQueue = vulkan.computeQueue;
+            hrm_config.base_config.base_config.hrm_config.inner_config.computeQueueFamilyIndex = vulkan.computeQueueFamilyIndex;
+            hrm_config.base_config.base_config.hrm_config.inner_config.commandPool = vulkan.commandPool;
+
             hrm = std::make_shared<ResourceAwareHRM>(hrm_config);
         }
 
