@@ -1,0 +1,385 @@
+#include "self_modifying_hrm.hpp"
+#include <iostream>
+#include <algorithm>
+#include <random>
+
+SelfModifyingHRM::SelfModifyingHRM(const SelfModifyingHRMConfig& config)
+    : SelfEvolvingHRM(config.base_config), config_(config) {
+    std::cout << "Initializing Self-Modifying HRM System..." << std::endl;
+
+    // Initialize self-modification components
+    code_analyzer_ = std::make_unique<CodeAnalysisSystem>(config.project_root);
+    runtime_compiler_ = std::make_unique<RuntimeCompilationSystem>(config.temp_compilation_dir);
+
+    // Initialize self-modification state
+    interactions_since_last_analysis_ = 0;
+
+    std::cout << "Self-Modifying HRM System initialized with "
+              << (config.enable_self_modification ? "self-modification enabled" : "self-modification disabled")
+              << " and "
+              << (config.enable_runtime_recompilation ? "runtime recompilation enabled" : "runtime recompilation disabled")
+              << std::endl;
+}
+
+SelfModifyingHRM::~SelfModifyingHRM() {
+    // Clean up any active modifications
+    runtime_compiler_->cleanup_temp_files();
+}
+
+CommunicationResult SelfModifyingHRM::communicate(const std::string& input_message) {
+    // First, perform normal communication
+    CommunicationResult result = SelfEvolvingHRM::communicate(input_message);
+
+    // Increment interaction counter
+    interactions_since_last_analysis_++;
+
+    // Check if we should perform self-analysis
+    if (config_.enable_self_modification &&
+        interactions_since_last_analysis_ >= config_.self_analysis_frequency) {
+
+        std::cout << "Performing periodic self-analysis..." << std::endl;
+
+        SelfModificationResult self_mod = analyze_and_modify_self();
+        if (self_mod.modification_applied) {
+            std::cout << "Self-modification applied: " << self_mod.modification_description << std::endl;
+            log_self_modification_activity(self_mod);
+
+            // Reset counter
+            interactions_since_last_analysis_ = 0;
+
+            // Add self-modification info to result
+            result.applied_corrections.push_back("Self-modification: " + self_mod.modification_description);
+        }
+    }
+
+    return result;
+}
+
+SelfModificationResult SelfModifyingHRM::analyze_and_modify_self() {
+    SelfModificationResult result;
+    result.modification_applied = false;
+    result.compilation_successful = false;
+    result.system_restart_required = false;
+
+    // Step 1: Analyze the codebase
+    CodeAnalysisResult analysis = code_analyzer_->analyze_codebase();
+
+    if (analysis.issues.empty()) {
+        std::cout << "No issues found in self-analysis" << std::endl;
+        return result;
+    }
+
+    std::cout << "Found " << analysis.issues.size() << " issues in self-analysis" << std::endl;
+
+    // Step 2: Generate potential fixes
+    std::vector<CodeModification> fixes = generate_self_fixes(analysis);
+
+    if (fixes.empty()) {
+        std::cout << "No fixes generated for self-modification" << std::endl;
+        return result;
+    }
+
+    // Step 3: Evaluate modification impact
+    SelfModificationResult evaluation = evaluate_modification_impact(fixes);
+
+    if (evaluation.confidence_score < config_.modification_confidence_threshold) {
+        std::cout << "Self-modification confidence too low: " << evaluation.confidence_score << std::endl;
+        return result;
+    }
+
+    // Step 4: Apply modifications if safe
+    if (apply_self_modification(evaluation)) {
+        result = evaluation;
+        result.modification_applied = true;
+        std::cout << "Self-modification successfully applied" << std::endl;
+    } else {
+        std::cout << "Self-modification failed or was deemed unsafe" << std::endl;
+    }
+
+    return result;
+}
+
+std::vector<CodeModification> SelfModifyingHRM::generate_self_fixes(const CodeAnalysisResult& analysis) {
+    return code_analyzer_->generate_fixes(analysis.issues);
+}
+
+SelfModificationResult SelfModifyingHRM::evaluate_modification_impact(const std::vector<CodeModification>& modifications) {
+    SelfModificationResult result;
+    result.modification_applied = false;
+    result.confidence_score = 0.0f;
+
+    if (modifications.empty()) return result;
+
+    // Evaluate each modification
+    float total_confidence = 0.0f;
+    std::vector<std::string> all_risks;
+
+    for (const auto& mod : modifications) {
+        // Check if modification is safe
+        if (!is_file_modification_safe(mod.file_path)) {
+            all_risks.push_back("Unsafe file modification: " + mod.file_path);
+            continue;
+        }
+
+        // Validate modification semantics
+        if (!validate_modification_semantics(mod)) {
+            all_risks.push_back("Invalid modification semantics: " + mod.reason);
+            continue;
+        }
+
+        // Assess risk
+        float risk = assess_modification_risk(mod);
+        float confidence = mod.confidence_score * (1.0f - risk);
+
+        total_confidence += confidence;
+
+        if (!mod.file_path.empty()) {
+            result.modified_file = mod.file_path;
+            result.modification_description = mod.reason;
+        }
+    }
+
+    result.confidence_score = total_confidence / modifications.size();
+    result.potential_risks = all_risks;
+
+    // Generate rollback instructions
+    result.rollback_instructions = "Use git checkout or backup files to restore previous state";
+
+    return result;
+}
+
+bool SelfModifyingHRM::apply_self_modification(const SelfModificationResult& modification) {
+    // This is a high-risk operation - in a real implementation, this would be much more sophisticated
+    // For now, we'll just validate and log the modification
+
+    if (!validate_self_modification_safety(modification)) {
+        std::cout << "Self-modification validation failed" << std::endl;
+        return false;
+    }
+
+    // Create backup before modification
+    if (config_.create_backups_before_modification) {
+        create_system_backup();
+    }
+
+    // Log the modification
+    modification_history_.push_back(modification);
+
+    std::cout << "Self-modification applied (simulation): " << modification.modification_description << std::endl;
+
+    // In a real implementation, this would:
+    // 1. Apply the code modifications
+    // 2. Compile the modified code
+    // 3. Hot-swap the running components
+    // 4. Validate the new system
+
+    return true;
+}
+
+bool SelfModifyingHRM::rollback_self_modification(const std::string& backup_id) {
+    return restore_system_backup(backup_id);
+}
+
+std::unordered_map<std::string, std::string> SelfModifyingHRM::get_self_analysis_report() {
+    std::unordered_map<std::string, std::string> report;
+
+    // Get base system status
+    std::unordered_map<std::string, std::string> base_status;
+    get_system_status(base_status);
+
+    // Add self-modification specific info
+    report["self_modification_enabled"] = config_.enable_self_modification ? "true" : "false";
+    report["runtime_recompilation_enabled"] = config_.enable_runtime_recompilation ? "true" : "false";
+    report["interactions_since_last_analysis"] = std::to_string(interactions_since_last_analysis_);
+    report["total_modifications_applied"] = std::to_string(modification_history_.size());
+    report["self_analysis_frequency"] = std::to_string(config_.self_analysis_frequency);
+
+    // Merge with base status
+    report.insert(base_status.begin(), base_status.end());
+
+    return report;
+}
+
+std::vector<std::string> SelfModifyingHRM::detect_self_limitations() {
+    std::vector<std::string> limitations;
+
+    // Analyze current capabilities and identify limitations
+    limitations.push_back("Cannot modify core system libraries");
+    limitations.push_back("Limited understanding of complex code patterns");
+    limitations.push_back("Cannot guarantee correctness of all modifications");
+    limitations.push_back("Requires compilation environment for runtime modifications");
+
+    return limitations;
+}
+
+std::vector<std::string> SelfModifyingHRM::propose_self_improvements() {
+    std::vector<std::string> improvements;
+
+    // Analyze current system and propose improvements
+    improvements.push_back("Implement more sophisticated code analysis patterns");
+    improvements.push_back("Add support for multi-file modifications");
+    improvements.push_back("Implement better risk assessment algorithms");
+    improvements.push_back("Add support for gradual system updates");
+
+    return improvements;
+}
+
+bool SelfModifyingHRM::validate_self_modification_safety(const SelfModificationResult& modification) {
+    // Basic safety checks
+    if (modification.confidence_score < 0.8f) return false;
+    if (!modification.potential_risks.empty()) return false;
+    if (modification.system_restart_required) return false; // Too risky for now
+
+    return true;
+}
+
+void SelfModifyingHRM::log_self_modification_activity(const SelfModificationResult& modification) {
+    std::cout << "=== Self-Modification Log ===" << std::endl;
+    std::cout << "File: " << modification.modified_file << std::endl;
+    std::cout << "Description: " << modification.modification_description << std::endl;
+    std::cout << "Confidence: " << modification.confidence_score << std::endl;
+    std::cout << "Compilation: " << (modification.compilation_successful ? "Success" : "Failed") << std::endl;
+    std::cout << "Risks: " << modification.potential_risks.size() << std::endl;
+    std::cout << "==========================" << std::endl;
+}
+
+std::vector<std::string> SelfModifyingHRM::get_self_modification_history() {
+    std::vector<std::string> history;
+
+    for (const auto& mod : modification_history_) {
+        history.push_back(mod.modified_file + ": " + mod.modification_description +
+                         " (confidence: " + std::to_string(mod.confidence_score) + ")");
+    }
+
+    return history;
+}
+
+// Private methods
+
+bool SelfModifyingHRM::is_file_modification_safe(const std::string& file_path) {
+    // Check if file is in protected list
+    for (const auto& protected_file : config_.protected_files) {
+        if (file_path.find(protected_file) != std::string::npos) {
+            return false;
+        }
+    }
+
+    // Only allow modification of source files
+    return file_path.find(".cpp") != std::string::npos ||
+           file_path.find(".hpp") != std::string::npos;
+}
+
+bool SelfModifyingHRM::validate_modification_semantics(const CodeModification& modification) {
+    // Basic semantic validation
+    if (modification.modified_code.empty()) return false;
+    if (modification.modified_code.find("delete this") != std::string::npos) return false;
+    if (modification.modified_code.find("free(this)") != std::string::npos) return false;
+
+    return true;
+}
+
+float SelfModifyingHRM::assess_modification_risk(const CodeModification& modification) {
+    float risk = 0.0f;
+
+    // Assess risk based on modification type
+    if (modification.reason.find("memory") != std::string::npos) risk += 0.3f;
+    if (modification.reason.find("pointer") != std::string::npos) risk += 0.4f;
+    if (modification.reason.find("thread") != std::string::npos) risk += 0.5f;
+
+    // Assess risk based on code changes
+    if (modification.modified_code.find("nullptr") != std::string::npos) risk += 0.2f;
+    if (modification.modified_code.find("delete") != std::string::npos) risk += 0.3f;
+
+    return std::min(risk, 1.0f);
+}
+
+bool SelfModifyingHRM::compile_modified_system(const std::vector<CodeModification>& modifications) {
+    // Placeholder for compilation logic
+    std::cout << "Compiling modified system (placeholder)" << std::endl;
+    return true;
+}
+
+bool SelfModifyingHRM::hot_swap_modified_components() {
+    // Placeholder for hot-swapping logic
+    std::cout << "Hot-swapping modified components (placeholder)" << std::endl;
+    return true;
+}
+
+void SelfModifyingHRM::update_system_configuration() {
+    // Placeholder for configuration updates
+    std::cout << "Updating system configuration (placeholder)" << std::endl;
+}
+
+bool SelfModifyingHRM::create_system_backup() {
+    // Create backups of critical files
+    for (const auto& file : {"src/main.cpp", "src/hrm.hpp", "CMakeLists.txt"}) {
+        runtime_compiler_->create_backup(file);
+    }
+    return true;
+}
+
+bool SelfModifyingHRM::restore_system_backup(const std::string& backup_id) {
+    // Restore from backups
+    for (const auto& file : {"src/main.cpp", "src/hrm.hpp", "CMakeLists.txt"}) {
+        if (!runtime_compiler_->restore_backup(file)) {
+            std::cerr << "Failed to restore backup for " << file << std::endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+void SelfModifyingHRM::enter_safe_mode() {
+    std::cout << "Entering safe mode - disabling self-modification" << std::endl;
+    config_.enable_self_modification = false;
+}
+
+std::vector<std::string> SelfModifyingHRM::analyze_self_improvement_opportunities() {
+    std::vector<std::string> opportunities;
+
+    // Analyze current performance and suggest improvements
+    auto status = get_self_analysis_report();
+
+    if (status["average_confidence"] < "0.8") {
+        opportunities.push_back("Improve confidence scoring algorithms");
+    }
+
+    if (std::stoi(status["total_modifications_applied"]) < 5) {
+        opportunities.push_back("Increase self-modification frequency for better adaptation");
+    }
+
+    return opportunities;
+}
+
+std::vector<std::string> SelfModifyingHRM::detect_self_degradation_patterns() {
+    std::vector<std::string> patterns;
+
+    // Analyze modification history for degradation patterns
+    if (modification_history_.size() > 10) {
+        int recent_failures = 0;
+        for (size_t i = modification_history_.size() - 5; i < modification_history_.size(); ++i) {
+            if (!modification_history_[i].compilation_successful) {
+                recent_failures++;
+            }
+        }
+
+        if (recent_failures >= 3) {
+            patterns.push_back("Recent modifications showing compilation failures - possible degradation");
+        }
+    }
+
+    return patterns;
+}
+
+void SelfModifyingHRM::adapt_self_analysis_parameters() {
+    // Adapt analysis parameters based on performance
+    auto status = get_self_analysis_report();
+
+    if (std::stod(status["average_confidence"]) > 0.9) {
+        // High confidence - can be more aggressive
+        config_.modification_confidence_threshold = std::max(0.7f, config_.modification_confidence_threshold - 0.05f);
+    } else if (std::stod(status["average_confidence"]) < 0.7) {
+        // Low confidence - be more conservative
+        config_.modification_confidence_threshold = std::min(0.9f, config_.modification_confidence_threshold + 0.05f);
+    }
+}

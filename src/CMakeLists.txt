@@ -1,4 +1,4 @@
-add_executable(hrm_vulkan main.cpp attention.cpp attention.hpp mlp.cpp mlp.hpp rms_norm.cpp rms_norm.hpp block.cpp block.hpp linear.cpp linear.hpp embedding.cpp embedding.hpp hierarchical_reasoning_module.cpp hierarchical_reasoning_module.hpp hrm_inner.cpp hrm_inner.hpp hrm.cpp hrm.hpp losses.cpp losses.hpp utf8_processor.cpp utf8_processor.hpp meta_reasoning_layer.cpp meta_reasoning_layer.hpp self_evolving_hrm.cpp self_evolving_hrm.hpp)
+add_executable(hrm_vulkan main.cpp attention.cpp attention.hpp mlp.cpp mlp.hpp rms_norm.cpp rms_norm.hpp block.cpp block.hpp linear.cpp linear.hpp embedding.cpp embedding.hpp hierarchical_reasoning_module.cpp hierarchical_reasoning_module.hpp hrm_inner.cpp hrm_inner.hpp hrm.cpp hrm.hpp losses.cpp losses.hpp utf8_processor.cpp utf8_processor.hpp meta_reasoning_layer.cpp meta_reasoning_layer.hpp self_evolving_hrm.cpp self_evolving_hrm.hpp code_analysis_system.cpp code_analysis_system.hpp runtime_compilation_system.cpp runtime_compilation_system.hpp self_modifying_hrm.cpp self_modifying_hrm.hpp)
 
 target_link_libraries(hrm_vulkan PRIVATE Vulkan::Vulkan)
 

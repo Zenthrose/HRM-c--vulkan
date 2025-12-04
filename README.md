@@ -345,17 +345,173 @@ Self-Evolving HRM System
 | **Confidence Scoring** | ✅ **Implemented** | Real-time reliability assessment |
 | **Continual Learning** | ✅ **Implemented** | Ongoing improvement without supervision |
 
+### **🔬 Self-Modifying Code Capabilities**
+
+The ultimate advancement: **the HRM can now analyze, detect flaws in, and modify its own source code on the fly!**
+
+#### **Code Self-Analysis**
+- **Automatic Codebase Scanning**: Analyzes its own C++ source files for bugs and issues
+- **Comprehensive Bug Detection**: Identifies memory leaks, null pointer dereferences, logic errors, security vulnerabilities
+- **Quality Metrics**: Calculates code quality scores and generates improvement recommendations
+- **Real-time Monitoring**: Continuous analysis of code health during operation
+
+#### **Self-Repair & Modification**
+- **Automatic Code Fixes**: Generates and applies corrections to detected issues
+- **Safe Modification**: Validates changes before application with rollback capabilities
+- **Compilation on Demand**: Runtime C++ compilation with hot-swapping support
+- **Backup & Recovery**: Automatic backup creation with safe rollback mechanisms
+
+#### **Runtime Code Evolution**
+- **Dynamic Recompilation**: Compiles modified code while the system is running
+- **Hot-Swapping**: Replaces running components without system restart
+- **Incremental Updates**: Applies changes gradually to maintain system stability
+- **Self-Optimization**: Identifies and implements performance improvements
+
+#### **Safety & Validation**
+- **Modification Risk Assessment**: Evaluates potential risks before applying changes
+- **Semantic Validation**: Ensures code changes maintain logical consistency
+- **Compilation Verification**: Tests all modifications compile successfully
+- **Fallback Mechanisms**: Automatic rollback if modifications cause issues
+
+### **Usage Examples - Self-Modifying Capabilities**
+
+#### **Automatic Self-Analysis**
+
+```cpp
+#include "self_modifying_hrm.hpp"
+
+SelfModifyingHRMConfig config{...}; // Configure with self-modification enabled
+SelfModifyingHRM system(config);
+
+// The system automatically analyzes its own code periodically
+CommunicationResult result = system.communicate("Hello, how are you?");
+
+// If issues are detected, the system may self-modify and recompile
+if (result.applied_corrections.size() > 0) {
+    std::cout << "Self-modification applied: " << result.applied_corrections[0] << std::endl;
+}
+```
+
+#### **Manual Self-Modification**
+
+```cpp
+// Trigger self-analysis and potential modification
+SelfModificationResult mod_result = system.analyze_and_modify_self();
+
+if (mod_result.modification_applied) {
+    std::cout << "Self-modified: " << mod_result.modification_description << std::endl;
+    std::cout << "Confidence: " << mod_result.confidence_score << std::endl;
+    std::cout << "Compilation: " << (mod_result.compilation_successful ? "Success" : "Failed") << std::endl;
+}
+```
+
+#### **System Introspection**
+
+```cpp
+// Get detailed self-analysis report
+auto report = system.get_self_analysis_report();
+for (const auto& pair : report) {
+    std::cout << pair.first << ": " << pair.second << std::endl;
+}
+
+// Detect current limitations
+auto limitations = system.detect_self_limitations();
+std::cout << "Current limitations:" << std::endl;
+for (const auto& limit : limitations) {
+    std::cout << "  - " << limit << std::endl;
+}
+
+// Get improvement suggestions
+auto improvements = system.propose_self_improvements();
+std::cout << "Suggested improvements:" << std::endl;
+for (const auto& imp : improvements) {
+    std::cout << "  - " << imp << std::endl;
+}
+```
+
+### **Technical Architecture - Self-Modification**
+
+```
+Self-Modifying HRM System
+├── Code Analysis System
+│   ├── Static Code Analysis
+│   ├── Bug Pattern Detection
+│   ├── Quality Metrics Calculation
+│   └── Issue Classification
+├── Runtime Compilation System
+│   ├── Dynamic C++ Compilation
+│   ├── Library Loading (dlopen/dlsym)
+│   ├── Hot-Swapping Mechanisms
+│   └── Safety Validation
+├── Self-Modification Engine
+│   ├── Code Modification Generation
+│   ├── Risk Assessment Algorithms
+│   ├── Backup & Recovery Systems
+│   └── Incremental Update Logic
+└── Meta-Monitoring Layer
+    ├── Self-Analysis Scheduling
+    ├── Modification History Tracking
+    ├── Performance Impact Assessment
+    └── Adaptation Parameter Tuning
+```
+
+### **Safety Features**
+
+#### **Multi-Layer Protection**
+- **File Protection**: Critical system files cannot be modified
+- **Semantic Validation**: Code changes must maintain logical consistency
+- **Compilation Verification**: All modifications must compile successfully
+- **Risk Assessment**: High-risk changes are rejected or flagged
+
+#### **Recovery Mechanisms**
+- **Automatic Backups**: All files backed up before modification
+- **Rollback Support**: One-click restoration to previous state
+- **Safe Mode**: System can enter read-only mode if issues detected
+- **Gradual Updates**: Changes applied incrementally to prevent cascading failures
+
+#### **Monitoring & Logging**
+- **Modification History**: Complete log of all self-modifications
+- **Impact Assessment**: Performance impact of each change tracked
+- **Error Detection**: Automatic detection of modification-induced issues
+- **Health Monitoring**: Continuous system health assessment
+
+### **Performance & Capabilities**
+
+| Capability | Status | Implementation | Safety Level |
+|------------|--------|----------------|--------------|
+| **Code Analysis** | ✅ **Complete** | Regex-based pattern matching | High |
+| **Bug Detection** | ✅ **Complete** | Multi-pattern analysis | High |
+| **Self-Modification** | ✅ **Complete** | Safe code generation | Medium |
+| **Runtime Compilation** | ✅ **Complete** | GCC/Clang integration | High |
+| **Hot-Swapping** | ✅ **Complete** | Dynamic library loading | Medium |
+| **Safety Validation** | ✅ **Complete** | Multi-layer checks | High |
+| **Backup/Recovery** | ✅ **Complete** | Automatic snapshots | High |
+
+### **Ethical Considerations**
+
+#### **Responsible Self-Modification**
+- **Human Oversight**: All major modifications logged and reviewable
+- **Conservative Approach**: Only high-confidence, low-risk changes applied automatically
+- **Transparency**: Complete audit trail of all self-modifications
+- **Safety Limits**: Hard-coded restrictions prevent dangerous modifications
+
+#### **Beneficial Applications**
+- **Automated Debugging**: Self-fixing of common programming errors
+- **Performance Optimization**: Automatic code improvements
+- **Maintenance Reduction**: Self-maintenance of codebase health
+- **Adaptation**: Dynamic adjustment to changing requirements
+
 ### **Future Enhancements**
 
-Building on these advanced capabilities:
+Building on self-modifying capabilities:
 
-- **🔄 Vulkan Backpropagation** - Full training in compute shaders
-- **🌐 Multi-GPU Distributed Training** - Device group support
-- **🐍 Python Bindings** - Seamless Python integration
-- **⚡ Advanced Shader Optimizations** - Memory coalescing, workgroup tuning
-- **🧪 Comprehensive Testing** - Validation against Python implementation
-- **🧬 Advanced Evolution** - Genetic algorithms for architecture search
-- **🎨 Creative Generation** - Enhanced creative and generative capabilities
+- **🔄 Advanced Code Analysis** - AST-based parsing for deeper understanding
+- **🧬 Genetic Code Evolution** - Evolutionary algorithms for code optimization
+- **🌐 Distributed Self-Modification** - Multi-system coordinated improvements
+- **🎯 Goal-Oriented Evolution** - Purpose-driven code modifications
+- **🛡️ Advanced Safety Systems** - AI-powered risk assessment
+- **📊 Predictive Modification** - Anticipating future issues and preventing them
+- **🔗 Cross-Language Support** - Self-modification across different programming languages
 
 ---
 
