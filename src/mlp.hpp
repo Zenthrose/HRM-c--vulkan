@@ -1,0 +1,33 @@
+#pragma once
+
+#include <vulkan/vulkan.h>
+#include <vector>
+#include <string>
+
+#include "attention.hpp" // For Tensor
+#include "linear.hpp" // For LinearVulkan
+
+struct SwiGLUConfig {
+    uint32_t hidden_size;
+    float expansion;
+};
+
+class SwiGLUVulkan {
+public:
+    SwiGLUVulkan(const SwiGLUConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool);
+    ~SwiGLUVulkan();
+
+    Tensor forward(const Tensor& input);
+
+private:
+    SwiGLUConfig config;
+    VkPhysicalDevice physicalDevice;
+    VkDevice device;
+    VkQueue computeQueue;
+    uint32_t computeQueueFamilyIndex;
+    VkCommandPool commandPool;
+
+    LinearVulkan* gate_up_proj;
+    LinearVulkan* down_proj;
+};
+

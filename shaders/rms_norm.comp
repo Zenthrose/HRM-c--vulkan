@@ -1,0 +1,36 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Uniforms
+layout(binding = 2) uniform Params {
+    uint seq_len;
+    uint hidden_size;
+    float variance_epsilon;
+};
+
+// Buffers
+layout(binding = 0) readonly buffer InputBuffer { float data[]; };
+layout(binding = 1) writeonly buffer OutputBuffer { float out_data[]; };
+
+void main() {
+    uint seq_idx = gl_GlobalInvocationID.x;
+
+    if (seq_idx >= seq_len) return;
+
+    // Compute RMS for this sequence
+    float sum_sq = 0.0;
+    for (uint d = 0; d < hidden_size; ++d) {
+        uint idx = seq_idx * hidden_size + d;
+        float val = data[idx];
+        sum_sq += val * val;
+    }
+    float variance = sum_sq / float(hidden_size);
+    float inv_rms = 1.0 / sqrt(variance + variance_epsilon);
+
+    // Apply normalization
+    for (uint d = 0; d < hidden_size; ++d) {
+        uint idx = seq_idx * hidden_size + d;
+        out_data[idx] = data[idx] * inv_rms;
+    }
+}

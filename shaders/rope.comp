@@ -1,0 +1,57 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Buffers
+layout(binding = 0) buffer QueryBuffer { float q[]; };
+layout(binding = 1) buffer KeyBuffer { float k[]; };
+layout(binding = 2) readonly buffer CosBuffer { float cos_vals[]; };
+layout(binding = 3) readonly buffer SinBuffer { float sin_vals[]; };
+
+// Uniforms
+layout(binding = 4) uniform Params {
+    uint batch_size;
+    uint seq_len;
+    uint num_heads;
+    uint head_dim;
+};
+
+void main() {
+    uint global_id = gl_GlobalInvocationID.x;
+    uint total_elements = batch_size * seq_len * num_heads * head_dim;
+    if (global_id >= total_elements) return;
+
+    // Compute indices
+    uint batch = global_id / (seq_len * num_heads * head_dim);
+    uint seq = (global_id / (num_heads * head_dim)) % seq_len;
+    uint head = (global_id / head_dim) % num_heads;
+    uint dim = global_id % head_dim;
+
+    // RoPE rotation
+    uint half_dim = head_dim / 2;
+    if (dim < half_dim) {
+        // Real part: q*cos - q_rot*sin
+        // Imag part: q*sin + q_rot*cos
+        float cos_val = cos_vals[seq * half_dim + dim];
+        float sin_val = sin_vals[seq * half_dim + dim];
+
+        uint q_idx = global_id;
+        uint q_rot_idx = global_id + half_dim;
+
+        float q_real = q[q_idx];
+        float q_imag = q[q_rot_idx];
+
+        q[q_idx] = q_real * cos_val - q_imag * sin_val;
+        q[q_rot_idx] = q_real * sin_val + q_imag * cos_val;
+
+        // Same for key
+        uint k_idx = batch * seq_len * num_heads * head_dim + seq * num_heads * head_dim + head * head_dim + dim;
+        uint k_rot_idx = k_idx + half_dim;
+
+        float k_real = k[k_idx];
+        float k_imag = k[k_rot_idx];
+
+        k[k_idx] = k_real * cos_val - k_imag * sin_val;
+        k[k_rot_idx] = k_real * sin_val + k_imag * cos_val;
+    }
+}

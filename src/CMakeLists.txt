@@ -1,0 +1,25 @@
+add_executable(hrm_vulkan main.cpp attention.cpp attention.hpp mlp.cpp mlp.hpp rms_norm.cpp rms_norm.hpp block.cpp block.hpp linear.cpp linear.hpp embedding.cpp embedding.hpp)
+
+target_link_libraries(hrm_vulkan PRIVATE Vulkan::Vulkan)
+
+add_custom_command(TARGET hrm_vulkan POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:hrm_vulkan>/shaders
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+             ${CMAKE_BINARY_DIR}/shaders/attention.spv
+             $<TARGET_FILE_DIR:hrm_vulkan>/shaders/attention.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+             ${CMAKE_BINARY_DIR}/shaders/swiglu.spv
+             $<TARGET_FILE_DIR:hrm_vulkan>/shaders/swiglu.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+             ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv
+             $<TARGET_FILE_DIR:hrm_vulkan>/shaders/rms_norm.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+             ${CMAKE_BINARY_DIR}/shaders/linear.spv
+             $<TARGET_FILE_DIR:hrm_vulkan>/shaders/linear.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+             ${CMAKE_BINARY_DIR}/shaders/embedding.spv
+             $<TARGET_FILE_DIR:hrm_vulkan>/shaders/embedding.spv
+    COMMENT "Copying generated shaders to runtime directory"
+)
+
+add_dependencies(hrm_vulkan compile_shaders)

@@ -1,0 +1,26 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Buffers
+layout(binding = 0) readonly buffer InputBuffer { uint data[]; };
+layout(binding = 1) readonly buffer WeightBuffer { float weights[]; };
+layout(binding = 2) writeonly buffer OutputBuffer { float out_data[]; };
+
+// Uniforms
+layout(binding = 3) uniform Params {
+    uint seq_len;
+    uint embedding_dim;
+};
+
+void main() {
+    uint idx = gl_GlobalInvocationID.x;
+    uint seq_idx = idx / embedding_dim;
+    uint dim_idx = idx % embedding_dim;
+
+    if (seq_idx >= seq_len) return;
+
+    uint token_id = data[seq_idx];
+    uint weight_idx = token_id * embedding_dim + dim_idx;
+    out_data[idx] = weights[weight_idx];
+}

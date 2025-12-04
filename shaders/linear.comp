@@ -1,0 +1,39 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Buffers
+layout(binding = 0) readonly buffer InputBuffer { float data[]; };
+layout(binding = 1) readonly buffer WeightBuffer { float weights[]; };
+layout(binding = 2) readonly buffer BiasBuffer { float biases[]; };
+layout(binding = 3) writeonly buffer OutputBuffer { float out_data[]; };
+
+// Uniforms
+layout(binding = 4) uniform Params {
+    uint batch_seq;
+    uint in_features;
+    uint out_features;
+    uint has_bias;
+};
+
+void main() {
+    uint idx = gl_GlobalInvocationID.x;
+    uint batch_seq_idx = idx / out_features;
+    uint out_idx = idx % out_features;
+
+    if (batch_seq_idx >= batch_seq || out_idx >= out_features) return;
+
+    float sum = 0.0;
+    for (uint i = 0; i < in_features; ++i) {
+        uint input_idx = batch_seq_idx * in_features + i;
+        uint weight_idx = out_idx * in_features + i;
+        sum += data[input_idx] * weights[weight_idx];
+    }
+
+    if (has_bias != 0) {
+        sum += biases[out_idx];
+    }
+
+    uint output_idx = batch_seq_idx * out_features + out_idx;
+    out_data[output_idx] = sum;
+}
