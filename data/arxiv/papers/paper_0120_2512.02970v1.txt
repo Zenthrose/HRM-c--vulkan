@@ -1,0 +1,8 @@
+Title: Identification of Multivariate Measurement Error Models
+Authors: Yingyao Hu
+Date: 2025-12-02
+ArXiv ID: 2512.02970v1
+
+Identification of Multivariate Measurement Error Models
+
+This paper develops new identification results for multidimensional continuous measurement-error models where all observed measurements are contaminated by potentially correlated errors and none provides an injective mapping of the latent distribution. Using third order cross moments, the paper constructs a three way tensor whose unique decomposition, guaranteed by Kruskal theorem, identifies the factor loading matrices. Starting with a linear structure, the paper recovers the full distribution of latent factors by constructing suitable measurements and applying scalar or multivariate versions of Kotlarski identity. As a result, the joint distribution of the latent vector and measurement errors is fully identified without requiring injective measurements, showing that multivariate latent structure can be recovered in broader settings than previously believed. Under injectivity, the paper also provides user-friendly testable conditions for identification. Finally, this paper provides general identification results for nonlinear models using a newly-defined generalized Kruskal rank - signal rank - of intergral operators. These results have wide applicability in empirical work involving noisy or indirect measurements, including factor models, survey data with reporting errors, mismeasured regressors in econometrics, and multidimensional latent-trait models in psychology and marketing, potentially enabling more robust estimation and interpretation when clean measurements are unavailable.

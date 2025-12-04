@@ -1,0 +1,8 @@
+Title: Mean First Passage Time of the Symmetric Noisy Voter Model with Arbitrary Initial and Boundary Conditions
+Authors: Rytis Kazakevičius, Aleksejus Kononovicius
+Date: 2025-12-02
+ArXiv ID: 2512.02519v1
+
+Mean First Passage Time of the Symmetric Noisy Voter Model with Arbitrary Initial and Boundary Conditions
+
+Models of imitation and herding behavior often underestimate the role of individualistic actions and assume symmetric boundary conditions. However, real-world systems (e.g., electoral processes) frequently involve asymmetric boundaries. In this study, we explore how arbitrarily placed boundary conditions influence the mean first passage time in the symmetric noisy voter model, and how individualistic behavior amplifies this asymmetry. We derive exact analytical expressions for mean first passage time that accommodate any initial condition and two types of boundary configurations: (i) both boundaries absorbing, and (ii) one absorbing and one reflective. In both scenarios, mean first passage time exhibits a clear asymmetry with respect to the initial condition, shaped by the boundary placement and the rate of independent transitions. Symmetry in mean first passage time emerges only when absorbing boundaries are equidistant from the midpoint. Additionally, we show that Kramers' law holds in both configurations when the rate of independent transitions is large. Our analytical results are in excellent agreement with numerical simulations, reinforcing the robustness of our findings.

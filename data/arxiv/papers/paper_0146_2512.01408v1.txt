@@ -1,0 +1,8 @@
+Title: Bayesian Distributionally Robust Merton Problem with Nonlinear Wasserstein Projections
+Authors: Jose Blanchet, Jiayi Cheng, Hao Liu, Yang Liu
+Date: 2025-12-01
+ArXiv ID: 2512.01408v1
+
+Bayesian Distributionally Robust Merton Problem with Nonlinear Wasserstein Projections
+
+We revisit Merton's continuous-time portfolio selection through a data-driven, distributionally robust lens. Our aim is to tap the benefits of frequent trading over short horizons while acknowledging that drift is hard to pin down, whereas volatility can be screened using realized or implied measures for appropriately selected assets. Rather than time-rectangular distributional robust control -- which replenishes adversarial power at every instant and induces over-pessimism -- we place a single ambiguity set on the drift prior within a Bayesian Merton model. This prior-level ambiguity preserves learning and tractability: a minimax swap reduces the robust control to optimizing a nonlinear functional of the prior, enabling Karatzas and Zhao -type's closed-form evaluation for each candidate prior. We then characterize small-radius worst-case priors under Wasserstein uncertainty via an explicit asymptotically optimal pushforward of the nominal prior, and we calibrate the ambiguity radius through a nonlinear Wasserstein projection tailored to the Merton functional. Synthetic and real-data studies demonstrate reduced pessimism relative to DRC and improved performance over myopic DRO-Markowitz under frequent rebalancing.

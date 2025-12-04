@@ -1,0 +1,8 @@
+Title: Optical Context Compression Is Just (Bad) Autoencoding
+Authors: Ivan Yee Lee, Cheng Yang, Taylor Berg-Kirkpatrick
+Date: 2025-12-03
+ArXiv ID: 2512.03643v1
+
+Optical Context Compression Is Just (Bad) Autoencoding
+
+DeepSeek-OCR demonstrates that rendered text can be reconstructed with high fidelity from a small number of vision tokens. This finding has sparked excitement about vision-based context compression for language models. But the evaluation stops at reconstruction; whether these representations help language modeling remains untested. We test two assumptions implicit in the optical-compression narrative: that vision-based compression provides unique advantages for text reconstruction from compressed representations, and that DeepSeek-OCR's reconstruction results are evidence that vision-based compression will be useful for language modeling. Comparing their vision encoder against simple alternatives--parameter-free mean pooling and a learned hierarchical encoder--we find that these simple approaches match or surpass vision for reconstruction at matched compression ratios, and outperform it for language modeling--where vision-based compression fails to beat truncation. The excitement around optical context compression outpaces the evidence. Code and checkpoints are available at https://github.com/ivnle/bad-autoencoding

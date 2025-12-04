@@ -1,0 +1,8 @@
+Title: Basis Choices for Frequency Domain Statistical Independence Tests and Algorithms for Algebraic Relation Extraction
+Authors: Juan Shi, Wenbo Wang, Wan Zhang, Han Bao, Sergio Chavez, Jingfang Huang, Yichao Wu, Kai Zhang
+Date: 2025-12-01
+ArXiv ID: 2512.01963v1
+
+Basis Choices for Frequency Domain Statistical Independence Tests and Algorithms for Algebraic Relation Extraction
+
+In this paper, we explore how different selections of basis functions impact the efficacy of frequency domain techniques in statistical independence tests, and study different algorithms for extracting low-dimensional algebraic relations from dependent data. We examine a range of complete orthonormal bases functions including the Legendre polynomials, Fourier series, Walsh functions, and standard and nonstandard Haar wavelet bases. We utilize fast transformation algorithms to efficiently transform physical domain data to frequency domain coefficients. The main focuses of this paper are the effectiveness of different basis selections in detecting data dependency using frequency domain data, e.g., whether varying basis choices significantly influence statistical power loss for small data with large noise; and on the stability of different optimization formulations for finding proper algebraic relations when data are dependent. We present numerical results to demonstrate the effectiveness of frequency domain-based statistical analysis methods and provide guidance for selecting the proper basis and algorithm to detect a particular type of relations.

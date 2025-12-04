@@ -1,0 +1,8 @@
+Title: Fast Gaussian Process Approximations for Autocorrelated Data
+Authors: Ahmadreza Chokhachian, Matthias Katzfuss, Yu Ding
+Date: 2025-12-02
+ArXiv ID: 2512.02925v1
+
+Fast Gaussian Process Approximations for Autocorrelated Data
+
+This paper is concerned with the problem of how to speed up computation for Gaussian process models trained on autocorrelated data. The Gaussian process model is a powerful tool commonly used in nonlinear regression applications. Standard regression modeling assumes random samples and an independently, identically distributed noise. Various fast approximations that speed up Gaussian process regression work under this standard setting. But for autocorrelated data, failing to account for autocorrelation leads to a phenomenon known as temporal overfitting that deteriorates model performance on new test instances. To handle autocorrelated data, existing fast Gaussian process approximations have to be modified; one such approach is to segment the originally correlated data points into blocks in which the blocked data are de-correlated. This work explains how to make some of the existing Gaussian process approximations work with blocked data. Numerical experiments across diverse application datasets demonstrate that the proposed approaches can remarkably accelerate computation for Gaussian process regression on autocorrelated data without compromising model prediction performance.

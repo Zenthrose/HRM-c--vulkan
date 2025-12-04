@@ -1,0 +1,8 @@
+Title: Comparison of neural network training strategies for the simulation of dynamical systems
+Authors: Paul Strasser, Andreas Pfeffer, Jakob Weber, Markus Gurtner, Andreas Körner
+Date: 2025-12-03
+ArXiv ID: 2512.03851v1
+
+Comparison of neural network training strategies for the simulation of dynamical systems
+
+Neural networks have become a widely adopted tool for modeling nonlinear dynamical systems from data. However, the choice of training strategy remains a key design decision, particularly for simulation tasks. This paper compares two predominant strategies: parallel and series-parallel training. The conducted empirical analysis spans five neural network architectures and two examples: a pneumatic valve test bench and an industrial robot benchmark. The study reveals that, even though series-parallel training dominates current practice, parallel training consistently yields better long-term prediction accuracy. Additionally, this work clarifies the often inconsistent terminology in the literature and relate both strategies to concepts from system identification. The findings suggest that parallel training should be considered the default training strategy for neural network-based simulation of dynamical systems.

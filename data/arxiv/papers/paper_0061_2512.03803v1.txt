@@ -1,0 +1,8 @@
+Title: Enhancing Instruction-Following Capabilities in Seq2Seq Models: DoLA Adaptations for T5
+Authors: Huey Sun, Anabel Yong, Lorenzo Gilly, Felipe Jin
+Date: 2025-12-03
+ArXiv ID: 2512.03803v1
+
+Enhancing Instruction-Following Capabilities in Seq2Seq Models: DoLA Adaptations for T5
+
+Contrastive decoding is a lightweight and effective inference-time method that improves the quality of text generation in Large Language Models. However, algorithms such as DoLa (Decoding by Contrastive Layers) have only been implemented in decoder-only architectures and studied for their impact on improving factuality. This work adapts DoLa for the T5 and FLAN-T5 model families and evaluates its impact on the models' instruction following capabilities, which to our knowledge is the first implementation of a contrastive decoding strategy in an encoder-decoder architecture. Our results show that DoLa improves the faithfulness of text generation for certain categories of tasks and harms others. To understand these results, we present a layer-by-layer analysis of logit evolution in a FLAN-T5 model to quantify DoLa's impact on token output probabilities.

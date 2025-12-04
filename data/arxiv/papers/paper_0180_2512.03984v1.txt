@@ -1,0 +1,8 @@
+Title: Entanglement Detection with Rotationally Covariant Measurements - From Compton Scattering to Lemonade
+Authors: Marlene Funck, Ilija Funk, Tizian Schmidt, René Schwonnek
+Date: 2025-12-03
+ArXiv ID: 2512.03984v1
+
+Entanglement Detection with Rotationally Covariant Measurements - From Compton Scattering to Lemonade
+
+The accurate and efficient detection of quantum entanglement remains a central challenge in quantum information science. In this work, we study the detection of entanglement of polarized photons for measurement devices that are solely specified by rotational symmetry. We derive explicit positive operator valued measures (POVMs) showing that from a quantum information perspective any such setting is classified by one real measurable parameter r. In Particular, we give a POVM formulation of the Klein--Nishina formula for Compton scattering of polarized photons. We provide an SDP-based entanglement certification method that operates on the full measured statistics and gives tight bounds, also considering semi-device independent scenarios. Furthermore, we show that, while Bell violations are impossible with rotationally covariant measurements, EPR steering can still be certified under one-sided symmetry constraints. Finally, we present a rotationally covariant showcase experiment, analyzing the scattering of polarized optical light in a selection of soft drinks. Our results suggest that lemonade-based detectors are suitable for entanglement detection.

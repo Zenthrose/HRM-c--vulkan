@@ -1,0 +1,8 @@
+Title: Improved Ising Meson Spectroscopy Simulation on a Noisy Digital Quantum Device
+Authors: Hao-Ti Hung, Isabel Nha Minh Le, Johannes Knolle, Ying-Jer Kao
+Date: 2025-12-02
+ArXiv ID: 2512.02516v1
+
+Improved Ising Meson Spectroscopy Simulation on a Noisy Digital Quantum Device
+
+The transverse-field Ising model serves as a paradigm for studying confinement and excitation spectra, particularly the emergence of  symmetry near criticality. However, experimentally resolving the Ising meson spectroscopy required to verify these symmetries is challenging on near-term quantum hardware due to the depth of circuits required for real-time evolution. Here, we demonstrate improved spectroscopy of confined excitations using two distinct error-resilient circuit construction techniques on the IBM Torino device: first-order Trotter decomposition utilizing native fractional gates, and a tensor-network-based circuit compression via Riemannian optimization. By analyzing the Fourier spectrum of error-mitigated time-series data, we successfully identify key signatures of  symmetry despite hardware noise. These results validate the viability of both circuit compression and hardware-efficient compilation for probing complex topological phenomena on NISQ devices.

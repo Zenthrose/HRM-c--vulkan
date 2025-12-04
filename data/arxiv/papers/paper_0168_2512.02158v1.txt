@@ -1,0 +1,8 @@
+Title: Out-of-equilibrium modeling of lyotropic liquid crystals: from binary simulations to multi-component theory
+Authors: Jonathan Salmerón-Hernández, Pablo Zubieta-Rico, Juan de Pablo
+Date: 2025-12-01
+ArXiv ID: 2512.02158v1
+
+Out-of-equilibrium modeling of lyotropic liquid crystals: from binary simulations to multi-component theory
+
+We present a thermodynamically consistent theoretical framework for lyotropic liquid crystals (LCs) based on the GENERIC (General Equation for the Non-Equilibrium Reversible-Irreversible Coupling) formalism. This formalism ensures conservation of energy and production of entropy, while coupling concentration, momentum balance, and liquid crystalline order. Starting from a binary nematic-isotropic mixture, we derive a theory for these key variables, which is then extended to multi-component systems. The binary equations are solved numerically using a Julia-based solver that relies on an upwind finite-difference scheme, enabling stable and efficient simulations capable of handling multiple time scales while satisfying fundamental mathematical constraints. The results of simulations are consistent with experimental observations of topological core defects in chromonic LCs, as well as flow-driven droplet shape transitions under Couette and Poiseuille flows. This work provides a platform for simulations of multi-component lyotropic LCs that can be extended to systems with multiple interfaces, active materials, and materials subject to external fields.

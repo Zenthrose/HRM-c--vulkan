@@ -1,0 +1,8 @@
+Title: Grouped Competition Test with Unified False Discovery Rate Control
+Authors: Mingzhou Deng, Yan Fu
+Date: 2025-11-30
+ArXiv ID: 2512.00901v1
+
+Grouped Competition Test with Unified False Discovery Rate Control
+
+This paper discusses several p-value-free multiple hypothesis testing methods proposed in recent years and organizes them by introducing a unified framework termed competition test. Although existing competition tests are effective in controlling the False Discovery Rate (FDR), they struggle with handling data with strong heterogeneity or dependency structures. Based on this framework, the paper proposes a novel approach that applies a corrected competition procedure to group data with certain structure, and then integrates the results from each group. Using the favorable properties of competition test, the paper proposes a theorem demonstrating that this approach controls the global FDR. We further show that although the correction parameters may lead to a slight loss in power, such loss is typically minimal. Through simulation experiments and mass spectrometry data analysis, we illustrate the flexibility and efficacy of our approach.

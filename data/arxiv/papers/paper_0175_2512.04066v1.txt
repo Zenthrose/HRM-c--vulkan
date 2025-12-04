@@ -1,0 +1,8 @@
+Title: Instantaneous Sobolev Regularization for Dissipative Bosonic Dynamics
+Authors: Pablo Costa Rico, Paul Gondolf, Tim Möbus
+Date: 2025-12-03
+ArXiv ID: 2512.04066v1
+
+Instantaneous Sobolev Regularization for Dissipative Bosonic Dynamics
+
+We investigate quantum Markov semigroups on bosonic Fock space and identify a broad class of infinite-dimensional dissipative evolutions that exhibit instantaneous Sobolev-regularization. Motivated by stability problems in quantum computation, we show that for certain Lindblad operators that are polynomials of creation and annihilation operators, the resulting dynamics immediately transform any initial state into one with finite expectation in all powers of the number operator. A key application is in the bosonic cat code, where we obtain explicit estimates in the trace norm for the speed of convergence. These estimates sharpen existing perturbative bounds at both short and long times, offering new analytic tools for assessing stability and error suppression in bosonic quantum information processing. For example, we improve the strong exponential convergence of the (shifted) -photon dissipation to its fixed point to the uniform topology.

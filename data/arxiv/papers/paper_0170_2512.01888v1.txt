@@ -1,0 +1,8 @@
+Title: Domain-Decomposed Graph Neural Network Surrogate Modeling for Ice Sheets
+Authors: Adrienne M. Propp, Mauro Perego, Eric C. Cyr, Anthony Gruber, Amanda A. Howard, Alexander Heinlein, Panos Stinis, Daniel M. Tartakovsky
+Date: 2025-12-01
+ArXiv ID: 2512.01888v1
+
+Domain-Decomposed Graph Neural Network Surrogate Modeling for Ice Sheets
+
+Accurate yet efficient surrogate models are essential for large-scale simulations of partial differential equations (PDEs), particularly for uncertainty quantification (UQ) tasks that demand hundreds or thousands of evaluations. We develop a physics-inspired graph neural network (GNN) surrogate that operates directly on unstructured meshes and leverages the flexibility of graph attention. To improve both training efficiency and generalization properties of the model, we introduce a domain decomposition (DD) strategy that partitions the mesh into subdomains, trains local GNN surrogates in parallel, and aggregates their predictions. We then employ transfer learning to fine-tune models across subdomains, accelerating training and improving accuracy in data-limited settings. Applied to ice sheet simulations, our approach accurately predicts full-field velocities on high-resolution meshes, substantially reduces training time relative to training a single global surrogate model, and provides a ripe foundation for UQ objectives. Our results demonstrate that graph-based DD, combined with transfer learning, provides a scalable and reliable pathway for training GNN surrogates on massive PDE-governed systems, with broad potential for application beyond ice sheet dynamics.

@@ -1,0 +1,8 @@
+Title: Thermodynamics of an Open Symmetric Quantum System
+Authors: Baibhab Bose, Devvrat Tiwari, Subhashish Banerjee
+Date: 2025-12-03
+ArXiv ID: 2512.03935v1
+
+Thermodynamics of an Open Symmetric Quantum System
+
+For a subclass of a general symmetric Hamiltonian obeying anti-commutation relation with its conjugate, a Hermitian basis is found that spans the bi-orthonormal energy eigenvectors. Using the modified projectors constructed from these eigenvectors, the generalized density matrix of the symmetric evolution is calculated, and subsequently, ergotropy for a closed system is obtained. The symmetric system, in an open system scenario, is studied to understand ergotropy under different regimes of non-Hermiticity of the Hamiltonian. The consistency of the three laws of thermodynamics for the symmetric system in an open system scenario is also analyzed.

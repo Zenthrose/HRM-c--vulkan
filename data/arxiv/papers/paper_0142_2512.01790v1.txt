@@ -1,0 +1,8 @@
+Title: An hybrid stochastic Newton algorithm for logistic regression
+Authors: Bernard Bercu, Luis Fredes, Eméric Gbaguidi
+Date: 2025-12-01
+ArXiv ID: 2512.01790v1
+
+An hybrid stochastic Newton algorithm for logistic regression
+
+In this paper, we investigate a second-order stochastic algorithm for solving large-scale binary classification problems. We propose to make use of a new hybrid stochastic Newton algorithm that includes two weighted components in the Hessian matrix estimation: the first one coming from the natural Hessian estimate and the second associated with the stochastic gradient information. Our motivation comes from the fact that both parts evaluated at the true parameter of logistic regression, are equal to the Hessian matrix. This new formulation has several advantages and it enables us to prove the almost sure convergence of our stochastic algorithm to the true parameter. Moreover, we significantly improve the almost sure rate of convergence to the Hessian matrix. Furthermore, we establish the central limit theorem for our hybrid stochastic Newton algorithm. Finally, we show a surprising result on the almost sure convergence of the cumulative excess risk.

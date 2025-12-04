@@ -1,0 +1,8 @@
+Title: Efficient Public Verification of Private ML via Regularization
+Authors: Zoë Ruha Bell, Anvith Thudi, Olive Franzese-McLaughlin, Nicolas Papernot, Shafi Goldwasser
+Date: 2025-12-03
+ArXiv ID: 2512.04008v1
+
+Efficient Public Verification of Private ML via Regularization
+
+Training with differential privacy (DP) provides a guarantee to members in a dataset that they cannot be identified by users of the released model. However, those data providers, and, in general, the public, lack methods to efficiently verify that models trained on their data satisfy DP guarantees. The amount of compute needed to verify DP guarantees for current algorithms scales with the amount of compute required to train the model. In this paper we design the first DP algorithm with near optimal privacy-utility trade-offs but whose DP guarantees can be verified cheaper than training. We focus on DP stochastic convex optimization (DP-SCO), where optimal privacy-utility trade-offs are known. Here we show we can obtain tight privacy-utility trade-offs by privately minimizing a series of regularized objectives and only using the standard DP composition bound. Crucially, this method can be verified with much less compute than training. This leads to the first known DP-SCO algorithm with near optimal privacy-utility whose DP verification scales better than training cost, significantly reducing verification costs on large datasets.

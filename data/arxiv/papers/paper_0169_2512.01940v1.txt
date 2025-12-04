@@ -1,0 +1,8 @@
+Title: Comparison of shock compaction models for granular materials: P -α model and mesoscale simulation
+Authors: Dawa Seo, Darby J. Luscher, Nitin Daphalapurkar
+Date: 2025-12-01
+ArXiv ID: 2512.01940v1
+
+Comparison of shock compaction models for granular materials: P -α model and mesoscale simulation
+
+This study examines particle velocity measurements in granular sugar to evaluate the predictive accuracy of two computational models for weak shock under flyer-plate impact: the continuum-based P-alpha Menko model and mesoscale simulations with explicit particle and pore representations. Using flyer-plate impact experiments as a benchmark, we show that both two-dimensional (2D) models can reproduce the measured particle velocity histories, but through fundamentally different mechanisms. In the P-alpha framework, applying a pressure-dependent yield strength is essential to capture the particle velocity evolution, though calibration of other constitutive parameters, such as crush-out pressure, still strongly influences the response. In contrast, mesoscale simulations are less sensitive to parameter tuning and rely critically on the physical state variable of porosity, represented in 2D as an equivalent measure of the 3D specimen. Together, these results establish that their mechanical interpretations differ: continuum parameters act as effective surrogates for grain-scale physics, whereas mesoscale modeling reveals porosity as the dominant control of macroscopic wave onset.

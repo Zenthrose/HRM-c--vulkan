@@ -1,0 +1,8 @@
+Title: Hybrid Temporal-8-Bit Spike Coding for Spiking Neural Network Surrogate Training
+Authors: Luu Trong Nhan, Luu Trung Duong, Pham Ngoc Nam, Truong Cong Thang
+Date: 2025-12-03
+ArXiv ID: 2512.03879v1
+
+Hybrid Temporal-8-Bit Spike Coding for Spiking Neural Network Surrogate Training
+
+Spiking neural networks (SNNs) have emerged as a promising direction in both computational neuroscience and artificial intelligence, offering advantages such as strong biological plausibility and low energy consumption on neuromorphic hardware. Despite these benefits, SNNs still face challenges in achieving state-of-the-art performance on vision tasks. Recent work has shown that hybrid rate-temporal coding strategies (particularly those incorporating bit-plane representations of images into traditional rate coding schemes) can significantly improve performance when trained with surrogate backpropagation. Motivated by these findings, this study proposes a hybrid temporal-bit spike coding method that integrates bit-plane decompositions with temporal coding principles. Through extensive experiments across multiple computer vision benchmarks, we demonstrate that blending bit-plane information with temporal coding yields competitive, and in some cases improved, performance compared to established spike-coding techniques. To the best of our knowledge, this is the first work to introduce a hybrid temporal-bit coding scheme specifically designed for surrogate gradient training of SNNs.

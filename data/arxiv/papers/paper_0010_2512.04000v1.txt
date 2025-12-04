@@ -1,0 +1,8 @@
+Title: Divide, then Ground: Adapting Frame Selection to Query Types for Long-Form Video Understanding
+Authors: Jialuo Li, Bin Li, Jiahao Li, Yan Lu
+Date: 2025-12-03
+ArXiv ID: 2512.04000v1
+
+Divide, then Ground: Adapting Frame Selection to Query Types for Long-Form Video Understanding
+
+The application of Large Multimodal Models (LMMs) to long-form video understanding is constrained by limited context lengths and the computationally prohibitive cost of processing dense video tokens. Consequently, recent research has focused on query-aware frame selection, methods that often incur significant computational overhead. This paper challenges the assumption that such complex search mechanisms are universally necessary. We first identify and validate a query typology distinguishing between global query and localized query. We demonstrate that while uniform sampling is both effective and efficient for global queries, localized queries indeed necessitate query-aware selection for optimal performance. Building on this insight, we propose DIG, a training-free frame selection framework that adapts its strategy based on the query type. Specifically,DIG employs efficient uniform sampling for global queries while activating a specialized pipeline to extract query-relevant frames for localized queries. Experiments on three long-form video understanding benchmarks demonstrate that DIG consistently outperforms existing baselines and robustly improves LMM performance, even when scaling the input frame count to 256.

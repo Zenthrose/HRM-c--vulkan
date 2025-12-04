@@ -1,0 +1,8 @@
+Title: Accelerated Machine Learning Force Field for Predicting Thermal Conductivity of Organic Liquids
+Authors: Wei Feng, Siyuan Liu, Hongyi Wang, Zhenliang Mu, Zhichen Pu, Xu Han, Tianze Zheng, Zhenze Yang, Zhi Wang, Weihao Gao, Yidan Cao, Kuang Yu, Sheng Gong, Wen Yan
+Date: 2025-12-01
+ArXiv ID: 2512.01627v1
+
+Accelerated Machine Learning Force Field for Predicting Thermal Conductivity of Organic Liquids
+
+The thermal conductivity of organic liquids is a vital parameter influencing various industrial and environmental applications, including energy conversion, electronics cooling, and chemical processing. However, atomistic simulation of thermal conductivity of organic liquids has been hindered by the limited accuracy of classical force fields and the huge computational demand of ab initio methods. In this work, we present a machine learning force field (MLFF)-based molecular dynamics simulation workflow to predict the thermal conductivity of 20 organic liquids. Here, we introduce the concept of differential attention into the MLFF architecture for enhanced learning ability, and we use density of the liquids to align the MLFF with experiments. As a result, this workflow achieves a mean absolute percentage error of 14% for the thermal conductivity of various organic liquids, significantly lower than that of the current off-the-shelf classical force field (78%). Furthermore, the MLFF is rewritten using Triton language to maximize simulation speed, enabling rapid prediction of thermal conductivity.

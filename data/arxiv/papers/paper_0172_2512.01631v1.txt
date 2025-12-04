@@ -1,0 +1,8 @@
+Title: First-principles screening of materials with extreme effective masses
+Authors: Szymon Błazucki, Junfeng Qiao, Nicola Marzari
+Date: 2025-12-01
+ArXiv ID: 2512.01631v1
+
+First-principles screening of materials with extreme effective masses
+
+The effective mass of charge carriers is a fundamental descriptor of the electronic structure of materials, and can be used to assess performance in electronics applications, or to screen for thermoelectrics and transparent conductors. Here, we perform a high-throughput computational screening of approximately 20,000 experimentally known three-dimensional stoichiometric inorganics obtained from the Materials Cloud 3D structure database. By combining density-functional theory calculations and maximally localized Wannier functions, we are able to compute the full conductivity effective mass tensor for electrons and holes from the Boltzmann transport equation in the constant relaxation-time approximation. This approach captures the effects of band non-parabolicity, anisotropy, and valley multiplicity that would be neglected by standard parabolic fittings. The screening identifies a curated set of candidates exhibiting extreme electronic properties, from ultra-low to ultra-large effective masses, these latter associated with flat-band physics. We validate the workflow by recovering established high-mobility semiconductors and highlight promising novel candidates. Furthermore, we classify materials by their mass anisotropy and discuss the physical limits of defining a conductivity effective mass in narrow-gap regimes at room temperature. The resulting dataset provides a systematic roadmap to search for high-performance materials in novel chemical spaces.

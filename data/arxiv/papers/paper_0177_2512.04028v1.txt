@@ -1,0 +1,8 @@
+Title: Thermalization from quenching in coupled oscillators
+Authors: M. Harinarayanan, Karthik Rajeev
+Date: 2025-12-03
+ArXiv ID: 2512.04028v1
+
+Thermalization from quenching in coupled oscillators
+
+We introduce a finite-time protocol that thermalizes a quantum harmonic oscillator, initially in its ground state, without requiring a macroscopic bath. The method uses a second oscillator as an effective environment and implements sudden quenches of the oscillator frequencies and coupling. Owing to the Gaussian nature of the dynamics, the thermalization condition reduces to three solvable equations, yielding exact analytic solutions for a dense discrete set of temperatures and numerical solutions in all other cases. Any target temperature can be approximated with arbitrary precision, with a trade-off between speed and accuracy. The simplicity of the protocol makes it a promising tool for rapid, controlled thermalization in quantum thermodynamics experiments and state preparation.

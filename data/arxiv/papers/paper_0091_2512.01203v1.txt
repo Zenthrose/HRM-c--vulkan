@@ -1,0 +1,8 @@
+Title: The Evolution of Learning Algorithms for Artificial Neural Networks
+Authors: Jonathan Baxter
+Date: 2025-12-01
+ArXiv ID: 2512.01203v1
+
+The Evolution of Learning Algorithms for Artificial Neural Networks
+
+In this paper we investigate a neural network model in which weights between computational nodes are modified according to a local learning rule. To determine whether local learning rules are sufficient for learning, we encode the network architectures and learning dynamics genetically and then apply selection pressure to evolve networks capable of learning the four boolean functions of one variable. The successful networks are analysed and we show how learning behaviour emerges as a distributed property of the entire network. Finally the utility of genetic algorithms as a tool of discovery is discussed.

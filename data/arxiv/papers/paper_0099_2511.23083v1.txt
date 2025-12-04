@@ -1,0 +1,8 @@
+Title: Spectral Concentration at the Edge of Stability: Information Geometry of Kernel Associative Memory
+Authors: Akira Tamamori
+Date: 2025-11-28
+ArXiv ID: 2511.23083v1
+
+Spectral Concentration at the Edge of Stability: Information Geometry of Kernel Associative Memory
+
+High-capacity kernel Hopfield networks exhibit a "Ridge of Optimization" characterized by extreme stability. While previously linked to "Spectral Concentration," its origin remains elusive. Here, we analyze the network dynamics on a statistical manifold, revealing that the Ridge corresponds to the "Edge of Stability," a critical boundary where the Fisher Information Matrix becomes singular. We demonstrate that the apparent Euclidean force antagonism is a manifestation of  in the Riemannian space. This unifies learning dynamics and capacity via the Minimum Description Length principle, offering a geometric theory of self-organized criticality.

@@ -1,0 +1,8 @@
+Title: Scalable Decision Focused Learning via Online Trainable Surrogates
+Authors: Gaetano Signorelli, Michele Lombardi
+Date: 2025-12-03
+ArXiv ID: 2512.03861v1
+
+Scalable Decision Focused Learning via Online Trainable Surrogates
+
+Decision support systems often rely on solving complex optimization problems that may require to estimate uncertain parameters beforehand. Recent studies have shown how using traditionally trained estimators for this task can lead to suboptimal solutions. Using the actual decision cost as a loss function (called Decision Focused Learning) can address this issue, but with a severe loss of scalability at training time. To address this issue, we propose an acceleration method based on replacing costly loss function evaluations with an efficient surrogate. Unlike previously defined surrogates, our approach relies on unbiased estimators reducing the risk of spurious local optima and can provide information on its local confidence allowing one to switch to a fallback method when needed. Furthermore, the surrogate is designed for a black-box setting, which enables compensating for simplifications in the optimization model and account- ing for recourse actions during cost computation. In our results, the method reduces costly inner solver calls, with a solution quality comparable to other state-of-the-art techniques.

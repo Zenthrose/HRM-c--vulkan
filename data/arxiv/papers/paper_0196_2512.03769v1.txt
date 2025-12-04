@@ -1,0 +1,8 @@
+Title: Metrological Sensitivity beyond Gaussian Limits with Cubic Phase States
+Authors: Jiajie Guo, Shuheng Liu, Boxuan Jing, Qiongyi He, Manuel Gessner
+Date: 2025-12-03
+ArXiv ID: 2512.03769v1
+
+Metrological Sensitivity beyond Gaussian Limits with Cubic Phase States
+
+Cubic phase states provide the essential non-Gaussian resource for continuous-variable quantum computing. We show that they also offer significant potential for quantum metrology, surpassing the phase-sensing sensitivity of all Gaussian states at equal average photon number. Optimal sensitivity requires only moderate initial squeezing, and the non-Gaussian advantage remains robust against loss and detection noise. We identify optimal measurement strategies and show that several experimentally relevant preparation schemes surpass Gaussian limits, in some cases reaching the sensitivity of cubic phase states. Our results establish cubic phase states as a promising resource for quantum-enhanced precision measurements beyond Gaussian limits.

@@ -1,0 +1,8 @@
+Title: HeteroJIVE: Joint Subspace Estimation for Heterogeneous Multi-View Data
+Authors: Jingyang Li, Zhongyuan Lyu
+Date: 2025-12-02
+ArXiv ID: 2512.02866v1
+
+HeteroJIVE: Joint Subspace Estimation for Heterogeneous Multi-View Data
+
+Many modern datasets consist of multiple related matrices measured on a common set of units, where the goal is to recover the shared low-dimensional subspace. While the Angle-based Joint and Individual Variation Explained (AJIVE) framework provides a solution, it relies on equal-weight aggregation, which can be strictly suboptimal when views exhibit significant statistical heterogeneity (arising from varying SNR and dimensions) and structural heterogeneity (arising from individual components). In this paper, we propose HeteroJIVE, a weighted two-stage spectral algorithm tailored to such heterogeneity. Theoretically, we first revisit the ``non-diminishing" error barrier with respect to the number of views  identified in recent literature for the equal-weight case. We demonstrate that this barrier is not universal: under generic geometric conditions, the bias term vanishes and our estimator achieves the  rate without the need for iterative refinement. Extending this to the general-weight case, we establish error bounds that explicitly disentangle the two layers of heterogeneity. Based on this, we derive an oracle-optimal weighting scheme implemented via a data-driven procedure. Extensive simulations corroborate our theoretical findings, and an application to TCGA-BRCA multi-omics data validates the superiority of HeteroJIVE in practice.

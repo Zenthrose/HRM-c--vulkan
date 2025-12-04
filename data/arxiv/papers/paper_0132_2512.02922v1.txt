@@ -1,0 +1,8 @@
+Title: Asymptotics for additive functionals of particle systems via Stein's method
+Authors: Arturo Jaramillo, Antonio Murillo-Salas
+Date: 2025-12-02
+ArXiv ID: 2512.02922v1
+
+Asymptotics for additive functionals of particle systems via Stein's method
+
+We consider additive functionals of systems of random measures whose initial configuration is given by a Poisson point process, and whose individual components evolve according to arbitrary Markovian or non-Markovian measure valued dynamics, with no structural assumptions beyond basic moment bounds. In this setting and under adequate conditions, we establish a general third moment theorem for the normalized functionals. Building on this result, we obtain the first quantitative bounds in the Wasserstein distance for a variety of moving-measure models initialized by Poisson-driven clouds of points, turning qualitative central limit theorems into explicit rates of convergence. The scope of the approach is then demonstrated through several examples, including systems driven by fractional Brownian motion, -stable processes, uniformly elliptic diffusions, and spectral empirical measures arising from Dyson Brownian motion, all under broad assumptions on the control measure of the initial Poisson configuration. The analysis relies on a combination of Stein's method with Mecke's formula, in the spirit of the Poisson Malliavin-Stein methodology.

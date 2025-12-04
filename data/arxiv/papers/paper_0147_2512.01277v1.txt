@@ -1,0 +1,8 @@
+Title: Volatility change point detection for linear parabolic SPDEs
+Authors: Yozo Tonaki, Yusuke Kaino, Masayuki Uchida
+Date: 2025-12-01
+ArXiv ID: 2512.01277v1
+
+Volatility change point detection for linear parabolic SPDEs
+
+We consider change point detection for the volatility in second order linear parabolic stochastic partial differential equations based on high frequency spatio-temporal data. We give a test statistic to detect changes in the volatility based on change point analysis for diffusion processes and derive the asymptotic null distribution of the test statistic. We also show that the test is consistent. Moreover, we provide some examples and then perform numerical simulations of the proposed test statistic.

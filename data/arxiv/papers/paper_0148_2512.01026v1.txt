@@ -1,0 +1,8 @@
+Title: Asymptotic inference in a stationary quantum time series
+Authors: Michael Nussbaum, Arleta Szkoła
+Date: 2025-11-30
+ArXiv ID: 2512.01026v1
+
+Asymptotic inference in a stationary quantum time series
+
+We consider a statistical model of a n-mode quantum Gaussian state which is shift invariant and also gauge invariant. Such models can be considered analogs of classical Gaussian stationary time series, parametrized by their spectral density. Defining an appropriate quantum spectral density as the parameter, we establish that the quantum Gaussian time series model is asymptotically equivalent to a classical nonlinear regression model given as a collection of independent geometric random variables. The asymptotic equivalence is established in the sense of the quantum Le Cam distance between statistical models (experiments). The geometric regression model has a further classical approximation as a certain Gaussian white noise model with a transformed quantum spectral density as signal. In this sense, the result is a quantum analog of the asymptotic equivalence of classical spectral density estimation and Gaussian white noise, which is known for Gaussian stationary time series. In a forthcoming version of this preprint, we will also identify a quantum analog of the periodogram and provide optimal parametric and nonparametric estimates of the quantum spectral density.

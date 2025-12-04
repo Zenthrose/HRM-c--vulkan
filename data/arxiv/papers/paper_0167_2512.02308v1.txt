@@ -1,0 +1,8 @@
+Title: Geant4 Modeling of Energy and Charge Deposition in Satellites Solar Cells
+Authors: Youssef Abouhussien, Gennady Miloshevsky
+Date: 2025-12-02
+ArXiv ID: 2512.02308v1
+
+Geant4 Modeling of Energy and Charge Deposition in Satellites Solar Cells
+
+Understanding radiation effects in spacecraft components is critical for predicting long-term performance degradation. In this work, a Geant4 Monte Carlo model is developed to compute charge and energy deposition in satellite solar-cell materials exposed to electrons, protons, and X-ray environments. The model is validated against published experimental and computational benchmarks and shows strong agreement across multiple energy ranges. Power-density deposition profiles are then evaluated for a multi-layer solar-cell structure under blackbody soft X-rays, mono-energetic X-rays, and high-energy electrons. The results show that low-energy X-rays dominate damage in surface layers, while high-energy particles penetrate deeper into semiconductor and substrate layers, posing risk to electronic components. These findings highlight the importance of radiation-specific shielding strategies for space solar-cell design.

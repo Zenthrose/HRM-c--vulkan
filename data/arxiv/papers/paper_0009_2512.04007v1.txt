@@ -1,0 +1,8 @@
+Title: On the Temporality for Sketch Representation Learning
+Authors: Marcelo Isaias de Moraes Junior, Moacir Antonelli Ponti
+Date: 2025-12-03
+ArXiv ID: 2512.04007v1
+
+On the Temporality for Sketch Representation Learning
+
+Sketches are simple human hand-drawn abstractions of complex scenes and real-world objects. Although the field of sketch representation learning has advanced significantly, there is still a gap in understanding the true relevance of the temporal aspect to the quality of these representations. This work investigates whether it is indeed justifiable to treat sketches as sequences, as well as which internal orders play a more relevant role. The results indicate that, although the use of traditional positional encodings is valid for modeling sketches as sequences, absolute coordinates consistently outperform relative ones. Furthermore, non-autoregressive decoders outperform their autoregressive counterparts. Finally, the importance of temporality was shown to depend on both the order considered and the task evaluated.

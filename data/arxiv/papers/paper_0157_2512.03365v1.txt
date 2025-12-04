@@ -1,0 +1,8 @@
+Title: Generative Refinement:A New Paradigm for Determining Single Crystal Structures Directly from HKL Data
+Authors: Wen-Lin Luo, Yi Yuan, Cheng-Hui Li, Yue Zhao, Jing-Lin Zuo
+Date: 2025-12-03
+ArXiv ID: 2512.03365v1
+
+Generative Refinement:A New Paradigm for Determining Single Crystal Structures Directly from HKL Data
+
+Single-crystal X-ray diffraction (SC-XRD) is the gold standard technique to characterize crystal structures in solid state. Despite significant advances in automation for structure solution, the refinement stage still depends heavily on expert intervention and subjective judgment, limiting accessibility and scalability. Herein, we introduce RefrActor, an end-to-end deep learning framework that enables crystal structure determination directly from HKL data. By coupling a physics-informed reciprocal-space encoder (ReciEncoder) with a symmetry-aware diffusion-based generator (StruDiffuser), RefrActor produces fully refined atomic models without requiring initial structural guesses or manual input. Comprehensive evaluations on the GenRef-10k benchmark demonstrates that RefrActor achieves low R1-factors across diverse systems, including low-symmetry, light-atom, and heavy-atom crystals. Case studies further confirm that RefrActor can correctly resolve hydrogen positions, elemental assignments, and moderate disorder. This work establishes a new data-driven paradigm for autonomous crystallographic analysis, offering a foundation for fully automated, high-throughput crystal structure determination.

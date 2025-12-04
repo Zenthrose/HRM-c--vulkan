@@ -1,0 +1,8 @@
+Title: Towards Quantum Stochastic Optimization for Energy Systems under Uncertainty: Joint Chance Constraints with Quantum Annealing
+Authors: David Ribes, Tatiana Gonzalez Grandon
+Date: 2025-12-03
+ArXiv ID: 2512.03925v1
+
+Towards Quantum Stochastic Optimization for Energy Systems under Uncertainty: Joint Chance Constraints with Quantum Annealing
+
+Uncertainty is fundamental in modern power systems, where renewable generation and fluctuating demand make stochastic optimization indispensable. The chance constrained unit commitment problem (UCP) captures this uncertainty but rapidly becomes computationally challenging as the number of scenarios grows. Quantum computing has been proposed as a potential route to overcome such scaling barriers. In this work, we evaluate the applicability of quantum annealing platforms to the chance constrained UCP. Focusing on a scenario approximation, we reformulated the problem as a mixed integer linear program and solved it using DWave hybrid quantum classical solver alongside Gurobi. The hybrid solver proved competitive under strict runtime limits for large scenario sets (15,000 in our experiments), while Gurobi remained superior on smaller cases. QUBO reformulations were also tested, but current annealers cannot accommodate stochastic UCPs due to hardware limits, and deterministic cases suffered from embedding overhead. Our study delineates where chance constrained UCPs can already be addressed with hybrid quantum classical methods, and where current quantum annealers remain fundamentally limited.

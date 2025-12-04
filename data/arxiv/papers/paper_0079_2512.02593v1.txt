@@ -1,0 +1,8 @@
+Title: Spoken Conversational Agents with Large Language Models
+Authors: Chao-Han Huck Yang, Andreas Stolcke, Larry Heck
+Date: 2025-12-02
+ArXiv ID: 2512.02593v1
+
+Spoken Conversational Agents with Large Language Models
+
+Spoken conversational agents are converging toward voice-native LLMs. This tutorial distills the path from cascaded ASR/NLU to end-to-end, retrieval-and vision-grounded systems. We frame adaptation of text LLMs to audio, cross-modal alignment, and joint speech-text training; review datasets, metrics, and robustness across accents and compare design choices (cascaded vs. E2E, post-ASR correction, streaming). We link industrial assistants to current open-domain and task-oriented agents, highlight reproducible baselines, and outline open problems in privacy, safety, and evaluation. Attendees leave with practical recipes and a clear systems-level roadmap.

@@ -1,0 +1,8 @@
+Title: Image Theory for the Single Bounce Quantum Gravimeter
+Authors: Joachim Guyomard, Serge Reynaud, Pierre Cladé
+Date: 2025-12-03
+ArXiv ID: 2512.03953v1
+
+Image Theory for the Single Bounce Quantum Gravimeter
+
+We develop an image theory for the recently proposed single-bounce quantum gravimeter. Free fall and quantum bounce of a matter wave-packet are described through decompositions over a basis of continuous energies. This leads to a much clearer interpretation of the origin of quantum interferences, associated to semi-classical estimations. We then give new tools to explore the space of parameters, and discuss the expected accuracy of the free-fall acceleration measurement.

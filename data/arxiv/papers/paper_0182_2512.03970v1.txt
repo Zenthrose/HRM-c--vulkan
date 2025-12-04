@@ -1,0 +1,8 @@
+Title: Non-radiative energy transfer between boron vacancies in hexagonal boron nitride and other 2D materials
+Authors: Fraunié Jules, Mikhail M. Glazov, Sébastien Roux, Abraao Cefas Torres-Dias, Cora Crunteanu-Stanescu, Tom Fournier, Maryam S. Dehaghani, Tristan Clua-Provost, Delphine Lagarde, Laurent Lombez, Xavier Marie, Benjamin Lassagne, Thomas Poirier, James H. Edgar, Vincent Jacques, Cedric Robert
+Date: 2025-12-03
+ArXiv ID: 2512.03970v1
+
+Non-radiative energy transfer between boron vacancies in hexagonal boron nitride and other 2D materials
+
+Boron vacancies () in hexagonal boron nitride (hBN) have emerged as a promising platform for two-dimensional quantum sensors capable of operating at atomic-scale proximity. However, the mechanisms responsible for photoluminescence quenching in thin hBN sensing layers when placed in contact with absorptive materials remain largely unexplored. In this Letter, we investigate non-radiative Förster resonance energy transfer (FRET) between  centers and either monolayer graphene or 2D semiconductors. Strikingly, we find that the FRET rate is negligible for hBN sensing layers thicker than 3 nm, highlighting the potential of  centers for integration into ultra-thin quantum sensors within van der Waals heterostructures. Furthermore, we experimentally extract the intrinsic radiative decay rate of  defects.

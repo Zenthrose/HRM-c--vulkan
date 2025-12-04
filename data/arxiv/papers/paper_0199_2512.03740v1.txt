@@ -1,0 +1,8 @@
+Title: Quantum Max Cut for complete tripartite graphs
+Authors: Tea Štrekelj
+Date: 2025-12-03
+ArXiv ID: 2512.03740v1
+
+Quantum Max Cut for complete tripartite graphs
+
+The Quantum Max--Cut (-QMC) problem is a special instance of a -local Hamiltonian problem, representing the quantum analog of the classical Max--Cut problem. The -QMC problem seeks the largest eigenvalue of a Hamiltonian defined on a graph with  vertices, where edges correspond to swap operators acting on . In recent years, progress has been made by investigating the algebraic structure of the -QMC Hamiltonian. Building on this approach, this article solves the -QMC problem for complete tripartite graphs for small local dimensions, .

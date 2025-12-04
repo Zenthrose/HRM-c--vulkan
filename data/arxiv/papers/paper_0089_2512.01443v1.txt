@@ -1,0 +1,8 @@
+Title: MEGConformer: Conformer-Based MEG Decoder for Robust Speech and Phoneme Classification
+Authors: Xabier de Zuazo, Ibon Saratxaga, Eva Navas
+Date: 2025-12-01
+ArXiv ID: 2512.01443v1
+
+MEGConformer: Conformer-Based MEG Decoder for Robust Speech and Phoneme Classification
+
+We present Conformer-based decoders for the LibriBrain 2025 PNPL competition, targeting two foundational MEG tasks: Speech Detection and Phoneme Classification. Our approach adapts a compact Conformer to raw 306-channel MEG signals, with a lightweight convolutional projection layer and task-specific heads. For Speech Detection, a MEG-oriented SpecAugment provided a first exploration of MEG-specific augmentation. For Phoneme Classification, we used inverse-square-root class weighting and a dynamic grouping loader to handle 100-sample averaged examples. In addition, a simple instance-level normalization proved critical to mitigate distribution shifts on the holdout split. Using the official Standard track splits and F1-macro for model selection, our best systems achieved 88.9% (Speech) and 65.8% (Phoneme) on the leaderboard, surpassing the competition baselines and ranking within the top-10 in both tasks. For further implementation details, the technical documentation, source code, and checkpoints are available at https://github.com/neural2speech/libribrain-experiments.

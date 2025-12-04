@@ -1,0 +1,8 @@
+Title: A novel sequential method for building upper and lower bounds of moments of distributions
+Authors: Solal Martin, Emilie Chouzenoux, Victor Elvira
+Date: 2025-12-01
+ArXiv ID: 2512.01761v1
+
+A novel sequential method for building upper and lower bounds of moments of distributions
+
+Approximating integrals is a fundamental task in probability theory and statistical inference, and their applied fields of signal processing, and Bayesian learning, as soon as expectations over probability distributions must be computed efficiently and accurately. When these integrals lack closed-form expressions, numerical methods must be used, from the Newton-Cotes formulas and Gaussian quadrature, to Monte Carlo and variational approximation techniques. Despite these numerous tools, few are guaranteed to preserve majoration/minoration inequalities, while this feature is fundamental in certain applications in statistics. In this paper, we focus on the integration problem arising in the estimation of moments of scalar, unnormalized, distributions. We introduce a sequential method for constructing upper and lower bounds on the sought integral. Our approach leverages the majorization-minimization framework to iteratively refine these bounds, in an enveloped principle. The method has proven convergence, and controlled accuracy, under mild conditions. We demonstrate its effectiveness through a detailed numerical example of the estimation of a Monte-Carlo sampler variance in a Bayesian inference problem.

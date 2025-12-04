@@ -1,0 +1,8 @@
+Title: Hawkes process with a diffusion-driven baseline: long-run behavior, inference, statistical tests
+Authors: Maya Sadeler Perrin, Anna Bonnet, Charlotte Dion-Blanc, Adeline Samson
+Date: 2025-12-01
+ArXiv ID: 2512.01447v1
+
+Hawkes process with a diffusion-driven baseline: long-run behavior, inference, statistical tests
+
+Event-driven systems in fields such as neuroscience, social networks, and finance often exhibit dynamics influenced by continuously evolving external covariates. Motivated by these applications, we introduce a new class of multivariate Hawkes processes, in which the spontaneous rate of events is modulated by a diffusion process. This framework allows the point process to adapt dynamically to continuously evolving covariates, capturing both intrinsic self-excitation and external influences. In this article, we establish the probabilistic properties of the coupled process, proving stability and ergodicity under moderate assumptions. Classical functional results, including law of large numbers and mixing properties, are extended to this diffusion-driven setting. Building on these results, we study parametric inference for the Hawkes component: we derive consistency and asymptotic normality of the maximum likelihood estimator in the long-time regime, and derive stronger convergence results under additional assumptions on the covariate process. We further propose hypothesis testing procedures to assess the statistical relevance of the covariate. Simulation studies illustrate the validity of the asymptotic results and the effectiveness of the proposed inference methods. Overall, this work provides theoretical and practical foundations for diffusion-driven Hawkes models.

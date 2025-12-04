@@ -1,0 +1,8 @@
+Title: AITutor-EvalKit: Exploring the Capabilities of AI Tutors
+Authors: Numaan Naeem, Kaushal Kumar Maurya, Kseniia Petukhova, Ekaterina Kochmar
+Date: 2025-12-03
+ArXiv ID: 2512.03688v1
+
+AITutor-EvalKit: Exploring the Capabilities of AI Tutors
+
+We present AITutor-EvalKit, an application that uses language technology to evaluate the pedagogical quality of AI tutors, provides software for demonstration and evaluation, as well as model inspection and data visualization. This tool is aimed at education stakeholders as well as *ACL community at large, as it supports learning and can also be used to collect user feedback and annotations.

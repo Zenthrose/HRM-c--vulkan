@@ -1,0 +1,8 @@
+Title: Modelling the Impact of Device Imperfections on Electron Shuttling in SiMOS devices
+Authors: Jack J. Turner, Christian W. Binder, Guido Burkard, Andrew J. Fisher
+Date: 2025-12-03
+ArXiv ID: 2512.03853v1
+
+Modelling the Impact of Device Imperfections on Electron Shuttling in SiMOS devices
+
+Extensive theoretical and experimental work has established high-fidelity electron shuttling in Si/SiGe systems, whereas demonstrations in Si/SiO2 (SiMOS) remain at an early stage. To help address this, we perform full 3D simulations of conveyor-belt charge shuttling in a realistic SiMOS device, building on earlier 2D modelling. We solve the Poisson and time-dependent Schrodinger equations for varying shuttling speeds and gate voltages, focusing on potential pitfalls of typical SiMOS devices such as oxide-interface roughness, gate fabrication imperfections, and charge defects along the transport path. The simulations reveal that for low clavier-gate voltages, the additional oxide screening in multi-layer gate architectures causes conveyor-belt shuttling to collapse to the bucket-brigade mode, inducing considerable orbital excitation in the process. Increasing the confinement restores conveyor-belt operation, which we find to be robust against interface roughness, gate misalignment, and charge defects buried in the oxide. However, our results indicate that defects located at the Si/SiO2-interface can induce considerable orbital excitation. For lower conveyor gate biases, positive defects in the transport channel can even capture passing electrons. Hence we identify key challenges and find operating regimes for reliable charge transport in SiMOS architectures.

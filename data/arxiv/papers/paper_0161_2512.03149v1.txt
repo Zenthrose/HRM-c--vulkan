@@ -1,0 +1,8 @@
+Title: A high-order regularized delta-Chebyshev method for computing spectral densities
+Authors: Jinjing Yi, Daniel Massatt, Andrew Horning, Mitchell Luskin, J. H. Pixley, Jason Kaye
+Date: 2025-12-02
+ArXiv ID: 2512.03149v1
+
+A high-order regularized delta-Chebyshev method for computing spectral densities
+
+We introduce a numerical method for computing spectral densities, and apply it to the evaluation of the local density of states (LDOS) of sparse Hamiltonians derived from tight-binding models. The approach, which we call the high-order delta-Chebyshev method, can be viewed as a variant of the popular regularized Chebyshev kernel polynomial method (KPM), but it uses a high-order accurate approximation of the -function to achieve rapid convergence to the thermodynamic limit for smooth spectral densities. The costly computational steps are identical to those for KPM, with high-order accuracy achieved by an inexpensive post-processing procedure. We apply the algorithm to tight-binding models of graphene and twisted bilayer graphene, demonstrating high-order convergence to the LDOS at non-singular points.
