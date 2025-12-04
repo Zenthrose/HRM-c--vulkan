@@ -382,7 +382,38 @@ ResourceUsage ResourceMonitor::get_disk_info() {
 ResourceUsage ResourceMonitor::get_network_info() {
     ResourceUsage usage;
 #ifdef _WIN32
-    // Windows network monitoring not implemented yet
+    // Windows network monitoring using IP Helper API
+    MIB_IFTABLE* pIfTable = nullptr;
+    DWORD dwSize = 0;
+
+    // Get the size needed
+    if (GetIfTable(nullptr, &dwSize, FALSE) == ERROR_INSUFFICIENT_BUFFER) {
+        pIfTable = (MIB_IFTABLE*)malloc(dwSize);
+        if (pIfTable == nullptr) {
+            return usage;
+        }
+    }
+
+    // Get the interface table
+    if (GetIfTable(pIfTable, &dwSize, FALSE) == NO_ERROR) {
+        for (DWORD i = 0; i < pIfTable->dwNumEntries; i++) {
+            MIB_IFROW* pIfRow = &(pIfTable->table[i]);
+
+            // Skip loopback and inactive interfaces
+            if (pIfRow->dwType == MIB_IF_TYPE_LOOPBACK ||
+                (pIfRow->dwAdminStatus != MIB_IF_ADMIN_STATUS_UP)) {
+                continue;
+            }
+
+            // Accumulate statistics
+            usage.network_bytes_received += pIfRow->dwInOctets;
+            usage.network_bytes_sent += pIfRow->dwOutOctets;
+        }
+    }
+
+    if (pIfTable) {
+        free(pIfTable);
+    }
     return usage;
 #else
     struct ifaddrs *ifaddr, *ifa;
