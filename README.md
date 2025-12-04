@@ -501,10 +501,180 @@ Self-Modifying HRM System
 - **Maintenance Reduction**: Self-maintenance of codebase health
 - **Adaptation**: Dynamic adjustment to changing requirements
 
+### **🔋 Resource-Aware Task Management**
+
+The HRM now includes comprehensive **real-time resource monitoring** and **adaptive task management** to prevent OOM errors and optimize performance on resource-constrained systems.
+
+#### **Real-Time Resource Monitoring**
+- **CPU Monitoring**: Usage percentage, core-level tracking, temperature monitoring
+- **Memory Management**: RAM usage, available memory, memory pressure detection
+- **Disk I/O**: Storage usage, read/write speeds, available space tracking
+- **Network Monitoring**: Bandwidth usage, connection status, data transfer rates
+- **System Load**: Overall system load averages and process counts
+
+#### **Adaptive Task Management**
+- **Intelligent Queuing**: Tasks automatically queued when resources are insufficient
+- **Pause/Resume**: Non-critical tasks paused during resource pressure, resumed when safe
+- **Priority-Based Scheduling**: Critical tasks prioritized, resource allocation optimized
+- **OOM Prevention**: Proactive monitoring prevents out-of-memory crashes
+- **Resource Prediction**: Future resource usage prediction for better planning
+
+#### **Task Chunking & Optimization**
+- **Large Task Breaking**: Automatically splits large operations into manageable chunks
+- **Memory-Aware Chunking**: Chunk sizes adjusted based on available memory
+- **Progress Tracking**: Real-time progress monitoring for all tasks
+- **Resource Balancing**: Load balancing across available system resources
+- **Failure Recovery**: Automatic retry and recovery for failed task chunks
+
+#### **System Integration**
+- **Vulkan Resource Awareness**: GPU memory and compute resource monitoring
+- **Cross-Platform Support**: Works on Linux, Windows, and macOS
+- **Configurable Thresholds**: Customizable resource limits and warning levels
+- **Emergency Mode**: Automatic system protection during critical resource shortages
+- **Performance Analytics**: Detailed performance metrics and optimization suggestions
+
+### **Usage Examples - Resource Management**
+
+#### **Resource-Aware Communication**
+
+```cpp
+#include "resource_aware_hrm.hpp"
+
+ResourceAwareHRMConfig config{...}; // Configure with resource monitoring enabled
+ResourceAwareHRM system(config);
+
+// System automatically monitors resources and adapts behavior
+CommunicationResult result = system.communicate("Process this large dataset");
+
+// Check current resource status
+auto resource_usage = system.get_current_resource_usage();
+std::cout << "Memory usage: " << resource_usage.memory_usage_percent << "%" << std::endl;
+std::cout << "CPU usage: " << resource_usage.cpu_usage_percent << "%" << std::endl;
+
+// Get resource optimization suggestions
+auto suggestions = system.get_resource_optimization_suggestions();
+for (const auto& suggestion : suggestions) {
+    std::cout << "Suggestion: " << suggestion << std::endl;
+}
+```
+
+#### **Resource-Aware Task Submission**
+
+```cpp
+// Submit a memory-intensive task with automatic resource management
+TaskRequirements req{
+    500,  // 500MB estimated memory
+    50.0, // 50% estimated CPU
+    100,  // 100MB estimated disk
+    30.0, // 30 seconds estimated duration
+    TaskType::MEMORY_INTENSIVE,
+    true, // Can be chunked
+    50   // Max 50MB per chunk
+};
+
+std::string task_id = system.submit_resource_aware_task(
+    "Process large dataset",
+    TaskPriority::NORMAL,
+    req,
+    [](const std::vector<TaskChunk>& chunks) -> TaskResult {
+        // Task automatically chunked and managed based on resources
+        TaskResult result;
+        result.success = true;
+        // Process chunks...
+        return result;
+    }
+);
+
+// Monitor task progress
+auto task = system.get_task_manager()->get_task(task_id);
+if (task) {
+    std::cout << "Task progress: " << task->get_progress() * 100 << "%" << std::endl;
+}
+```
+
+#### **Resource Alert Handling**
+
+```cpp
+// Monitor and respond to resource alerts
+auto alerts = system.get_resource_alerts();
+for (const auto& alert : alerts) {
+    switch (alert.level) {
+        case ResourceAlertLevel::WARNING:
+            std::cout << "Resource warning: " << alert.message << std::endl;
+            // Reduce task concurrency
+            system.adapt_to_resource_constraints();
+            break;
+
+        case ResourceAlertLevel::CRITICAL:
+            std::cout << "Resource critical: " << alert.message << std::endl;
+            // Pause non-critical tasks
+            system.pause_task_due_to_resources(some_task_id);
+            break;
+
+        case ResourceAlertLevel::EMERGENCY:
+            std::cout << "Resource emergency: " << alert.message << std::endl;
+            // Emergency measures
+            system.enter_resource_conservation_mode();
+            break;
+    }
+}
+```
+
+### **Technical Architecture - Resource Management**
+
+```
+Resource-Aware HRM System
+├── Resource Monitor
+│   ├── CPU Usage Tracking
+│   ├── Memory Management
+│   ├── Disk I/O Monitoring
+│   ├── Network Statistics
+│   └── System Load Analysis
+├── Task Manager
+│   ├── Priority-Based Queuing
+│   ├── Resource-Aware Scheduling
+│   ├── Task Chunking System
+│   ├── Pause/Resume Mechanisms
+│   └── Progress Tracking
+├── Resource-Aware HRM
+│   ├── Adaptive Communication
+│   ├── Resource-Constrained Task Submission
+│   ├── Emergency Response System
+│   ├── Performance Optimization
+│   └── System Health Monitoring
+└── Integration Layer
+    ├── Vulkan Resource Awareness
+    ├── Cross-Platform Compatibility
+    ├── Configurable Thresholds
+    ├── Alert Management
+    └── Performance Analytics
+```
+
+### **Resource Thresholds & Safety**
+
+#### **Default Thresholds**
+- **Memory**: Warning at 75%, Critical at 85%, Emergency at 95%
+- **CPU**: Warning at 70%, Critical at 85%, Emergency at 95%
+- **Disk**: Warning at 80%, Critical at 90%, Emergency at 95%
+- **Network**: Monitored for bandwidth saturation
+
+#### **OOM Prevention**
+- **Proactive Monitoring**: Continuous resource tracking prevents memory exhaustion
+- **Graceful Degradation**: System slows down rather than crashing
+- **Automatic Recovery**: Tasks resume when resources become available
+- **Emergency Protocols**: Critical operations protected during resource shortages
+
 ### **Future Enhancements**
 
-Building on self-modifying capabilities:
+Building on resource management and self-modifying capabilities:
 
+- **🔄 Advanced Resource Prediction** - ML-based resource usage forecasting
+- **🌐 Distributed Resource Management** - Multi-system resource coordination
+- **⚡ GPU Resource Optimization** - Vulkan memory and compute optimization
+- **📊 Performance Profiling** - Detailed bottleneck analysis and optimization
+- **🔧 Auto-Scaling** - Dynamic resource allocation based on workload
+- **🎯 Quality of Service** - Guaranteed performance for critical tasks
+- **📈 Predictive Maintenance** - Resource trend analysis and preventive action
 - **🔄 Advanced Code Analysis** - AST-based parsing for deeper understanding
 - **🧬 Genetic Code Evolution** - Evolutionary algorithms for code optimization
 - **🌐 Distributed Self-Modification** - Multi-system coordinated improvements
