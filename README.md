@@ -123,9 +123,11 @@ HRM System
 - Vulkan SDK 1.3+
 - CMake 3.16+
 - C++17 compiler
-- Linux (primary platform)
+- Linux, macOS, or Windows
 
 ### **Build & Run**
+
+#### **Linux/macOS**
 
 ```bash
 git clone https://github.com/Zenthrose/HRM-c--vulkan.git
@@ -138,6 +140,33 @@ make -j$(nproc)
 ./src/hrm_system --cli    # Command-line interface
 ./src/hrm_system --gui    # Graphical interface (default)
 ./src/hrm_system --test   # Run system tests
+```
+
+#### **Windows**
+
+```batch
+git clone https://github.com/Zenthrose/HRM-c--vulkan.git
+cd HRM-c--vulkan
+mkdir build && cd build
+cmake ..
+cmake --build . --config Release
+
+# Run with different interfaces
+.\src\Release\hrm_system.exe --cli    # Command-line interface
+.\src\Release\hrm_system.exe --gui    # Graphical interface (default)
+.\src\Release\hrm_system.exe --test   # Run system tests
+```
+
+### **Testing**
+
+#### **Linux/macOS**
+```bash
+./test_hrm_system.sh
+```
+
+#### **Windows**
+```batch
+.\test_hrm_system.bat
 ```
 
 ### **System Requirements**
