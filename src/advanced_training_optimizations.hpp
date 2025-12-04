@@ -17,7 +17,7 @@ struct MixedPrecisionConfig {
     bool use_bf16 = false;  // Better for some GPUs
     float loss_scale = 65536.0f;
     bool dynamic_loss_scaling = true;
-    int gradient_clip_norm = 1.0f;
+    int gradient_clip_norm = 1;
 };
 
 /**

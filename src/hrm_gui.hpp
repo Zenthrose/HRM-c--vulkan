@@ -4,7 +4,12 @@
 #include <string>
 #include <vector>
 #include <functional>
+#ifdef _WIN32
+#include <windows.h>
+#include <conio.h>
+#else
 #include <termios.h>
+#endif
 #include "resource_aware_hrm.hpp"
 
 enum class GUITheme {
@@ -99,7 +104,11 @@ private:
     std::chrono::system_clock::time_point last_update_;
 
     // Terminal state
+#ifdef _WIN32
+    DWORD original_console_mode_;
+#else
     struct termios original_termios_;
+#endif
 
     // Drawing helpers
     void clear_screen();

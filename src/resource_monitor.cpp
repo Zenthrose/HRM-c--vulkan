@@ -5,6 +5,16 @@
 #include <algorithm>
 #include <numeric>
 #include <cstring>
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <winsock2.h>
+#include <windows.h>
+#include <psapi.h>
+#include <iphlpapi.h>
+#pragma comment(lib, "pdh.lib")
+#pragma comment(lib, "iphlpapi.lib")
+#pragma comment(lib, "ws2_32.lib")
+#else
 #include <unistd.h>
 #include <sys/sysinfo.h>
 #include <sys/statvfs.h>
@@ -13,6 +23,7 @@
 #include <net/if.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
 
 ResourceMonitor::ResourceMonitor()
     : monitoring_active_(false), monitoring_interval_(std::chrono::milliseconds(1000)) {
@@ -201,6 +212,18 @@ std::unordered_map<std::string, std::string> ResourceMonitor::get_system_info() 
     std::unordered_map<std::string, std::string> info;
 
     // Get system information
+#ifdef _WIN32
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(MEMORYSTATUSEX);
+    if (GlobalMemoryStatusEx(&memStatus)) {
+        info["total_memory_mb"] = std::to_string(memStatus.ullTotalPhys / (1024 * 1024));
+        info["free_memory_mb"] = std::to_string(memStatus.ullAvailPhys / (1024 * 1024));
+        info["memory_usage_percent"] = std::to_string((1.0 - (double)memStatus.ullAvailPhys / memStatus.ullTotalPhys) * 100.0);
+    }
+    info["uptime_seconds"] = std::to_string(GetTickCount64() / 1000);
+    // CPU load - simplified for Windows
+    info["cpu_usage_percent"] = get_cpu_usage_windows();
+#else
     struct sysinfo sys_info;
     if (sysinfo(&sys_info) == 0) {
         info["total_memory_mb"] = std::to_string(sys_info.totalram / (1024 * 1024));
@@ -212,8 +235,15 @@ std::unordered_map<std::string, std::string> ResourceMonitor::get_system_info() 
         info["load_average_5min"] = std::to_string(sys_info.loads[1] / 65536.0);
         info["load_average_15min"] = std::to_string(sys_info.loads[2] / 65536.0);
     }
+#endif
 
     // CPU info
+#ifdef _WIN32
+    SYSTEM_INFO sysInfo;
+    GetSystemInfo(&sysInfo);
+    info["cpu_count"] = std::to_string(sysInfo.dwNumberOfProcessors);
+    info["cpu_architecture"] = "x64"; // Simplified
+#else
     std::ifstream cpuinfo("/proc/cpuinfo");
     std::string line;
     int cpu_count = 0;
@@ -223,6 +253,7 @@ std::unordered_map<std::string, std::string> ResourceMonitor::get_system_info() 
         }
     }
     info["cpu_count"] = std::to_string(cpu_count);
+#endif
 
     return info;
 }
@@ -342,6 +373,10 @@ ResourceUsage ResourceMonitor::get_disk_info() {
 
 ResourceUsage ResourceMonitor::get_network_info() {
     ResourceUsage usage;
+#ifdef _WIN32
+    // Windows network monitoring not implemented yet
+    return usage;
+#else
     struct ifaddrs *ifaddr, *ifa;
 
     if (getifaddrs(&ifaddr) == -1) {
@@ -373,14 +408,20 @@ ResourceUsage ResourceMonitor::get_network_info() {
 
     freeifaddrs(ifaddr);
     return usage;
+#endif
 }
 
 double ResourceMonitor::get_system_load() {
+#ifdef _WIN32
+    // Windows load average not implemented
+    return 0.0;
+#else
     double load[3];
     if (getloadavg(load, 3) != -1) {
         return load[0]; // 1-minute load average
     }
     return 0.0;
+#endif
 }
 
 void ResourceMonitor::check_thresholds(const ResourceUsage& usage) {
@@ -462,3 +503,11 @@ void ResourceMonitor::cleanup_old_data() {
         alert_history_.end()
     );
 }
+
+#ifdef _WIN32
+double ResourceMonitor::get_cpu_usage_windows() const {
+    // Simplified CPU usage for Windows - returns 0 for now
+    // Full implementation would use PDH or performance counters
+    return 0.0;
+}
+#endif

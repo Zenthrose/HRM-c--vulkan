@@ -123,6 +123,9 @@ private:
     ResourceUsage get_disk_info();
     ResourceUsage get_network_info();
     double get_system_load();
+#ifdef _WIN32
+    double get_cpu_usage_windows() const;
+#endif
 
     // Alert generation
     void check_thresholds(const ResourceUsage& usage);

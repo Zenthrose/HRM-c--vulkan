@@ -4,9 +4,14 @@
 #include <sstream>
 #include <algorithm>
 #include <cstring>
+#ifdef _WIN32
+#include <windows.h>
+#include <psapi.h>
+#else
 #include <unistd.h>
 #include <sys/sysinfo.h>
 #include <sys/statvfs.h>
+#endif
 #include <vulkan/vulkan.h>
 
 HardwareAbstractionLayer::HardwareAbstractionLayer()
@@ -349,6 +354,18 @@ HardwareProfile HardwareAbstractionLayer::detect_system_capabilities() {
     HardwareProfile profile;
 
     // Get system memory info
+#ifdef _WIN32
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(MEMORYSTATUSEX);
+    if (GlobalMemoryStatusEx(&memStatus)) {
+        profile.system_memory_mb = memStatus.ullTotalPhys / (1024 * 1024);
+    }
+    // Get disk info
+    ULARGE_INTEGER freeBytesAvailable, totalNumberOfBytes, totalNumberOfFreeBytes;
+    if (GetDiskFreeSpaceExA("C:\\", &freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes)) {
+        profile.available_storage_mb = freeBytesAvailable.QuadPart / (1024 * 1024);
+    }
+#else
     struct sysinfo sys_info;
     if (sysinfo(&sys_info) == 0) {
         profile.system_memory_mb = sys_info.totalram / (1024 * 1024);
@@ -359,6 +376,7 @@ HardwareProfile HardwareAbstractionLayer::detect_system_capabilities() {
     if (statvfs("/", &stat) == 0) {
         profile.available_storage_mb = (stat.f_bavail * stat.f_frsize) / (1024 * 1024);
     }
+#endif
 
     return profile;
 }

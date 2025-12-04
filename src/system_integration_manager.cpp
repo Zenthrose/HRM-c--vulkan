@@ -3,12 +3,20 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
+#ifdef _WIN32
+#include <windows.h>
+#include <process.h>
+#include <io.h>
+#include <lmcons.h>  // For UNLEN
+#include <shlobj.h>  // For SHGetFolderPath
+#else
 #include <unistd.h>
 #include <sys/wait.h>
 #include <pwd.h>
 #include <limits.h>
 #include <dirent.h>
 #include <sys/statvfs.h>
+#endif
 #include <algorithm>
 
 SystemIntegrationManager::SystemIntegrationManager()
@@ -269,6 +277,19 @@ std::vector<std::string> SystemIntegrationManager::list_directory_safe(const std
         return contents;
     }
 
+#ifdef _WIN32
+    WIN32_FIND_DATAA findData;
+    HANDLE hFind = FindFirstFileA((path + "\\*").c_str(), &findData);
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            std::string name = findData.cFileName;
+            if (name != "." && name != "..") {
+                contents.push_back(name);
+            }
+        } while (FindNextFileA(hFind, &findData));
+        FindClose(hFind);
+    }
+#else
     DIR* dir = opendir(path.c_str());
     if (dir) {
         struct dirent* entry;
@@ -280,6 +301,7 @@ std::vector<std::string> SystemIntegrationManager::list_directory_safe(const std
         }
         closedir(dir);
     }
+#endif
 
     return contents;
 }
@@ -321,15 +343,26 @@ std::unordered_map<std::string, std::string> SystemIntegrationManager::get_syste
     status["system_type"] = get_system_info();
 
     // Check disk space
+#ifdef _WIN32
+    ULARGE_INTEGER freeBytesAvailable, totalNumberOfBytes, totalNumberOfFreeBytes;
+    if (GetDiskFreeSpaceExA(home_directory_.c_str(), &freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes)) {
+        double available_gb = freeBytesAvailable.QuadPart / (1024.0 * 1024.0 * 1024.0);
+        status["disk_space_available_gb"] = std::to_string(available_gb);
+        if (available_gb < 1.0) {
+            status["disk_warning"] = "Low disk space";
+        }
+    }
+#else
     struct statvfs stat;
     if (statvfs(home_directory_.c_str(), &stat) == 0) {
         uint64_t available_bytes = stat.f_bavail * stat.f_frsize;
         double available_gb = available_bytes / (1024.0 * 1024.0 * 1024.0);
         status["disk_space_available_gb"] = std::to_string(available_gb);
-
         if (available_gb < 1.0) {
             status["disk_warning"] = "Low disk space";
         }
+    }
+#endif
     }
 
     // Check memory
@@ -505,7 +538,11 @@ ProgramExecutionResult SystemIntegrationManager::execute_program_linux(const std
     std::string command = build_command_string(program_path, arguments);
 
     // Execute with timeout using popen
+#ifdef _WIN32
+    FILE* pipe = _popen(command.c_str(), "r");
+#else
     FILE* pipe = popen(command.c_str(), "r");
+#endif
     if (!pipe) {
         return {false, -1, "", "", std::chrono::milliseconds(0), "Failed to execute command"};
     }
@@ -517,7 +554,11 @@ ProgramExecutionResult SystemIntegrationManager::execute_program_linux(const std
         output += buffer;
     }
 
+#ifdef _WIN32
+    int exit_code = _pclose(pipe);
+#else
     int exit_code = pclose(pipe);
+#endif
 
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
@@ -612,6 +653,18 @@ SystemType SystemIntegrationManager::detect_system_type() {
 }
 
 std::string SystemIntegrationManager::get_home_directory() {
+#ifdef _WIN32
+    const char* home = std::getenv("USERPROFILE");
+    if (home) {
+        return home;
+    }
+    // Fallback to APPDATA or current dir
+    const char* appdata = std::getenv("APPDATA");
+    if (appdata) {
+        return appdata;
+    }
+    return "."; // Current directory fallback
+#else
     const char* home = std::getenv("HOME");
     if (home) {
         return home;
@@ -624,10 +677,15 @@ std::string SystemIntegrationManager::get_home_directory() {
     }
 
     return "/tmp"; // Ultimate fallback
+#endif
 }
 
 std::string SystemIntegrationManager::get_system_root() {
+#ifdef _WIN32
+    return "C:\\"; // Windows system root
+#else
     return "/"; // Unix-like systems
+#endif
 }
 
 std::string SystemIntegrationManager::build_command_string(const std::string& program_path,

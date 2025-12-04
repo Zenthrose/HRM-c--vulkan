@@ -5,9 +5,15 @@
 #include <cstdlib>
 #include <chrono>
 #include <algorithm>
+#ifdef _WIN32
+#include <windows.h>
+#include <process.h>
+#include <io.h>
+#else
 #include <dlfcn.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#endif
 #include <cstring>
 
 RuntimeCompilationSystem::RuntimeCompilationSystem(const std::string& temp_dir)
@@ -263,7 +269,11 @@ CompilationResult RuntimeCompilationSystem::execute_compilation(
     std::cout << "Executing compilation command: " << command << std::endl;
 
     // Execute the command
+#ifdef _WIN32
+    FILE* pipe = _popen(command.c_str(), "r");
+#else
     FILE* pipe = popen(command.c_str(), "r");
+#endif
     if (!pipe) {
         result.success = false;
         result.errors = {"Failed to execute compilation command"};
@@ -277,7 +287,11 @@ CompilationResult RuntimeCompilationSystem::execute_compilation(
         output += buffer;
     }
 
+#ifdef _WIN32
+    int status = _pclose(pipe);
+#else
     int status = pclose(pipe);
+#endif
     result.success = (status == 0);
 
     auto end_time = std::chrono::high_resolution_clock::now();
@@ -339,18 +353,30 @@ bool RuntimeCompilationSystem::copy_file(const std::string& src, const std::stri
 }
 
 void* RuntimeCompilationSystem::load_library(const std::string& path) {
+#ifdef _WIN32
+    return LoadLibraryA(path.c_str());
+#else
     return dlopen(path.c_str(), RTLD_LAZY);
+#endif
 }
 
 void RuntimeCompilationSystem::unload_library(void* handle) {
     if (handle) {
+#ifdef _WIN32
+        FreeLibrary(static_cast<HMODULE>(handle));
+#else
         dlclose(handle);
+#endif
     }
 }
 
 void* RuntimeCompilationSystem::get_symbol(void* handle, const std::string& symbol_name) {
     if (!handle) return nullptr;
+#ifdef _WIN32
+    return GetProcAddress(static_cast<HMODULE>(handle), symbol_name.c_str());
+#else
     return dlsym(handle, symbol_name.c_str());
+#endif
 }
 
 bool RuntimeCompilationSystem::check_compilation_safety(const std::vector<std::string>& source_files) {

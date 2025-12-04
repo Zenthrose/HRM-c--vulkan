@@ -4,7 +4,11 @@
 #include <random>
 #include <fstream>
 #include <sstream>
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <unistd.h>
+#endif
 // X11 headers not available in this environment, using simplified idle detection
 
 IdleTimeRepairScheduler::IdleTimeRepairScheduler(std::shared_ptr<ResourceMonitor> resource_monitor)

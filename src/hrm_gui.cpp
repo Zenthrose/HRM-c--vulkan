@@ -6,9 +6,14 @@
 #include <chrono>
 #include <algorithm>
 #include <limits>
+#ifdef _WIN32
+#include <windows.h>
+#include <conio.h>
+#else
 #include <termios.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#endif
 #include <signal.h>
 #include <cstring>
 #include <cstdlib>
@@ -279,7 +284,7 @@ void HRMGUI::show_message_box(const std::string& title, const std::string& messa
     int width = get_terminal_width();
     int height = get_terminal_height();
 
-    int box_width = std::min(60, width - 4);
+    int box_width = std::min<int>(60, width - 4);
     int box_height = 8;
     int x = (width - box_width) / 2;
     int y = (height - box_height) / 2;
@@ -301,7 +306,7 @@ bool HRMGUI::show_confirmation_dialog(const std::string& message) {
     int width = get_terminal_width();
     int height = get_terminal_height();
 
-    int box_width = std::min(50, width - 4);
+    int box_width = std::min<int>(50, width - 4);
     int box_height = 6;
     int x = (width - box_width) / 2;
     int y = (height - box_height) / 2;
@@ -325,7 +330,7 @@ std::string HRMGUI::show_input_dialog(const std::string& prompt) {
     int width = get_terminal_width();
     int height = get_terminal_height();
 
-    int box_width = std::min(60, width - 4);
+    int box_width = std::min<int>(60, width - 4);
     int box_height = 6;
     int x = (width - box_width) / 2;
     int y = (height - box_height) / 2;
@@ -567,7 +572,7 @@ std::string HRMGUI::wrap_text(const std::string& text, size_t width) {
     std::string result;
     size_t pos = 0;
     while (pos < text.length()) {
-        size_t end = std::min(pos + width, text.length());
+        size_t end = std::min<size_t>(pos + width, text.length());
         if (end < text.length()) {
             // Find last space within width
             size_t last_space = text.rfind(' ', end);
@@ -594,6 +599,17 @@ void HRMGUI::sleep_ms(int milliseconds) {
 }
 
 void HRMGUI::setup_terminal() {
+#ifdef _WIN32
+    // Windows console setup
+    HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
+    GetConsoleMode(hConsole, &original_console_mode_);
+    SetConsoleMode(hConsole, ENABLE_PROCESSED_INPUT | ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
+    // Hide cursor - Windows equivalent
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(hConsole, &cursorInfo);
+    cursorInfo.bVisible = FALSE;
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
+#else
     // Save current terminal settings
     tcgetattr(STDIN_FILENO, &original_termios_);
 
@@ -605,27 +621,51 @@ void HRMGUI::setup_terminal() {
     // Hide cursor
     std::cout << "\033[?25l";
     std::cout.flush();
+#endif
 }
 
 void HRMGUI::restore_terminal() {
+#ifdef _WIN32
+    // Restore Windows console settings
+    HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
+    SetConsoleMode(hConsole, original_console_mode_);
+    // Show cursor
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(hConsole, &cursorInfo);
+    cursorInfo.bVisible = TRUE;
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
+#else
     // Restore original terminal settings
     tcsetattr(STDIN_FILENO, TCSANOW, &original_termios_);
 
     // Show cursor
     std::cout << "\033[?25h";
     std::cout.flush();
+#endif
 }
 
 int HRMGUI::get_terminal_width() {
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+#else
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     return w.ws_col;
+#endif
 }
 
 int HRMGUI::get_terminal_height() {
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+#else
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     return w.ws_row;
+#endif
 }
 
 bool HRMGUI::is_terminal_resized() {
@@ -634,6 +674,27 @@ bool HRMGUI::is_terminal_resized() {
 }
 
 std::string HRMGUI::get_input() {
+#ifdef _WIN32
+    // Windows non-blocking input
+    if (_kbhit()) {
+        char ch = _getch();
+        if (ch == '\n' || ch == '\r') {
+            std::string input = current_input_;
+            current_input_.clear();
+            return input;
+        } else if (ch == 127 || ch == 8) { // Backspace
+            if (!current_input_.empty()) {
+                current_input_.pop_back();
+                redraw_needed_ = true;
+            }
+        } else if (ch >= 32 && ch <= 126) { // Printable characters
+            current_input_ += ch;
+            redraw_needed_ = true;
+        } else {
+            handle_special_keys(ch);
+        }
+    }
+#else
     // Non-blocking input reading
     fd_set readfds;
     FD_ZERO(&readfds);
@@ -664,6 +725,7 @@ std::string HRMGUI::get_input() {
             }
         }
     }
+#endif
     return "";
 }
 
