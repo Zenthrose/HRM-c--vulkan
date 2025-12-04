@@ -213,15 +213,149 @@ int main() {
 }
 ```
 
+### **🚀 Advanced Capabilities - Self-Evolving HRM**
+
+The latest implementation includes groundbreaking advanced AI capabilities:
+
+#### **🧠 Self-Repair System**
+- **Error Detection**: Automatic identification of logical inconsistencies, semantic errors, and contradictions
+- **Confidence Scoring**: Real-time assessment of output reliability and uncertainty
+- **Self-Correction**: Automatic repair of detected issues using multiple correction strategies
+- **Learning from Corrections**: System learns successful repair patterns for future use
+
+#### **🔄 Self-Learning & Evolution**
+- **Continual Learning**: Ongoing improvement without external supervision
+- **Meta-Learning**: Learning how to learn more effectively
+- **Architecture Adaptation**: Dynamic parameter adjustment based on performance
+- **Pattern Recognition**: Extraction and consolidation of successful interaction patterns
+
+#### **💬 Raw UTF-8 Communication**
+- **Character-Level Processing**: Direct UTF-8 encoding/decoding instead of tokenization
+- **Unicode Support**: Full Unicode character handling with proper encoding validation
+- **Variable-Length Characters**: Proper handling of multi-byte UTF-8 sequences
+- **Raw Text Communication**: Communicate using actual text rather than abstract tokens
+
+#### **🎯 Meta-Reasoning Layer**
+- **Output Analysis**: Deep analysis of model's own outputs and decision processes
+- **Logical Consistency Checking**: Detection of contradictions and logical fallacies
+- **Semantic Coherence**: Assessment of meaning preservation and coherence
+- **Syntactic Correctness**: Grammar and structure validation
+
+### **Usage Examples - Advanced Features**
+
+#### **Self-Evolving Communication**
+
+```cpp
+#include "self_evolving_hrm.hpp"
+
+// Configure advanced HRM system
+SelfEvolvingHRMConfig config{
+    /* hrm_config */ hrm_config,
+    /* utf8_config */ utf8_config,
+    /* meta_config */ meta_config,
+    /* enable_self_evolution */ true,
+    /* evolution_rate */ 0.01f,
+    /* adaptation_cycles */ 100,
+    /* enable_continual_learning */ true,
+    /* use_utf8_communication */ true,
+    /* max_conversation_length */ 1000
+};
+
+SelfEvolvingHRM system(config);
+
+// Communicate with self-repair and evolution
+CommunicationResult result = system.communicate("Explain quantum computing in simple terms");
+
+// System automatically:
+// - Processes raw UTF-8 input
+// - Analyzes response quality
+// - Self-repairs if issues detected
+// - Learns from interaction
+// - Evolves parameters periodically
+
+std::cout << "Response: " << result.response << std::endl;
+std::cout << "Confidence: " << result.confidence_score << std::endl;
+std::cout << "Self-repair performed: " << (result.self_repair_performed ? "Yes" : "No") << std::endl;
+```
+
+#### **Forced Self-Repair**
+
+```cpp
+// Manually trigger repair of known flawed response
+CommunicationResult repair_result = system.repair_and_respond(
+    "What is the capital of France?",
+    "The capital of France is London." // Intentionally wrong
+);
+
+std::cout << "Repaired response: " << repair_result.response << std::endl;
+std::cout << "Issues detected: " << repair_result.detected_issues.size() << std::endl;
+```
+
+#### **System Evolution & Adaptation**
+
+```cpp
+// Provide feedback for adaptation
+system.adapt_to_feedback("Responses are too verbose, please be more concise");
+
+// Trigger evolution cycle
+system.perform_evolution_cycle();
+
+// Check system status
+std::unordered_map<std::string, std::string> status;
+system.get_system_status(status);
+for (const auto& pair : status) {
+    std::cout << pair.first << ": " << pair.second << std::endl;
+}
+```
+
+### **Technical Architecture - Advanced Features**
+
+```
+Self-Evolving HRM System
+├── Core HRM Model (Hierarchical Reasoning)
+├── UTF-8 Processor
+│   ├── Character Encoding/Decoding
+│   ├── Unicode Validation
+│   └── Raw Text Processing
+├── Meta-Reasoning Layer
+│   ├── Error Detection
+│   ├── Confidence Scoring
+│   ├── Self-Correction Algorithms
+│   └── Pattern Learning
+├── Self-Evolution Engine
+│   ├── Parameter Adaptation
+│   ├── Architecture Modification
+│   ├── Continual Learning
+│   └── Pattern Consolidation
+└── Communication Interface
+    ├── Raw UTF-8 I/O
+    ├── Context Management
+    ├── Feedback Processing
+    └── Evolution Triggers
+```
+
+### **Performance & Capabilities**
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| **Self-Repair** | ✅ **Implemented** | Automatic error detection and correction |
+| **Self-Evolution** | ✅ **Implemented** | Continuous learning and adaptation |
+| **UTF-8 Communication** | ✅ **Implemented** | Raw character-level text processing |
+| **Meta-Reasoning** | ✅ **Implemented** | Analysis of model's own outputs |
+| **Confidence Scoring** | ✅ **Implemented** | Real-time reliability assessment |
+| **Continual Learning** | ✅ **Implemented** | Ongoing improvement without supervision |
+
 ### **Future Enhancements**
 
-The C++/Vulkan implementation provides a foundation for:
+Building on these advanced capabilities:
 
-- **🔄 Vulkan backpropagation** - Full training in compute shaders
-- **🌐 Multi-GPU distributed training** - Device group support
-- **🐍 Python bindings** - Seamless Python integration
-- **⚡ Advanced shader optimizations** - Memory coalescing, workgroup tuning
-- **🧪 Comprehensive testing** - Validation against Python implementation
+- **🔄 Vulkan Backpropagation** - Full training in compute shaders
+- **🌐 Multi-GPU Distributed Training** - Device group support
+- **🐍 Python Bindings** - Seamless Python integration
+- **⚡ Advanced Shader Optimizations** - Memory coalescing, workgroup tuning
+- **🧪 Comprehensive Testing** - Validation against Python implementation
+- **🧬 Advanced Evolution** - Genetic algorithms for architecture search
+- **🎨 Creative Generation** - Enhanced creative and generative capabilities
 
 ---
 
