@@ -53,6 +53,9 @@ public:
     // System status
     void get_system_status(std::unordered_map<std::string, std::string>& status);
 
+    // Access to core HRM model
+    HRM* get_hrm() { return hrm_model_.get(); }
+
 private:
     SelfEvolvingHRMConfig config_;
     std::unique_ptr<HRM> hrm_model_;

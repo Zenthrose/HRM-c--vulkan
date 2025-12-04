@@ -1,0 +1,32 @@
+{
+  "training_stats": {
+    "final_loss": 4.384785981450002,
+    "final_perplexity": 80.2210525821969,
+    "final_accuracy": 0.02260378421635183,
+    "total_epochs": 5,
+    "training_chars": 17313,
+    "model_params": 65536
+  },
+  "generated_samples": [
+    {
+      "prompt": "The quick brown fox",
+      "generated": "The quick brown fox>VzX .exrt\f\u0011pB~%CdNn0Cm\u001258  K]"
+    },
+    {
+      "prompt": "In the beginning",
+      "generated": "In the beginning\u0011\u0017kt _\u001a [A~M/jQ t%73,a\u0016o:]5#oi"
+    }
+  ],
+  "character_analysis": {
+    " ": 2819,
+    "e": 1598,
+    "i": 1053,
+    "t": 1034,
+    "a": 934,
+    "o": 919,
+    "n": 918,
+    "s": 883,
+    "r": 857,
+    "l": 576
+  }
+}

@@ -4,6 +4,9 @@
 #include <sstream>
 #include <regex>
 
+// Define the static constant
+const char32_t CharacterTextDataset::UNKNOWN_CHAR = 0xFFFD;
+
 CharacterTextDataset::CharacterTextDataset(const std::string& data_path, std::shared_ptr<UTF8Processor> utf8_processor)
     : data_path_(data_path), utf8_processor_(utf8_processor) {
 

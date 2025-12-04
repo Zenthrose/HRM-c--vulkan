@@ -1,0 +1,9 @@
+{
+  "final_loss": 1.9371024450000005,
+  "final_perplexity": 6.937223330194905,
+  "final_accuracy": 0.9,
+  "total_epochs": 10,
+  "vocab_size": 88,
+  "training_chars": 17313,
+  "validation_chars": 2307
+}

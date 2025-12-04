@@ -13,6 +13,7 @@
 #include "cloud_storage_manager.hpp"
 #include "hrm_cli.hpp"
 #include "hrm_gui.hpp"
+#include "character_language_trainer.hpp"
 
 namespace fs = std::filesystem;
 
@@ -220,6 +221,41 @@ void runGUI(std::shared_ptr<ResourceAwareHRM> hrm) {
     gui.run();
 }
 
+void runCharacterTraining(std::shared_ptr<ResourceAwareHRM> hrm) {
+    std::cout << "🚀 Starting Character-Level Language Training Mode" << std::endl;
+    std::cout << "==================================================" << std::endl;
+
+    // Create character language training configuration
+    CharacterLanguageModelConfig train_config;
+    train_config.max_epochs = 10;  // Shorter for demo
+    train_config.batch_size = 2;   // Smaller batch size
+    train_config.max_seq_length = 512;  // Shorter sequences
+    train_config.context_length = 256;
+    train_config.learning_rate = 1e-4;
+    train_config.warmup_steps = 100;
+    train_config.total_steps = 10000;
+
+    // Initialize character language trainer
+    CharacterLanguageTrainer trainer(hrm, train_config);
+
+    // Run training
+    std::string dataset_path = "./data/text/processed";
+    auto training_results = trainer.train_character_language_model(dataset_path);
+
+    std::cout << "\n✅ Character-level training completed!" << std::endl;
+    std::cout << "📊 Final Results:" << std::endl;
+    for (const auto& [metric, value] : training_results) {
+        std::cout << "  " << metric << ": " << value << std::endl;
+    }
+
+    // Test text generation
+    std::cout << "\n🎨 Testing text generation..." << std::endl;
+    std::string prompt = "The quick brown fox";
+    std::string generated = trainer.generate_text(prompt, 100);
+    std::cout << "Prompt: \"" << prompt << "\"" << std::endl;
+    std::cout << "Generated: \"" << generated << "\"" << std::endl;
+}
+
 void printUsage(const char* program_name) {
     std::cout << "HRM - Hierarchical Reasoning Module" << std::endl;
     std::cout << "Usage: " << program_name << " [options]" << std::endl;
@@ -227,6 +263,7 @@ void printUsage(const char* program_name) {
     std::cout << "Options:" << std::endl;
     std::cout << "  --cli              Run in command-line interface mode" << std::endl;
     std::cout << "  --gui              Run in graphical user interface mode" << std::endl;
+    std::cout << "  --train            Run character-level language training" << std::endl;
     std::cout << "  --test             Run basic functionality tests" << std::endl;
     std::cout << "  --help             Show this help message" << std::endl;
     std::cout << std::endl;
@@ -275,6 +312,7 @@ int main(int argc, char* argv[]) {
     // Parse command line arguments
     bool cli_mode = false;
     bool gui_mode = false;
+    bool train_mode = false;
     bool test_mode = false;
     bool show_help = false;
 
@@ -285,6 +323,8 @@ int main(int argc, char* argv[]) {
             cli_mode = true;
         } else if (arg == "--gui") {
             gui_mode = true;
+        } else if (arg == "--train") {
+            train_mode = true;
         } else if (arg == "--test") {
             test_mode = true;
         } else if (arg == "--help") {
@@ -303,7 +343,7 @@ int main(int argc, char* argv[]) {
     }
 
     // If no mode specified, default to GUI
-    if (!cli_mode && !gui_mode && !test_mode) {
+    if (!cli_mode && !gui_mode && !train_mode && !test_mode) {
         gui_mode = true;
     }
 
@@ -329,7 +369,10 @@ int main(int argc, char* argv[]) {
             return 0;
         }
 
-        if (cli_mode) {
+        if (train_mode) {
+            std::cout << "Starting HRM in Character Training mode..." << std::endl;
+            runCharacterTraining(hrm);
+        } else if (cli_mode) {
             std::cout << "Starting HRM in CLI mode..." << std::endl;
             runCLI(hrm);
         } else if (gui_mode) {

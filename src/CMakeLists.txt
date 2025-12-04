@@ -3,7 +3,7 @@ add_executable(hrm_vulkan main.cpp attention.cpp attention.hpp mlp.cpp mlp.hpp r
 target_link_libraries(hrm_vulkan PRIVATE Vulkan::Vulkan)
 
 # HRM system executable with CLI and GUI
-add_executable(hrm_system hrm_main.cpp hrm_cli.cpp hrm_gui.cpp memory_compaction_system.cpp cloud_storage_manager.cpp resource_aware_hrm.cpp resource_monitor.cpp task_manager.cpp self_modifying_hrm.cpp self_evolving_hrm.cpp code_analysis_system.cpp runtime_compilation_system.cpp hardware_abstraction_layer.cpp idle_time_repair_scheduler.cpp system_integration_manager.cpp hrm.cpp hrm_inner.cpp hierarchical_reasoning_module.cpp meta_reasoning_layer.cpp utf8_processor.cpp losses.cpp attention.cpp mlp.cpp rms_norm.cpp block.cpp linear.cpp embedding.cpp)
+add_executable(hrm_system hrm_main.cpp hrm_cli.cpp hrm_gui.cpp memory_compaction_system.cpp cloud_storage_manager.cpp resource_aware_hrm.cpp resource_monitor.cpp task_manager.cpp self_modifying_hrm.cpp self_evolving_hrm.cpp code_analysis_system.cpp runtime_compilation_system.cpp hardware_abstraction_layer.cpp idle_time_repair_scheduler.cpp system_integration_manager.cpp hrm.cpp hrm_inner.cpp hierarchical_reasoning_module.cpp meta_reasoning_layer.cpp utf8_processor.cpp losses.cpp attention.cpp mlp.cpp rms_norm.cpp block.cpp linear.cpp embedding.cpp character_language_trainer.cpp character_language_config.hpp character_text_dataset.cpp character_text_dataset.hpp character_language_loss.cpp character_language_loss.hpp character_language_evaluator.cpp character_language_evaluator.hpp advanced_training_optimizations.hpp flash_attention.cpp flash_attention.hpp mixed_precision.cpp mixed_precision.hpp)
 target_link_libraries(hrm_system PRIVATE Vulkan::Vulkan)
 
 add_custom_command(TARGET hrm_vulkan POST_BUILD

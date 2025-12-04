@@ -2,9 +2,10 @@
 
 #include <memory>
 #include <string>
-#include <unordered_map>
 #include <vector>
+#include <unordered_map>
 #include <chrono>
+#include "flash_attention.hpp"
 #include "attention.hpp"  // For Tensor struct
 
 /**
@@ -66,8 +67,14 @@ struct LRSchedulerConfig {
 /**
  * Advanced Training Optimizations for HRM
  *
- * Implements cutting-edge training techniques for 3-5x speedup
- * and ability to train much larger models.
+ * Implements cutting-edge training techniques for improved performance
+ * and efficiency in large-scale language model training.
+ *
+ * Key Features:
+ * - FlashAttention: O(n) attention computation
+ * - Mixed Precision: FP16/FP8 training support
+ * - Gradient Checkpointing: Memory-efficient training
+ * - Advanced Optimizers: Lion, Adafactor, etc.
  */
 class AdvancedTrainingOptimizations {
 public:

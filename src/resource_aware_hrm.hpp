@@ -54,6 +54,9 @@ public:
     // System status with resource information
     std::unordered_map<std::string, std::string> get_resource_aware_status();
 
+    // Access to core HRM model
+    HRM* get_hrm() { return SelfEvolvingHRM::get_hrm(); }
+
 private:
     ResourceAwareHRMConfig config_;
     std::shared_ptr<ResourceMonitor> resource_monitor_;

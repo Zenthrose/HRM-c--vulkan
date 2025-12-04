@@ -45,6 +45,9 @@ struct CharacterLanguageModelConfig {
     int max_epochs = 100;
     int save_every_epochs = 5;
     int eval_every_steps = 1000;
+    int warmup_steps = 1000;  // Linear warmup steps
+    int total_steps = 100000;  // Total training steps
+    float min_lr = 1e-6;  // Minimum learning rate
     std::chrono::seconds max_training_time = std::chrono::hours(24);  // 24 hours max
 
     // Early stopping

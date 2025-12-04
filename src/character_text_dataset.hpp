@@ -104,7 +104,7 @@ private:
     std::vector<char32_t> id_to_char_;
 
     // Special character constants
-    static const char32_t UNKNOWN_CHAR = 0xFFFD;  // Unicode replacement character
+    static const char32_t UNKNOWN_CHAR;  // Unicode replacement character
     static const char32_t PADDING_CHAR = 0x0000;  // Null character for padding
 
     /**
