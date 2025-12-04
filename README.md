@@ -49,7 +49,10 @@
 - ✅ GUI terminal functions use Windows Console API
 - ✅ Dynamic library loading (LoadLibrary/FreeLibrary)
 - ✅ Directory operations (FindFirstFile/FindNextFile)
-- ✅ Process execution (_popen/_pclose)
+- ✅ Process execution with timeout (CreateProcess API)
+- ✅ Program discovery (scans Program Files directories)
+- ✅ CPU load monitoring (PDH Performance Counters)
+- ✅ Idle time detection (GetLastInputInfo API)
 - ✅ Cross-platform conditional compilation fully implemented
 - ✅ Type conversion warnings fixed (double→float, size_t→int)
 - ✅ Network monitoring implemented (GetIfTable API)
