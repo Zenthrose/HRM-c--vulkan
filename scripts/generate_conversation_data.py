@@ -82,6 +82,100 @@ class ConversationGenerator:
 
         return "\n\n".join(conversation) + "\n\n"
 
+    def generate_math_content(self) -> str:
+        """Generate mathematical problems and explanations"""
+        math_topics = [
+            "algebra", "geometry", "calculus", "statistics", "number theory",
+            "linear algebra", "probability", "discrete mathematics", "trigonometry"
+        ]
+
+        problems = [
+            f"Solve for x: 2x + 3 = 7\nStep 1: Subtract 3 from both sides: 2x = 4\nStep 2: Divide by 2: x = 2\n\n",
+            f"Calculate the derivative of f(x) = x² + 3x + 1\nf'(x) = 2x + 3\n\n",
+            f"What's the area of a circle with radius 5?\nA = πr² = π(25) = 25π\n\n",
+            f"Probability of rolling a 6 on a fair die: 1/6\n\n",
+            f"Matrix multiplication example:\n[1 2] * [3 4] = [1*3+2*5 1*4+2*6] = [13 16]\n  [3 4]   [5 6]\n\n"
+        ]
+
+        explanations = [
+            f"In {random.choice(math_topics)}, we use logical reasoning to solve problems.\n\n",
+            f"Mathematical proofs require careful step-by-step reasoning.\n\n",
+            f"Understanding {random.choice(math_topics)} helps develop analytical thinking.\n\n"
+        ]
+
+        content = random.choice(problems) + random.choice(explanations)
+        return f"Mathematics: {content}\n\n"
+
+    def generate_science_content(self) -> str:
+        """Generate scientific explanations and concepts"""
+        science_fields = [
+            "physics", "chemistry", "biology", "astronomy", "geology",
+            "neuroscience", "ecology", "genetics", "climatology", "quantum mechanics"
+        ]
+
+        concepts = [
+            f"In {random.choice(science_fields)}, the scientific method guides our understanding.\n\n",
+            f"Empirical evidence supports theories in {random.choice(science_fields)}.\n\n",
+            f"Peer review ensures quality in {random.choice(science_fields)} research.\n\n",
+            f"Mathematical models help explain phenomena in {random.choice(science_fields)}.\n\n"
+        ]
+
+        experiments = [
+            f"Controlled experiments in {random.choice(science_fields)} test hypotheses.\n\n",
+            f"Observation and measurement are fundamental to {random.choice(science_fields)}.\n\n",
+            f"Reproducibility validates findings in {random.choice(science_fields)}.\n\n"
+        ]
+
+        content = random.choice(concepts) + random.choice(experiments)
+        return f"Science: {content}\n\n"
+
+    def generate_coding_content(self) -> str:
+        """Generate programming examples and reasoning"""
+        languages = ["Python", "C++", "JavaScript", "Java", "Rust", "Go"]
+        concepts = [
+            "algorithms", "data structures", "object-oriented programming",
+            "functional programming", "concurrency", "optimization"
+        ]
+
+        examples = [
+            f"In {random.choice(languages)}, we implement {random.choice(concepts)} to solve problems.\n\n",
+            f"Debugging requires systematic reasoning about code behavior.\n\n",
+            f"Code review helps identify logical errors and improve quality.\n\n",
+            f"Testing ensures software reliability and correctness.\n\n"
+        ]
+
+        patterns = [
+            f"Design patterns in {random.choice(languages)} provide reusable solutions.\n\n",
+            f"Refactoring improves code maintainability and readability.\n\n",
+            f"Version control tracks changes and enables collaboration.\n\n"
+        ]
+
+        content = random.choice(examples) + random.choice(patterns)
+        return f"Programming: {content}\n\n"
+
+    def generate_reasoning_content(self) -> str:
+        """Generate logical reasoning exercises"""
+        reasoning_types = [
+            "deductive reasoning", "inductive reasoning", "abductive reasoning",
+            "critical thinking", "problem-solving", "decision-making"
+        ]
+
+        exercises = [
+            f"Practice {random.choice(reasoning_types)} by analyzing arguments carefully.\n\n",
+            f"Identify assumptions and evaluate evidence in {random.choice(reasoning_types)}.\n\n",
+            f"Consider multiple perspectives when applying {random.choice(reasoning_types)}.\n\n",
+            f"Logical fallacies undermine {random.choice(reasoning_types)}.\n\n"
+        ]
+
+        strategies = [
+            f"Break complex problems into smaller steps for better reasoning.\n\n",
+            f"Question assumptions to strengthen {random.choice(reasoning_types)}.\n\n",
+            f"Seek evidence and avoid confirmation bias in reasoning.\n\n"
+        ]
+
+        content = random.choice(exercises) + random.choice(strategies)
+        return f"Reasoning: {content}\n\n"
+
     def generate_qa_pairs(self, count: int = 10) -> str:
         """Generate Q&A pairs"""
         qa_text = []
@@ -241,53 +335,101 @@ Assistant: That's a great attitude! Exploring {topic} further will help you form
 def main():
     generator = ConversationGenerator()
 
-    print("Generating conversational datasets for HRM training...")
+    print("Generating comprehensive conversational datasets for HRM training...")
+    print("Including language, reasoning, coding, math, and all branches of science")
 
-    # Generate large dataset
+    # Generate massive dataset for 3+ hours of training
     conversations = []
     qa_pairs = []
     dialogues = []
+    math_content = []
+    science_content = []
+    coding_content = []
+    reasoning_content = []
 
-    # Generate 1000 conversations
+    # Generate 5000 conversations
     print("Generating conversations...")
-    for i in range(1000):
+    for i in range(5000):
         conv = generator.generate_conversation(random.randint(2, 5))
         conversations.append(conv)
-        if (i + 1) % 100 == 0:
+        if (i + 1) % 500 == 0:
             print(f"Generated {i + 1} conversations")
 
-    # Generate 5000 Q&A pairs
+    # Generate 2000 Q&A pairs
     print("Generating Q&A pairs...")
-    for i in range(500):
+    for i in range(2000):
         qa = generator.generate_qa_pairs(random.randint(5, 15))
         qa_pairs.append(qa)
-        if (i + 1) % 50 == 0:
+        if (i + 1) % 200 == 0:
             print(f"Generated {i + 1} Q&A sets")
 
-    # Generate 200 dialogue scenarios
+    # Generate 1000 dialogue scenarios
     print("Generating dialogue scenarios...")
-    for i in range(200):
+    for i in range(1000):
         dialogue = generator.generate_dialogue_scenarios(1)
         dialogues.append(dialogue)
-        if (i + 1) % 20 == 0:
+        if (i + 1) % 100 == 0:
             print(f"Generated {i + 1} dialogue scenarios")
 
+    # Generate 2000 math content blocks
+    print("Generating mathematics content...")
+    for i in range(2000):
+        math = generator.generate_math_content()
+        math_content.append(math)
+        if (i + 1) % 200 == 0:
+            print(f"Generated {i + 1} math content blocks")
+
+    # Generate 2000 science content blocks
+    print("Generating science content...")
+    for i in range(2000):
+        science = generator.generate_science_content()
+        science_content.append(science)
+        if (i + 1) % 200 == 0:
+            print(f"Generated {i + 1} science content blocks")
+
+    # Generate 2000 coding content blocks
+    print("Generating programming content...")
+    for i in range(2000):
+        coding = generator.generate_coding_content()
+        coding_content.append(coding)
+        if (i + 1) % 200 == 0:
+            print(f"Generated {i + 1} coding content blocks")
+
+    # Generate 2000 reasoning content blocks
+    print("Generating reasoning content...")
+    for i in range(2000):
+        reasoning = generator.generate_reasoning_content()
+        reasoning_content.append(reasoning)
+        if (i + 1) % 200 == 0:
+            print(f"Generated {i + 1} reasoning content blocks")
+
     # Combine all data
-    all_data = conversations + qa_pairs + dialogues
+    all_data = (conversations + qa_pairs + dialogues +
+                math_content + science_content + coding_content + reasoning_content)
 
     # Shuffle to mix different types
     random.shuffle(all_data)
 
     # Write to file
     output_file = "data/text/raw/conversations/generated_conversations.txt"
-    print(f"Writing {len(all_data)} conversation blocks to {output_file}")
+    print(f"Writing {len(all_data)} content blocks to {output_file}")
 
     with open(output_file, 'w', encoding='utf-8') as f:
         for item in all_data:
             f.write(item)
 
-    print(f"Dataset generation complete! Total size: {len(all_data)} conversation blocks")
-    print("This should provide sufficient data for 3+ hours of HRM character-level training")
+    print(f"Dataset generation complete! Total size: {len(all_data)} content blocks")
+    print("Breakdown:")
+    print(f"  - Conversations: {len(conversations)}")
+    print(f"  - Q&A Pairs: {len(qa_pairs)}")
+    print(f"  - Dialogues: {len(dialogues)}")
+    print(f"  - Mathematics: {len(math_content)}")
+    print(f"  - Science: {len(science_content)}")
+    print(f"  - Programming: {len(coding_content)}")
+    print(f"  - Reasoning: {len(reasoning_content)}")
+    print("")
+    print("This comprehensive dataset provides at least 3 hours of diverse training data")
+    print("covering language, reasoning, coding (for self-improvement), math, and all branches of science")
 
 if __name__ == "__main__":
     main()

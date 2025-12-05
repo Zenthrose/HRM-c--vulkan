@@ -7,52 +7,103 @@ import json
 import os
 import sys
 import time
-import random
-import math
+import subprocess
+import signal
+from pathlib import Path
 
 def main():
-    print("🎯 HRM Character-Level Language Training")
+    print("HRM Character-Level Language Training")
     print("=" * 40)
 
     # Check for config
     config_path = "config/character_training_config.json"
     if not os.path.exists(config_path):
-        print(f"❌ Config not found: {config_path}")
+        print(f"Config not found: {config_path}")
         print("Run: ./prepare_language_dataset.sh")
         return
 
-    print("✅ Config loaded")
+    print("Config loaded")
 
     # Check for dataset
     dataset_path = "data/text/processed/training_corpus.txt"
     if not os.path.exists(dataset_path):
-        print(f"❌ Dataset not found: {dataset_path}")
+        print(f"Dataset not found: {dataset_path}")
         print("Run: ./prepare_language_dataset.sh")
         return
 
-    print("✅ Dataset found")
+    print("Dataset found")
 
-    # Simulate training
-    print("\n🚀 Starting Character-Level Training Simulation")
+    # Check for built executable
+    exe_path = "build/release/hrm_system.exe"
+    if not os.path.exists(exe_path):
+        print(f"HRM executable not found: {exe_path}")
+        print("Run: Build the project first using the instructions in AGENTS.md")
+        return
+
+    print("HRM executable found")
+
+    # Run actual Vulkan-based training
+    print("\nStarting Character-Level Training (Vulkan)")
     print("=" * 50)
 
-    for epoch in range(1, 6):
-        print(f"\nEpoch {epoch}/5")
+    try:
+        # Run the training command
+        cmd = [exe_path, "--train"]
+        print(f"Running: {' '.join(cmd)}")
+        print(f"Using executable: {exe_path}")
 
-        # Simulate training metrics
-        loss = 4.0 - (epoch * 0.3) + random.uniform(-0.1, 0.1)
-        perplexity = math.exp(loss)
-        accuracy = 0.1 + (epoch * 0.05) + random.uniform(-0.02, 0.02)
+        # Start the process
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+            universal_newlines=True
+        )
 
-        print(".4f")
-        print(".2f")
-        print(".1f")
+        # Monitor output in real-time
+        while True:
+            output = process.stdout.readline()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                print(output.strip())
 
-        if epoch % 2 == 0:
-            print("💾 Checkpoint saved")
+        # Get return code
+        return_code = process.poll()
 
-    print("\n✅ Training simulation complete!")
-    print("🎯 HRM is now ready for real character-level language training!")
+        if return_code == 0:
+            print("\nCharacter-level training completed successfully!")
+            print("HRM is now trained on character-level language patterns!")
+
+            # Check for training results
+            results_file = "logs/character_training_stats.json"
+            if os.path.exists(results_file):
+                print(f"Training results saved to: {results_file}")
+                try:
+                    with open(results_file, 'r') as f:
+                        results = json.load(f)
+                    print("Final metrics:")
+                    for key, value in results.items():
+                        if isinstance(value, (int, float)):
+                            print(f"  {key}: {value:.4f}")
+                except:
+                    print("  (Could not parse results file)")
+
+        else:
+            print(f"\nTraining failed with return code: {return_code}")
+
+    except KeyboardInterrupt:
+        print("\nTraining interrupted by user")
+        if 'process' in locals():
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+    except Exception as e:
+        print(f"\nError during training: {e}")
 
 if __name__ == "__main__":
     main()

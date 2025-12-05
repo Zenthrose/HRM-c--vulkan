@@ -108,12 +108,14 @@ HRMInner::HRMInner(const HRMInnerConfig& config) : config_(config) {
 }
 
 HRMInnerCarry HRMInner::empty_carry(int batch_size) {
-    int total_seq_len = config_.seq_len + puzzle_emb_len_;
-    int tensor_size = batch_size * total_seq_len * config_.hidden_size;
+    // Simplified for character training: ignore sequence and puzzle lengths
+    int tensor_size = batch_size * config_.hidden_size;
 
     HRMInnerCarry carry;
     carry.z_H.data.resize(tensor_size, 0.0f);
+    carry.z_H.shape = {static_cast<uint32_t>(batch_size), static_cast<uint32_t>(config_.hidden_size)};
     carry.z_L.data.resize(tensor_size, 0.0f);
+    carry.z_L.shape = {static_cast<uint32_t>(batch_size), static_cast<uint32_t>(config_.hidden_size)};
 
     return carry;
 }

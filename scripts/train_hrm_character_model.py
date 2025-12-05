@@ -135,42 +135,42 @@ def load_training_data():
 def train_hrm_model():
     """Train the HRM-like character-level model"""
 
-    print("🧠 HRM Character-Level Language Training Simulation")
+    print("HRM Character-Level Language Training Simulation")
     print("=" * 60)
 
     # Load training data
-    print("\n📚 Loading training data...")
+    print("\nLoading training data...")
     training_text = load_training_data()
 
     if not training_text:
-        print("❌ No training data found!")
+        print("No training data found!")
         return None
 
-    print(f"✅ Loaded {len(training_text)} characters")
-    print(f"📊 Unique characters: {len(set(training_text))}")
-    print(f"🎯 Sample text: {training_text[:100]}...")
+    print(f"Loaded {len(training_text)} characters")
+    print(f"Unique characters: {len(set(training_text))}")
+    print(f"Sample text: {training_text[:100]}...")
 
     # Initialize model
-    print("\n🏗️  Initializing HRM Character-Level Model...")
+    print("\nInitializing HRM Character-Level Model...")
     model = CharacterLevelPredictor(vocab_size=256, hidden_size=128, context_length=32)
-    print("✅ Model initialized with 32K+ parameters")
+    print("Model initialized with 32K+ parameters")
 
     # Training parameters
     epochs = 5
     learning_rate = 0.01
     context_length = 32
 
-    print(f"\n🎯 Training Configuration:")
+    print(f"\nTraining Configuration:")
     print(f"   Epochs: {epochs}")
     print(f"   Learning Rate: {learning_rate}")
     print(f"   Context Length: {context_length}")
     print(f"   Model Size: {model.vocab_size * model.hidden_size + model.hidden_size * model.vocab_size:,} parameters")
 
     # Training loop
-    print("\n🚀 Starting Training...")
+    print("\nStarting Training...")
 
     for epoch in range(epochs):
-        print(f"\n📈 Epoch {epoch + 1}/{epochs}")
+        print(f"\nEpoch {epoch + 1}/{epochs}")
 
         epoch_loss = 0.0
         epoch_accuracy = 0.0
@@ -204,10 +204,10 @@ def train_hrm_model():
                   ".4f"
                   ".1f")
 
-    print("\n✅ Training completed!")
+    print("\nTraining completed!")
 
     # Generate sample text
-    print("\n🎨 Generating Sample Text...")
+    print("\nGenerating Sample Text...")
 
     prompts = [
         "The quick brown fox",
@@ -222,7 +222,7 @@ def train_hrm_model():
         print(f"Generated: '{generated}'")
 
     # Analyze learning
-    print("\n📊 Learning Analysis:")
+    print("\nLearning Analysis:")
 
     # Character frequency analysis
     char_counts = Counter(training_text)
@@ -234,7 +234,7 @@ def train_hrm_model():
         print("6s")
 
     # Show learning progress
-    print("\n🎓 Learning Progress:")
+    print("\nLearning Progress:")
     print("Epoch | Loss    | Perplexity | Accuracy")
     print("-" * 35)
 
@@ -266,24 +266,24 @@ def train_hrm_model():
     with open("./logs/hrm_training_results.json", 'w') as f:
         json.dump(results, f, indent=2)
 
-    print("\n💾 Training results saved to ./logs/hrm_training_results.json")
+    print("\nTraining results saved to ./logs/hrm_training_results.json")
     return model
 
 def demonstrate_hrm_capabilities():
     """Demonstrate what HRM can learn and do"""
 
-    print("\n🎯 HRM Capabilities Demonstration")
-    print("=" * 40)
+    print("\nHRM Capabilities Demonstration")
+    print("=" * 45)
 
     model = train_hrm_model()
 
     if model is None:
         return
 
-    print("\n🧠 What HRM Learned:")
+    print("\nWhat HRM Learned:")
 
     # Test pattern recognition
-    print("\n🔍 Pattern Recognition:")
+    print("\nPattern Recognition:")
     test_patterns = [
         "the ", "ing ", "tion", "and ", "ing",
         "that", "with", "from", "they", "this"
@@ -294,7 +294,7 @@ def demonstrate_hrm_capabilities():
         continuation = model.generate_text(pattern, length=20, temperature=0.5)
         print(f"{pattern:8} -> {continuation[len(pattern):]}")
 
-    print("\n🎨 Creative Generation:")
+    print("\nCreative Generation:")
 
     # Generate longer creative text
     creative_prompts = [
@@ -308,27 +308,29 @@ def demonstrate_hrm_capabilities():
         print(f"\n{prompt}:")
         print(f"  {generated}")
 
-    print("\n💡 HRM Insights:")
+    print("\nHRM Insights:")
     print("• Learned character-level patterns from literature")
     print("• Can generate coherent text continuations")
     print("• Recognizes common English language patterns")
     print("• Adapts to different writing styles")
     print("• Maintains grammatical structure in generations")
 
-    print("\n🚀 HRM Potential:")
+    print("\nHRM Potential:")
     print("• Scale to massive datasets (GBs of text)")
     print("• Learn multiple languages simultaneously")
     print("• Generate code, poetry, and technical writing")
     print("• Understand context and maintain coherence")
     print("• Continuously learn and adapt")
 
-    print("\n✨ The HRM demonstrates the power of character-level language understanding!")
+    print("\nThe HRM demonstrates the power of character-level language understanding!")
 
 if __name__ == "__main__":
     try:
         demonstrate_hrm_capabilities()
     except KeyboardInterrupt:
-        print("\n⏹️  Training interrupted by user")
+        print("\nTraining interrupted by user")
     except Exception as e:
-        print(f"\n❌ Error during training: {e}")
+        print(f"\nError during training: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)

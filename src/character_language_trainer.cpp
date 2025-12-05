@@ -37,7 +37,7 @@ void CharacterLanguageTrainer::initialize_training_components() {
     // Initialize UTF-8 processor for the dataset
     UTF8Config utf8_config;
     utf8_config.max_sequence_length = config_.max_seq_length;
-    utf8_config.embedding_dim = 256; // Character embeddings
+    utf8_config.embedding_dim = config_.hidden_size; // Match HRM hidden size
     utf8_config.use_byte_fallback = true;
 
     auto utf8_processor = std::make_shared<UTF8Processor>(utf8_config);
@@ -277,6 +277,13 @@ std::unordered_map<std::string, Tensor> CharacterLanguageTrainer::sequences_to_h
     }
 
     batch["inputs"] = inputs_tensor;
+
+    // Add puzzle_identifiers for HRM system (coding treated as puzzles)
+    Tensor puzzle_tensor;
+    puzzle_tensor.data = std::vector<float>(config_.batch_size * 10, 0.0f);
+    puzzle_tensor.shape = {static_cast<uint32_t>(config_.batch_size), 10};
+    batch["puzzle_identifiers"] = puzzle_tensor;
+
     return batch;
 }
 
