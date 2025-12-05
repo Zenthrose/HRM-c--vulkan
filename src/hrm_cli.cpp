@@ -49,9 +49,13 @@ CLICommandResult HRMCLI::process_command(const std::string& input) {
     }
 
     CLICommand command = parse_command(args[0]);
-    args.erase(args.begin()); // Remove command name from args
-
-    return execute_command(command, args);
+    if (command == CLICommand::UNKNOWN) {
+        // Treat as direct chat message
+        return handle_chat(args);
+    } else {
+        args.erase(args.begin()); // Remove command name from args
+        return execute_command(command, args);
+    }
 }
 
 std::vector<std::string> HRMCLI::get_command_suggestions(const std::string& partial_input) {
@@ -145,6 +149,7 @@ CLICommandResult HRMCLI::handle_help(const std::vector<std::string>& args) {
     ss << "HRM Command Line Interface - Available Commands:\n\n";
 
     ss << "Communication:\n";
+    ss << "  <message>         - Send message directly to HRM (no prefix needed)\n";
     ss << "  chat <message>    - Send message to HRM and get response\n";
     ss << "  c <message>       - Short alias for chat\n\n";
 
@@ -332,7 +337,7 @@ void HRMCLI::display_welcome_message() {
         "  Self-Evolving | Self-Repairing | Resource-Aware  \n"
         + std::string(60, '=') + "\n"
         "\nWelcome to the HRM Command Line Interface!\n"
-        "Type 'help' for available commands or 'chat \"Hello\"' to start talking.\n"
+        "Type messages directly to chat with HRM, or 'help' for commands.\n"
         "The HRM system runs autonomously in the background.\n\n";
 
     std::cout << (colored_output_ ? format_colored_text(welcome, "cyan") : welcome);

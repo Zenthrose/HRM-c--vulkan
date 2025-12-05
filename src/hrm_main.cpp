@@ -30,7 +30,12 @@ ResourceAwareHRMConfig createDefaultHRMConfig() {
     config.base_config.base_config.adaptation_cycles = 10;
     config.base_config.base_config.enable_continual_learning = true;
 
-    config.base_config.project_root = ".";
+    // UTF-8 configuration
+    config.base_config.base_config.utf8_config.max_sequence_length = 2048;
+    config.base_config.base_config.utf8_config.embedding_dim = 256;
+    config.base_config.base_config.utf8_config.use_byte_fallback = true;
+
+    config.base_config.project_root = "./src";
     config.base_config.temp_compilation_dir = "./temp_compile";
     config.base_config.enable_self_modification = false; // Disabled for safety
     config.base_config.enable_runtime_recompilation = false;
@@ -483,12 +488,40 @@ int main(int argc, char* argv[]) {
 
             // Initialize HRM system only for CLI/GUI modes
             auto hrm_config = createDefaultHRMConfig();
+
+            // Initialize HRM inner config
+            hrm_config.base_config.base_config.hrm_config.inner_config.batch_size = 1;
+            hrm_config.base_config.base_config.hrm_config.inner_config.seq_len = 512;
+            hrm_config.base_config.base_config.hrm_config.inner_config.puzzle_emb_ndim = 128;
+            hrm_config.base_config.base_config.hrm_config.inner_config.num_puzzle_identifiers = 10;
+            hrm_config.base_config.base_config.hrm_config.inner_config.vocab_size = 100000;
+            hrm_config.base_config.base_config.hrm_config.inner_config.H_cycles = 3;
+            hrm_config.base_config.base_config.hrm_config.inner_config.L_cycles = 5;
+            hrm_config.base_config.base_config.hrm_config.inner_config.H_layers = 2;
+            hrm_config.base_config.base_config.hrm_config.inner_config.L_layers = 4;
+            hrm_config.base_config.base_config.hrm_config.inner_config.hidden_size = 768;
+            hrm_config.base_config.base_config.hrm_config.inner_config.expansion = 2.0f;
+            hrm_config.base_config.base_config.hrm_config.inner_config.num_heads = 12;
+            hrm_config.base_config.base_config.hrm_config.inner_config.pos_encodings = "learned";
+            hrm_config.base_config.base_config.hrm_config.inner_config.rms_norm_eps = 1e-5f;
+            hrm_config.base_config.base_config.hrm_config.inner_config.rope_theta = 10000.0f;
+            hrm_config.base_config.base_config.hrm_config.inner_config.halt_max_steps = 8;
+            hrm_config.base_config.base_config.hrm_config.inner_config.halt_exploration_prob = 0.1f;
+            hrm_config.base_config.base_config.hrm_config.inner_config.forward_dtype = "float32";
+
             // Set Vulkan resources in config
             hrm_config.base_config.base_config.hrm_config.inner_config.physicalDevice = vulkan.physicalDevice;
             hrm_config.base_config.base_config.hrm_config.inner_config.device = vulkan.device;
             hrm_config.base_config.base_config.hrm_config.inner_config.computeQueue = vulkan.computeQueue;
             hrm_config.base_config.base_config.hrm_config.inner_config.computeQueueFamilyIndex = vulkan.computeQueueFamilyIndex;
             hrm_config.base_config.base_config.hrm_config.inner_config.commandPool = vulkan.commandPool;
+
+            // Set Vulkan resources in UTF8 config
+            hrm_config.base_config.base_config.utf8_config.physicalDevice = vulkan.physicalDevice;
+            hrm_config.base_config.base_config.utf8_config.device = vulkan.device;
+            hrm_config.base_config.base_config.utf8_config.computeQueue = vulkan.computeQueue;
+            hrm_config.base_config.base_config.utf8_config.computeQueueFamilyIndex = vulkan.computeQueueFamilyIndex;
+            hrm_config.base_config.base_config.utf8_config.commandPool = vulkan.commandPool;
 
             hrm = std::make_shared<ResourceAwareHRM>(hrm_config);
         }

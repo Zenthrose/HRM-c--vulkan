@@ -1,3 +1,9 @@
+# MSYS2 Build Environment
+# Use MSYS2 (C:\msys64) with MinGW GCC 15.2.0 for Windows builds
+# Ignore the flat MinGW installation (GCC 6.3.0) - it lacks C++17 support
+# Build commands must use: set PATH=C:\msys64\mingw64\bin;%PATH%
+# And specify compilers: -DCMAKE_CXX_COMPILER=C:\msys64\mingw64\bin\g++.exe -DCMAKE_C_COMPILER=C:\msys64\mingw64\bin\gcc.exe
+
 # Build Commands
 - C++ Build (Linux/macOS): `mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc)`
 - C++ Build (Windows): `mkdir build && cd build && cmake .. && cmake --build . --config Release -j 4`
@@ -29,6 +35,11 @@
 - Run single C++ test: `./src/hrm_system --test` (or `.\src\Release\hrm_system.exe --test` on Windows)
 - Python evaluation: `python evaluate.py checkpoint=<path>`
 
+# Conversational Data Generation
+- Generate synthetic conversations: `python scripts/generate_conversation_data.py`
+- Prepare training dataset: `bash prepare_language_dataset.sh`
+- Train character language model: `python scripts/train_character_language.py`
+
 # Code Style Guidelines
 
 ## C++ Style
@@ -38,6 +49,12 @@
 - Error handling: throw `std::runtime_error` with descriptive messages
 - Use smart pointers (`std::unique_ptr`, `std::shared_ptr`) over raw pointers
 - RAII pattern for resource management
+
+## CLI Interface Updates
+- Direct message input: Type messages without "chat" prefix
+- Conversation history tracking: Maintains context across interactions
+- Enhanced response generation: Context-aware replies without repetition
+- Improved user experience: Natural chat flow
 
 ## Python Style
 - Type hints required for function parameters and return values

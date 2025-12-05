@@ -495,6 +495,11 @@ cat data/text/raw/code/sample_code.py >> data/text/processed/training_corpus.txt
 echo "" >> data/text/processed/training_corpus.txt
 cat data/text/raw/conversations/sample_conversations.txt >> data/text/processed/training_corpus.txt
 echo "" >> data/text/processed/training_corpus.txt
+if [ -f data/text/raw/conversations/generated_conversations.txt ]; then
+    cat data/text/raw/conversations/generated_conversations.txt >> data/text/processed/training_corpus.txt
+    echo "" >> data/text/processed/training_corpus.txt
+fi
+echo "" >> data/text/processed/training_corpus.txt
 cat data/text/raw/reasoning/sample_reasoning.txt >> data/text/processed/training_corpus.txt
 echo "" >> data/text/processed/training_corpus.txt
 cat data/text/raw/science/sample_science.txt >> data/text/processed/training_corpus.txt

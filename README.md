@@ -37,6 +37,8 @@
 | **Literary Training** | ✅ Complete | Pride & Prejudice dataset, character-level learning |
 | **Scientific Training** | ✅ Complete | ArXiv research paper dataset, academic text processing |
 | **Academic Text Generation** | ✅ Complete | Research paper writing, scientific terminology |
+| **Conversational Data Generation** | ✅ Complete | Synthetic dialogue creation, 1700+ conversation patterns |
+| **Enhanced CLI Interface** | ✅ Complete | Direct message input, conversation history tracking |
 | **Cross-Platform Build** | ✅ Complete | CMake + Clang + Ninja on Windows/Linux/macOS |
 | **Windows Compatibility** | ✅ Complete | Full Windows API integration, production-ready |
 
