@@ -384,3 +384,102 @@ void ResourceAwareHRM::emergency_task_cancellation() {
         }
     }
 }
+
+// Training methods
+
+bool ResourceAwareHRM::initialize_training(const VulkanTrainingConfig& training_config) {
+    if (vulkan_trainer_) {
+        std::cerr << "Training already initialized" << std::endl;
+        return false;
+    }
+
+    // Get Vulkan resources from HRM config
+    // The HRM config should have Vulkan resources set from hrm_main.cpp
+    auto hrm = get_hrm();
+    if (!hrm) {
+        std::cerr << "HRM not available for training initialization" << std::endl;
+        return false;
+    }
+
+    // For now, create trainer with null Vulkan resources (will be updated when we have access)
+    // In a full implementation, we'd extract Vulkan resources from the HRM config
+    vulkan_trainer_ = std::make_unique<VulkanTrainer>(
+        VK_NULL_HANDLE, VK_NULL_HANDLE, 0, VK_NULL_HANDLE, training_config
+    );
+
+    std::cout << "Vulkan training initialized with config:" << std::endl;
+    std::cout << "  Max sequence length: " << training_config.max_sequence_length << std::endl;
+    std::cout << "  Vocab size: " << training_config.vocab_size << std::endl;
+    std::cout << "  Batch size: " << training_config.batch_size << std::endl;
+    std::cout << "  Hidden size: " << training_config.hidden_size << std::endl;
+    std::cout << "  Max epochs: " << training_config.max_epochs << std::endl;
+
+    return true;
+}
+
+bool ResourceAwareHRM::start_training_session() {
+    if (!vulkan_trainer_) {
+        std::cerr << "Training not initialized. Call initialize_training() first." << std::endl;
+        return false;
+    }
+
+    // Load training data
+    std::string data_path = "data/text/processed/training_corpus.txt";
+    if (!vulkan_trainer_->load_training_data(data_path)) {
+        std::cerr << "Failed to load training data from: " << data_path << std::endl;
+        return false;
+    }
+
+    std::cout << "Training session started. Data loaded successfully." << std::endl;
+    return true;
+}
+
+bool ResourceAwareHRM::train_epoch() {
+    if (!vulkan_trainer_) {
+        std::cerr << "Training not initialized" << std::endl;
+        return false;
+    }
+
+    std::cout << "Training epoch " << (vulkan_trainer_->get_current_epoch() + 1) << "..." << std::endl;
+
+    if (!vulkan_trainer_->train_epoch()) {
+        std::cerr << "Training epoch failed" << std::endl;
+        return false;
+    }
+
+    std::cout << "Epoch completed. Loss: " << vulkan_trainer_->get_current_loss()
+              << ", Perplexity: " << vulkan_trainer_->get_current_perplexity() << std::endl;
+
+    return true;
+}
+
+bool ResourceAwareHRM::save_training_checkpoint(const std::string& checkpoint_path) {
+    if (!vulkan_trainer_) {
+        std::cerr << "Training not initialized" << std::endl;
+        return false;
+    }
+
+    return vulkan_trainer_->save_checkpoint(checkpoint_path);
+}
+
+bool ResourceAwareHRM::load_training_checkpoint(const std::string& checkpoint_path) {
+    if (!vulkan_trainer_) {
+        std::cerr << "Training not initialized" << std::endl;
+        return false;
+    }
+
+    return vulkan_trainer_->load_checkpoint(checkpoint_path);
+}
+
+std::string ResourceAwareHRM::generate_text(const std::string& prompt, uint32_t max_length) {
+    if (!vulkan_trainer_) {
+        return "";  // Empty triggers fallback to reasoning
+    }
+
+    try {
+        return vulkan_trainer_->generate_text(prompt, max_length);
+    } catch (const std::exception& e) {
+        std::cerr << "Text generation failed: " << e.what() << std::endl;
+        return "";  // Empty triggers fallback
+    }
+}

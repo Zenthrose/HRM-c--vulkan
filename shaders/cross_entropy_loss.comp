@@ -1,0 +1,61 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Input buffers
+layout(binding = 0) readonly buffer LogitsBuffer { float logits[]; };  // Pre-softmax outputs
+layout(binding = 1) readonly buffer TargetsBuffer { uint targets[]; }; // Target indices
+
+// Output buffers
+layout(binding = 2) writeonly buffer LossBuffer { float loss; };  // Single float for total loss
+layout(binding = 3) writeonly buffer GradBuffer { float grads[]; }; // Gradients for backprop
+
+// Uniforms
+layout(binding = 4) uniform LossParams {
+    uint batch_size;
+    uint seq_length;
+    uint vocab_size;
+};
+
+// Shared memory for softmax computation
+shared float shared_logits[1024];  // Adjust size based on vocab_size
+
+void main() {
+    uint idx = gl_GlobalInvocationID.x;
+    uint total_elements = batch_size * seq_length * vocab_size;
+
+    if (idx >= total_elements) return;
+
+    uint batch_seq = idx / vocab_size;
+    uint vocab_idx = idx % vocab_size;
+
+    // Load logits for this batch_seq
+    float logit = logits[idx];
+
+    // Compute softmax (need to find max and sum for numerical stability)
+    float max_logit = -1e10;
+    for (uint v = 0; v < vocab_size; ++v) {
+        uint logit_idx = batch_seq * vocab_size + v;
+        max_logit = max(max_logit, logits[logit_idx]);
+    }
+
+    float sum_exp = 0.0;
+    for (uint v = 0; v < vocab_size; ++v) {
+        uint logit_idx = batch_seq * vocab_size + v;
+        sum_exp += exp(logits[logit_idx] - max_logit);
+    }
+
+    float prob = exp(logit - max_logit) / sum_exp;
+
+    // Compute cross-entropy loss contribution
+    uint target = targets[batch_seq];
+    float target_prob = (vocab_idx == target) ? 1.0 : 0.0;
+
+    // Store loss contribution (will be summed in separate reduction)
+    if (vocab_idx == target) {
+        loss = -log(prob + 1e-10);
+    }
+
+    // Compute gradients: dL/dlogit = prob - target_prob
+    grads[idx] = prob - target_prob;
+}

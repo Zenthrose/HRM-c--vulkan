@@ -40,6 +40,9 @@ public:
     // Core communication interface
     CommunicationResult communicate(const std::string& input_message);
 
+    // Text generation (virtual for subclasses to override)
+    virtual std::string generate_text(const std::string& prompt, uint32_t max_length = 100);
+
     // Self-evolution methods
     void perform_evolution_cycle();
     void adapt_to_feedback(const std::string& feedback);

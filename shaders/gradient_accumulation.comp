@@ -1,0 +1,30 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Input buffers (gradients from multiple batches)
+layout(binding = 0) readonly buffer BatchGradBuffers { float batch_grads[]; };  // [batch][param]
+
+// Output buffer
+layout(binding = 1) writeonly buffer AccumulatedGradBuffer { float accumulated_grads[]; };
+
+// Uniforms
+layout(binding = 2) uniform AccumulationParams {
+    uint param_count;
+    uint batch_count;
+};
+
+void main() {
+    uint param_idx = gl_GlobalInvocationID.x;
+
+    if (param_idx >= param_count) return;
+
+    float sum = 0.0;
+    for (uint batch = 0; batch < batch_count; ++batch) {
+        uint grad_idx = batch * param_count + param_idx;
+        sum += batch_grads[grad_idx];
+    }
+
+    // Average gradients across batches
+    accumulated_grads[param_idx] = sum / float(batch_count);
+}

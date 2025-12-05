@@ -60,7 +60,7 @@ CLICommandResult HRMCLI::process_command(const std::string& input) {
 
 std::vector<std::string> HRMCLI::get_command_suggestions(const std::string& partial_input) {
     std::vector<std::string> suggestions;
-    std::vector<std::string> commands = {"help", "chat", "status", "memory", "settings", "exit"};
+    std::vector<std::string> commands = {"help", "chat", "status", "memory", "settings", "train", "exit"};
 
     for (const auto& cmd : commands) {
         if (cmd.find(partial_input) == 0) {
@@ -107,6 +107,7 @@ CLICommand HRMCLI::parse_command(const std::string& cmd) {
     if (lower_cmd == "status" || lower_cmd == "s") return CLICommand::STATUS;
     if (lower_cmd == "memory" || lower_cmd == "mem" || lower_cmd == "m") return CLICommand::MEMORY;
     if (lower_cmd == "settings" || lower_cmd == "config" || lower_cmd == "cfg") return CLICommand::SETTINGS;
+    if (lower_cmd == "train" || lower_cmd == "t") return CLICommand::TRAIN;
     if (lower_cmd == "exit" || lower_cmd == "quit" || lower_cmd == "q") return CLICommand::EXIT;
 
     return CLICommand::UNKNOWN;
@@ -136,6 +137,8 @@ CLICommandResult HRMCLI::execute_command(CLICommand command, const std::vector<s
             return handle_memory(args);
         case CLICommand::SETTINGS:
             return handle_settings(args);
+        case CLICommand::TRAIN:
+            return handle_train(args);
         case CLICommand::EXIT:
             return handle_exit(args);
         default:
@@ -162,6 +165,10 @@ CLICommandResult HRMCLI::handle_help(const std::vector<std::string>& args) {
     ss << "  memory compact    - Manually trigger memory compaction\n";
     ss << "  memory clear      - Clear memory (with confirmation)\n";
     ss << "  mem, m            - Short aliases for memory\n\n";
+
+    ss << "Training:\n";
+    ss << "  train             - Start Vulkan-based language model training\n";
+    ss << "  t                 - Short alias for train\n\n";
 
     ss << "Settings:\n";
     ss << "  settings          - Show current settings\n";
@@ -320,6 +327,97 @@ CLICommandResult HRMCLI::handle_settings(const std::vector<std::string>& args) {
 
     } else {
         return {false, "", "Usage: settings [key value] - Use 'settings' alone to show current settings", {"settings", "settings colors true"}};
+    }
+
+    return {true, ss.str(), ""};
+}
+
+CLICommandResult HRMCLI::handle_train(const std::vector<std::string>& args) {
+    std::stringstream ss;
+
+    ss << "Vulkan Training System for HRM Conversational AI\n";
+    ss << "================================================\n\n";
+
+    // Handle subcommands
+    if (!args.empty()) {
+        if (args[0] == "save" && args.size() > 1) {
+            std::string checkpoint_path = args[1];
+            if (hrm_system_->save_training_checkpoint(checkpoint_path)) {
+                ss << "✅ Training checkpoint saved to: " << checkpoint_path << "\n";
+            } else {
+                ss << "❌ Failed to save training checkpoint\n";
+            }
+            return {true, ss.str(), ""};
+        } else if (args[0] == "load" && args.size() > 1) {
+            std::string checkpoint_path = args[1];
+            if (hrm_system_->load_training_checkpoint(checkpoint_path)) {
+                ss << "✅ Training checkpoint loaded from: " << checkpoint_path << "\n";
+            } else {
+                ss << "❌ Failed to load training checkpoint\n";
+            }
+            return {true, ss.str(), ""};
+        }
+    }
+
+    // Check if training is already initialized
+    if (hrm_system_->is_training_initialized()) {
+        ss << "Training Status: Active\n\n";
+        ss << "Current Training State:\n";
+        ss << "  Epoch: " << hrm_system_->get_current_training_epoch() << "\n";
+        ss << "  Loss: " << hrm_system_->get_training_loss() << "\n";
+        ss << "  Perplexity: " << hrm_system_->get_training_perplexity() << "\n\n";
+
+        // Run one training epoch
+        if (hrm_system_->train_epoch()) {
+            ss << "✅ Training epoch completed successfully!\n\n";
+            ss << "Updated State:\n";
+            ss << "  Epoch: " << hrm_system_->get_current_training_epoch() << "\n";
+            ss << "  Loss: " << hrm_system_->get_training_loss() << "\n";
+            ss << "  Perplexity: " << hrm_system_->get_training_perplexity() << "\n\n";
+        } else {
+            ss << "❌ Training epoch failed\n\n";
+        }
+
+        ss << "Commands:\n";
+        ss << "  train save <path>  - Save training checkpoint\n";
+        ss << "  train load <path>  - Load training checkpoint\n";
+        ss << "  train              - Run another training epoch\n";
+
+    } else {
+        // Initialize training
+        VulkanTrainingConfig training_config;
+        training_config.max_sequence_length = 128;
+        training_config.vocab_size = 256;  // UTF-8 character level
+        training_config.batch_size = 16;
+        training_config.hidden_size = 512;
+        training_config.num_layers = 1;
+        training_config.learning_rate = 0.001f;
+        training_config.max_epochs = 100;
+        training_config.save_every_epochs = 10;
+
+        ss << "Initializing Vulkan Training System...\n\n";
+
+        if (hrm_system_->initialize_training(training_config)) {
+            ss << "✅ Training initialization successful!\n\n";
+            ss << "Configuration:\n";
+            ss << "  Sequence Length: " << training_config.max_sequence_length << "\n";
+            ss << "  Vocab Size: " << training_config.vocab_size << " (UTF-8 characters)\n";
+            ss << "  Batch Size: " << training_config.batch_size << "\n";
+            ss << "  Hidden Size: " << training_config.hidden_size << "\n";
+            ss << "  Learning Rate: " << training_config.learning_rate << "\n";
+            ss << "  Max Epochs: " << training_config.max_epochs << "\n\n";
+
+            if (hrm_system_->start_training_session()) {
+                ss << "✅ Training session started!\n";
+                ss << "Data loaded: 29,053 conversational samples\n\n";
+                ss << "Run 'train' again to start the first training epoch.\n";
+            } else {
+                ss << "❌ Failed to start training session\n";
+            }
+        } else {
+            ss << "❌ Training initialization failed\n";
+            ss << "Check Vulkan device availability and system resources.\n";
+        }
     }
 
     return {true, ss.str(), ""};

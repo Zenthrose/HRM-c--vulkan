@@ -1,0 +1,69 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Input buffers
+layout(binding = 0) readonly buffer InputBuffer { float input_data[]; };
+layout(binding = 1) readonly buffer WeightBuffer { float weights[]; };
+layout(binding = 2) readonly buffer OutputGradBuffer { float output_grad[]; };
+
+// Output buffers for gradients
+layout(binding = 3) writeonly buffer WeightGradBuffer { float weight_grad[]; };
+layout(binding = 4) writeonly buffer BiasGradBuffer { float bias_grad[]; };
+layout(binding = 5) writeonly buffer InputGradBuffer { float input_grad[]; };
+
+// Uniforms
+layout(binding = 6) uniform Params {
+    uint batch_seq;
+    uint in_features;
+    uint out_features;
+    uint has_bias;
+};
+
+void main() {
+    uint idx = gl_GlobalInvocationID.x;
+
+    // Compute weight gradients: weight_grad[out_idx][in_idx] += input[batch][in_idx] * output_grad[batch][out_idx]
+    if (idx < out_features * in_features) {
+        uint out_idx = idx / in_features;
+        uint in_idx = idx % in_features;
+
+        float grad_sum = 0.0;
+        for (uint batch = 0; batch < batch_seq; ++batch) {
+            uint input_idx = batch * in_features + in_idx;
+            uint output_grad_idx = batch * out_features + out_idx;
+            grad_sum += input_data[input_idx] * output_grad[output_grad_idx];
+        }
+
+        weight_grad[idx] = grad_sum;
+    }
+
+    // Compute bias gradients: bias_grad[out_idx] += sum over batch of output_grad[batch][out_idx]
+    else if (has_bias != 0 && idx < out_features * in_features + out_features) {
+        uint bias_idx = idx - out_features * in_features;
+
+        float grad_sum = 0.0;
+        for (uint batch = 0; batch < batch_seq; ++batch) {
+            uint output_grad_idx = batch * out_features + bias_idx;
+            grad_sum += output_grad[output_grad_idx];
+        }
+
+        bias_grad[bias_idx] = grad_sum;
+    }
+
+    // Compute input gradients: input_grad[batch][in_idx] += sum over out_features of output_grad[batch][out_idx] * weights[out_idx][in_idx]
+    else if (idx < out_features * in_features + out_features + batch_seq * in_features) {
+        uint input_grad_idx = idx - out_features * in_features - out_features;
+        uint batch = input_grad_idx / in_features;
+        uint in_idx = input_grad_idx % in_features;
+
+        float grad_sum = 0.0;
+        for (uint out_idx = 0; out_idx < out_features; ++out_idx) {
+            uint output_grad_idx = batch * out_features + out_idx;
+            uint weight_idx = out_idx * in_features + in_idx;
+            grad_sum += output_grad[output_grad_idx] * weights[weight_idx];
+        }
+
+        input_grad[input_grad_idx] = grad_sum;
+    }
+}

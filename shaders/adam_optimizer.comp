@@ -1,0 +1,51 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Input buffers
+layout(binding = 0) readonly buffer ParamBuffer { float params[]; };
+layout(binding = 1) readonly buffer GradBuffer { float grads[]; };
+
+// State buffers (momentum and variance)
+layout(binding = 2) buffer MBuffer { float m[]; };  // First moment
+layout(binding = 3) buffer VBuffer { float v[]; };  // Second moment
+
+// Output buffer
+layout(binding = 4) writeonly buffer UpdatedParamBuffer { float updated_params[]; };
+
+// Uniforms
+layout(binding = 5) uniform AdamParams {
+    uint param_count;
+    float learning_rate;
+    float beta1;
+    float beta2;
+    float epsilon;
+    uint t;  // Timestep
+};
+
+void main() {
+    uint idx = gl_GlobalInvocationID.x;
+
+    if (idx >= param_count) return;
+
+    float grad = grads[idx];
+    float param = params[idx];
+
+    // Update first moment
+    float m_prev = m[idx];
+    float m_new = beta1 * m_prev + (1.0 - beta1) * grad;
+    m[idx] = m_new;
+
+    // Update second moment
+    float v_prev = v[idx];
+    float v_new = beta2 * v_prev + (1.0 - beta2) * grad * grad;
+    v[idx] = v_new;
+
+    // Bias correction
+    float m_hat = m_new / (1.0 - pow(beta1, float(t)));
+    float v_hat = v_new / (1.0 - pow(beta2, float(t)));
+
+    // Parameter update
+    float update = learning_rate * m_hat / (sqrt(v_hat) + epsilon);
+    updated_params[idx] = param - update;
+}

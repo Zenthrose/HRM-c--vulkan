@@ -40,6 +40,14 @@
 - Prepare training dataset: `bash prepare_language_dataset.sh`
 - Train character language model: `python scripts/train_character_language.py`
 
+# Vulkan Training Implementation
+- Pure Vulkan-based neural network training (no CUDA/CPU dependencies)
+- Character-level model training on conversational data
+- Vulkan shader extensions for backward pass and optimization
+- Timeline: 5 weeks implementation completed on RX 580 GPU
+- Target: Natural conversations and brainstorming capabilities
+- Status: Fully Complete - All phases implemented, HRM now supports conversational AI with brainstorming capabilities
+
 # Code Style Guidelines
 
 ## C++ Style

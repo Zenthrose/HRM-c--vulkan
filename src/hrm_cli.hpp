@@ -11,6 +11,7 @@ enum class CLICommand {
     STATUS,
     MEMORY,
     SETTINGS,
+    TRAIN,
     EXIT,
     UNKNOWN
 };
@@ -65,6 +66,7 @@ private:
     CLICommandResult handle_status(const std::vector<std::string>& args);
     CLICommandResult handle_memory(const std::vector<std::string>& args);
     CLICommandResult handle_settings(const std::vector<std::string>& args);
+    CLICommandResult handle_train(const std::vector<std::string>& args);
     CLICommandResult handle_exit(const std::vector<std::string>& args);
 
     // Helper functions

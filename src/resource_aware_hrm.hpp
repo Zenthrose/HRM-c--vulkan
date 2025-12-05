@@ -3,6 +3,7 @@
 #include "self_modifying_hrm.hpp"
 #include "resource_monitor.hpp"
 #include "task_manager.hpp"
+#include "vulkan_trainer.hpp"
 
 struct ResourceAwareHRMConfig {
     SelfModifyingHRMConfig base_config;
@@ -54,6 +55,22 @@ public:
     // System status with resource information
     std::unordered_map<std::string, std::string> get_resource_aware_status();
 
+    // Training capabilities
+    bool initialize_training(const VulkanTrainingConfig& training_config);
+    bool start_training_session();
+    bool train_epoch();
+    bool save_training_checkpoint(const std::string& checkpoint_path);
+    bool load_training_checkpoint(const std::string& checkpoint_path);
+
+    // Training status
+    bool is_training_initialized() const { return vulkan_trainer_ != nullptr; }
+    float get_training_loss() const { return vulkan_trainer_ ? vulkan_trainer_->get_current_loss() : 0.0f; }
+    float get_training_perplexity() const { return vulkan_trainer_ ? vulkan_trainer_->get_current_perplexity() : 0.0f; }
+    uint32_t get_current_training_epoch() const { return vulkan_trainer_ ? vulkan_trainer_->get_current_epoch() : 0; }
+
+    // Text generation (override)
+    std::string generate_text(const std::string& prompt, uint32_t max_length = 100) override;
+
     // Access to core HRM model
     HRM* get_hrm() { return SelfEvolvingHRM::get_hrm(); }
 
@@ -61,6 +78,7 @@ private:
     ResourceAwareHRMConfig config_;
     std::shared_ptr<ResourceMonitor> resource_monitor_;
     std::shared_ptr<TaskManager> task_manager_;
+    std::unique_ptr<VulkanTrainer> vulkan_trainer_;
 
     // Resource-aware state
     std::vector<ResourceAwareTask> pending_tasks_;
