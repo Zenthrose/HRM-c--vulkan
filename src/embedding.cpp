@@ -63,7 +63,7 @@ Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
         // Average over sequence dimension
         int batch_size = 2;  // Hardcoded for now
         int seq_len = 512;   // Hardcoded for now
-        int embedding_dim = config.embedding_dim;
+        uint32_t embedding_dim = static_cast<uint32_t>(config.embedding_dim);
         Tensor output;
         output.data.resize(batch_size * embedding_dim, 0.0f);
         output.shape = {static_cast<uint32_t>(batch_size), embedding_dim};
@@ -249,12 +249,12 @@ Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
 
     // Average over sequence dimension to match HRM batch input
     // Assuming input.size() = batch_size * seq_len
-    int batch_size = 2;  // Hardcoded for now
-    int seq_len = 512;   // Hardcoded for now
-    int embedding_dim = config.embedding_dim;
+    uint32_t batch_size = 2;  // Hardcoded for now
+    uint32_t seq_len = 512;   // Hardcoded for now
+    uint32_t embedding_dim = static_cast<uint32_t>(config.embedding_dim);
     Tensor output;
     output.data.resize(batch_size * embedding_dim, 0.0f);
-    output.shape = {static_cast<uint32_t>(batch_size), embedding_dim};
+    output.shape = {batch_size, embedding_dim};
 
     for (int i = 0; i < batch_size; ++i) {
         for (int j = 0; j < embedding_dim; ++j) {

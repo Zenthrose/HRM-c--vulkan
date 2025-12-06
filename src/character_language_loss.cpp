@@ -3,6 +3,7 @@
 #include <cmath>
 #include <limits>
 #include <iostream>
+#include <filesystem>
 
 Tensor CharacterLanguageLoss::character_cross_entropy_loss(
     const Tensor& logits,
@@ -56,10 +57,15 @@ Tensor CharacterLanguageLoss::character_cross_entropy_loss(
                 logits.data.begin() + logits_offset + vocab_size
             );
 
-            // Compute softmax and cross-entropy
+            // Compute softmax and cross-entropy (with bounds checking)
             float sum_exp = 0.0f;
             for (size_t v = 0; v < vocab_size; ++v) {
-                sum_exp += std::exp(logits.data[logits_offset + v] - max_logit);
+                size_t idx = logits_offset + v;
+                if (idx >= logits.data.size()) {
+                    std::cerr << "Error: logits index out of bounds: " << idx << " >= " << logits.data.size() << std::endl;
+                    continue;
+                }
+                sum_exp += std::exp(logits.data[idx] - max_logit);
             }
 
             float log_prob = logits.data[logits_offset + target_idx] - max_logit - std::log(sum_exp);

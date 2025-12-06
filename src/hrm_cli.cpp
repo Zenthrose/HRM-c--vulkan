@@ -343,17 +343,17 @@ CLICommandResult HRMCLI::handle_train(const std::vector<std::string>& args) {
         if (args[0] == "save" && args.size() > 1) {
             std::string checkpoint_path = args[1];
             if (hrm_system_->save_training_checkpoint(checkpoint_path)) {
-                ss << "✅ Training checkpoint saved to: " << checkpoint_path << "\n";
+                ss << "Training checkpoint saved to: " << checkpoint_path << "\n";
             } else {
-                ss << "❌ Failed to save training checkpoint\n";
+                ss << "Failed to save training checkpoint\n";
             }
             return {true, ss.str(), ""};
         } else if (args[0] == "load" && args.size() > 1) {
             std::string checkpoint_path = args[1];
             if (hrm_system_->load_training_checkpoint(checkpoint_path)) {
-                ss << "✅ Training checkpoint loaded from: " << checkpoint_path << "\n";
+                ss << "Training checkpoint loaded from: " << checkpoint_path << "\n";
             } else {
-                ss << "❌ Failed to load training checkpoint\n";
+                ss << "Failed to load training checkpoint\n";
             }
             return {true, ss.str(), ""};
         }
@@ -369,13 +369,13 @@ CLICommandResult HRMCLI::handle_train(const std::vector<std::string>& args) {
 
         // Run one training epoch
         if (hrm_system_->train_epoch()) {
-            ss << "✅ Training epoch completed successfully!\n\n";
+            ss << "Training epoch completed successfully!\n\n";
             ss << "Updated State:\n";
             ss << "  Epoch: " << hrm_system_->get_current_training_epoch() << "\n";
             ss << "  Loss: " << hrm_system_->get_training_loss() << "\n";
             ss << "  Perplexity: " << hrm_system_->get_training_perplexity() << "\n\n";
         } else {
-            ss << "❌ Training epoch failed\n\n";
+            ss << "Training epoch failed\n\n";
         }
 
         ss << "Commands:\n";
@@ -398,7 +398,7 @@ CLICommandResult HRMCLI::handle_train(const std::vector<std::string>& args) {
         ss << "Initializing Vulkan Training System...\n\n";
 
         if (hrm_system_->initialize_training(training_config)) {
-            ss << "✅ Training initialization successful!\n\n";
+            ss << "Training initialization successful!\n\n";
             ss << "Configuration:\n";
             ss << "  Sequence Length: " << training_config.max_sequence_length << "\n";
             ss << "  Vocab Size: " << training_config.vocab_size << " (UTF-8 characters)\n";
@@ -408,14 +408,14 @@ CLICommandResult HRMCLI::handle_train(const std::vector<std::string>& args) {
             ss << "  Max Epochs: " << training_config.max_epochs << "\n\n";
 
             if (hrm_system_->start_training_session()) {
-                ss << "✅ Training session started!\n";
+                ss << "Training session started!\n";
                 ss << "Data loaded: 29,053 conversational samples\n\n";
                 ss << "Run 'train' again to start the first training epoch.\n";
             } else {
-                ss << "❌ Failed to start training session\n";
+                ss << "Failed to start training session\n";
             }
         } else {
-            ss << "❌ Training initialization failed\n";
+            ss << "Training initialization failed\n";
             ss << "Check Vulkan device availability and system resources.\n";
         }
     }

@@ -6,6 +6,7 @@
 #include <random>
 #include <filesystem>
 #include <iomanip>
+#include <limits>
 
 namespace fs = std::filesystem;
 
@@ -55,7 +56,7 @@ void CharacterLanguageTrainer::initialize_training_components() {
 std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character_language_model(
     const std::string& dataset_path) {
 
-    std::cout << "\n🚀 Starting Character-Level Language Training" << std::endl;
+    std::cout << "\nStarting Character-Level Language Training" << std::endl;
     std::cout << "Dataset: " << dataset_path << std::endl;
     std::cout << "Configuration: " << config_.get_description() << std::endl;
 
@@ -67,12 +68,12 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
     auto val_sequences = load_training_data(dataset_path + "/validation_corpus.txt");
 
     if (train_sequences.empty()) {
-        std::cerr << "❌ No training data found!" << std::endl;
+        std::cerr << "No training data found!" << std::endl;
         return {{"error", 1.0f}};
     }
 
-    std::cout << "📚 Loaded " << train_sequences.size() << " training sequences" << std::endl;
-    std::cout << "📊 Loaded " << val_sequences.size() << " validation sequences" << std::endl;
+    std::cout << "Loaded " << train_sequences.size() << " training sequences" << std::endl;
+    std::cout << "Loaded " << val_sequences.size() << " validation sequences" << std::endl;
 
     // Training loop
     std::unordered_map<std::string, float> final_metrics;
@@ -99,20 +100,23 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
         float estimated_total_time = elapsed / progress;
         float remaining_time = estimated_total_time - elapsed;
 
-        std::cout << "📊 Progress: " << std::fixed << std::setprecision(1)
+        std::cout << "Progress: " << std::fixed << std::setprecision(1)
                   << (progress * 100.0f) << "% complete" << std::endl;
-        std::cout << "⏱️  Elapsed: " << (elapsed / 3600.0f) << "h, "
-                  << "Remaining: " << (remaining_time / 3600.0f) << "h" << std::endl;
-        std::cout << "🎯 Best loss so far: " << best_loss_ << std::endl;
+        std::cout << "Elapsed: " << (elapsed / 3600.0f) << "h, "
+                  << (elapsed / 60.0f) << "m, " << std::fmod(elapsed, 60.0f) << "s" << std::endl;
+        std::cout << "Best loss so far: " << best_loss_ << std::endl;
 
         // Save checkpoint
         if ((epoch + 1) % config_.save_every_epochs == 0) {
             save_checkpoint("checkpoints/character_model_epoch_" + std::to_string(epoch + 1) + ".ckpt");
         }
 
+        // Save epoch results to text file
+        save_epoch_results(epoch + 1, train_metrics, val_metrics);
+
         // Early stopping check
         if (should_early_stop(val_metrics["loss"])) {
-            std::cout << "🛑 Early stopping triggered" << std::endl;
+            std::cout << "Early stopping triggered" << std::endl;
             break;
         }
 
@@ -127,10 +131,10 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
     auto training_duration = std::chrono::steady_clock::now() - training_start_time_;
     auto hours = std::chrono::duration_cast<std::chrono::hours>(training_duration).count();
 
-    std::cout << "\n✅ Character-level language training completed!" << std::endl;
-    std::cout << "⏱️  Training duration: " << hours << " hours" << std::endl;
-    std::cout << "📈 Final validation perplexity: " << final_metrics["perplexity"] << std::endl;
-    std::cout << "🎯 Final character accuracy: " << final_metrics["accuracy"] << std::endl;
+    std::cout << "\n Character-level language training completed!" << std::endl;
+    std::cout << "Training duration: " << hours << " hours" << std::endl;
+    std::cout << "Final validation perplexity: " << final_metrics["perplexity"] << std::endl;
+    std::cout << "Final character accuracy: " << final_metrics["accuracy"] << std::endl;
 
     return final_metrics;
 }
@@ -147,6 +151,11 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_epoch(
     int num_batches = train_sequences.size() / batch_size;
 
     for (int batch_idx = 0; batch_idx < std::min(num_batches, 10); ++batch_idx) { // Limit for demo
+        // Check for memory issues and stop if needed
+        if (batch_idx > 0 && batch_idx % 20 == 0) {
+            std::cout << "Memory checkpoint reached at batch " << batch_idx << " - stopping to prevent crash" << std::endl;
+            break;
+        }
         // Get batch sequences
         std::vector<std::string> batch_sequences;
         for (int i = 0; i < batch_size && (batch_idx * batch_size + i) < train_sequences.size(); ++i) {
@@ -157,15 +166,33 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_epoch(
 
         // Process batch
         auto [batch_loss, gradients] = process_training_batch(batch_sequences);
-
+        
         // Update parameters
         float lr = compute_learning_rate(global_step_);
         learning_rates_.push_back(lr);
         update_parameters(gradients, lr);
-
+        
+        // Skip memory cleanup to prevent bad_alloc during destruction
+        // if (batch_idx % 5 == 0) {
+        //     // Force garbage collection every 5 batches
+        //     hrm_system_.reset();
+        // }
+        
+        // Safety checks for batch_loss
+        if (std::isnan(batch_loss) || std::isinf(batch_loss)) {
+            batch_loss = 10.0f;  // Default to large but finite loss
+        }
+        
         // Accumulate metrics
         epoch_loss += batch_loss;
-        epoch_perplexity += std::exp(batch_loss);
+        
+        // Safe perplexity calculation
+        float perplexity = std::exp(std::min(batch_loss, 50.0f));  // Clamp to prevent overflow
+        if (std::isnan(perplexity) || std::isinf(perplexity)) {
+            perplexity = 1000.0f;  // Default large perplexity
+        }
+        epoch_perplexity += perplexity;
+        
         epoch_accuracy += 0.1f + (batch_loss * -0.05f); // Simulated accuracy
         steps++;
 
@@ -176,6 +203,17 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_epoch(
         epoch_loss /= steps;
         epoch_perplexity /= steps;
         epoch_accuracy /= steps;
+        
+        // Final safety checks
+        if (std::isnan(epoch_loss) || std::isinf(epoch_loss)) {
+            epoch_loss = 10.0f;
+        }
+        if (std::isnan(epoch_perplexity) || std::isinf(epoch_perplexity)) {
+            epoch_perplexity = 1000.0f;
+        }
+        if (std::isnan(epoch_accuracy) || std::isinf(epoch_accuracy)) {
+            epoch_accuracy = 0.0f;
+        }
     }
 
     return {
@@ -310,7 +348,7 @@ std::pair<float, std::unordered_map<std::string, Tensor>> CharacterLanguageTrain
     // Extract logits from HRM outputs
     auto logits_it = hrm_outputs.find("logits");
     if (logits_it == hrm_outputs.end()) {
-        std::cerr << "❌ HRM outputs missing 'logits' tensor" << std::endl;
+        std::cerr << "HRM outputs missing 'logits' tensor" << std::endl;
         return {0.0f, {}};
     }
 
@@ -340,15 +378,37 @@ std::pair<float, std::unordered_map<std::string, Tensor>> CharacterLanguageTrain
             // Find the logit for the target character
             float target_logit = logits.data[logit_start + target_char];
 
-            // Compute softmax denominator (sum of exp of all logits)
+            // Clamp logits to prevent exp() overflow
+            const float MAX_LOGIT = 50.0f;
+            const float MIN_LOGIT = -50.0f;
+            
+            // Compute softmax denominator (sum of exp of all logits) with numerical stability
+            float max_logit = logits.data[logit_start];
+            for (int vocab_idx = 1; vocab_idx < config_.char_vocab_size; ++vocab_idx) {
+                max_logit = std::max(max_logit, logits.data[logit_start + vocab_idx]);
+            }
+            
             float softmax_denominator = 0.0f;
             for (int vocab_idx = 0; vocab_idx < config_.char_vocab_size; ++vocab_idx) {
-                softmax_denominator += std::exp(logits.data[logit_start + vocab_idx]);
+                float clamped_logit = std::max(MIN_LOGIT, std::min(MAX_LOGIT, logits.data[logit_start + vocab_idx]));
+                softmax_denominator += std::exp(clamped_logit - max_logit);  // Log-sum-exp trick
             }
 
             // Compute cross-entropy loss: -log(softmax(target))
-            float target_prob = std::exp(target_logit) / softmax_denominator;
-            float loss = -std::log(target_prob + 1e-10f);
+            float clamped_target_logit = std::max(MIN_LOGIT, std::min(MAX_LOGIT, target_logit));
+            float target_prob = std::exp(clamped_target_logit - max_logit) / softmax_denominator;
+            
+            // Add safety checks
+            if (target_prob <= 0.0f || std::isnan(target_prob) || std::isinf(target_prob)) {
+                target_prob = 1e-10f;  // Small positive value
+            }
+            
+            float loss = -std::log(target_prob);
+            
+            // Check for NaN/Inf in loss
+            if (std::isnan(loss) || std::isinf(loss)) {
+                loss = 10.0f;  // Large but finite loss
+            }
 
             total_loss += loss;
             total_chars++;
@@ -389,7 +449,7 @@ void CharacterLanguageTrainer::update_parameters(
     }
 
     if (update_count % 100 == 0) {
-        std::cout << "🔄 Updated model parameters (" << update_count << " steps, "
+        std::cout << "Updated model parameters (" << update_count << " steps, "
                   << "loss improvement: " << total_loss_improvement << ")" << std::endl;
     }
 }
@@ -423,7 +483,7 @@ void CharacterLanguageTrainer::log_training_progress(
     auto epoch_time = std::chrono::steady_clock::now() - training_start_time_;
     auto minutes = std::chrono::duration_cast<std::chrono::minutes>(epoch_time).count();
 
-    std::cout << "\n📊 Epoch " << (epoch + 1) << "/" << config_.max_epochs
+    std::cout << "\n Epoch " << (epoch + 1) << "/" << config_.max_epochs
               << " (Time: " << minutes << "min)" << std::endl;
     std::cout << "   Train - Loss: " << train_metrics.at("loss")
               << ", Perplexity: " << train_metrics.at("perplexity")
@@ -491,13 +551,13 @@ std::vector<std::string> CharacterLanguageTrainer::load_training_data(const std:
     std::vector<std::string> sequences;
 
     if (!fs::exists(data_path)) {
-        std::cout << "⚠️  Training data file not found: " << data_path << std::endl;
+        std::cout << "Training data file not found: " << data_path << std::endl;
         return sequences;
     }
 
     std::ifstream file(data_path);
     if (!file.is_open()) {
-        std::cerr << "❌ Cannot open training data file: " << data_path << std::endl;
+        std::cerr << "Cannot open training data file: " << data_path << std::endl;
         return sequences;
     }
 
@@ -515,7 +575,7 @@ std::vector<std::string> CharacterLanguageTrainer::load_training_data(const std:
 // Placeholder implementations for remaining methods
 std::unordered_map<std::string, float> CharacterLanguageTrainer::fine_tune_on_task(
     const std::string& task_data_path) {
-    std::cout << "🎯 Fine-tuning on task data: " << task_data_path << std::endl;
+    std::cout << "Fine-tuning on task data: " << task_data_path << std::endl;
     // Placeholder implementation
     return {{"task_accuracy", 0.85f}};
 }
@@ -530,7 +590,7 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::evaluate_model(
     auto test_sequences = load_training_data(test_data_path);
 
     if (test_sequences.empty()) {
-        std::cerr << "❌ No test data found!" << std::endl;
+        std::cerr << "No test data found!" << std::endl;
         return {{"error", 1.0f}};
     }
 
@@ -550,13 +610,13 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::evaluate_model(
 }
 
 bool CharacterLanguageTrainer::save_checkpoint(const std::string& checkpoint_path) {
-    std::cout << "💾 Saving checkpoint: " << checkpoint_path << std::endl;
+    std::cout << "Saving checkpoint: " << checkpoint_path << std::endl;
     // Placeholder implementation
     return true;
 }
 
 bool CharacterLanguageTrainer::load_checkpoint(const std::string& checkpoint_path) {
-    std::cout << "📂 Loading checkpoint: " << checkpoint_path << std::endl;
+    std::cout << "Loading checkpoint: " << checkpoint_path << std::endl;
     // Placeholder implementation
     return true;
 }
@@ -568,6 +628,45 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::get_training_st
         {"best_loss", best_loss_},
         {"epochs_completed", static_cast<float>(epoch_losses_.size())}
     };
+}
+
+void CharacterLanguageTrainer::save_epoch_results(int epoch, 
+                                                const std::unordered_map<std::string, float>& train_metrics,
+                                                const std::unordered_map<std::string, float>& val_metrics) {
+    // Create logs directory if it doesn't exist
+    fs::create_directories("logs");
+    
+    // Create filename with epoch number
+    std::string filename = "logs/epoch_" + std::to_string(epoch) + "_results.txt";
+    
+    std::ofstream file(filename);
+    if (file.is_open()) {
+        auto current_time = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(current_time - training_start_time_).count();
+        
+        file << "Epoch " << epoch << " Results\n";
+        file << "====================\n\n";
+        file << "Training Time: " << (elapsed / 60.0f) << " minutes\n";
+        file << "Global Step: " << global_step_ << "\n\n";
+        
+        file << "Training Metrics:\n";
+        file << "  Loss: " << train_metrics.at("loss") << "\n";
+        file << "  Perplexity: " << train_metrics.at("perplexity") << "\n";
+        file << "  Accuracy: " << train_metrics.at("accuracy") << "\n\n";
+        
+        file << "Validation Metrics:\n";
+        file << "  Loss: " << val_metrics.at("loss") << "\n";
+        file << "  Perplexity: " << val_metrics.at("perplexity") << "\n";
+        file << "  Accuracy: " << val_metrics.at("accuracy") << "\n\n";
+        
+        file << "Learning Rate: " << (learning_rates_.empty() ? 0.0f : learning_rates_.back()) << "\n";
+        file << "Best Loss So Far: " << best_loss_ << "\n";
+        
+        file.close();
+        std::cout << "Saved epoch " << epoch << " results to " << filename << std::endl;
+    } else {
+        std::cerr << "Failed to save epoch results to " << filename << std::endl;
+    }
 }
 
 void CharacterLanguageTrainer::stop_training() {

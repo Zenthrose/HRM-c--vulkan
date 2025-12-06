@@ -5,6 +5,7 @@
 #include <regex>
 #include <cmath>
 #include <unordered_set>
+#include <filesystem>
 
 MetaReasoningLayer::MetaReasoningLayer(const MetaReasoningConfig& config) : config_(config) {
     std::cout << "Initializing Meta-Reasoning Layer..." << std::endl;

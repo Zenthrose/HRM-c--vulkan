@@ -4,18 +4,15 @@
 BlockVulkan::BlockVulkan(const BlockConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool) {
     std::cout << "Initializing BlockVulkan..." << std::endl;
-    attention = new AttentionVulkan(config.attention_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
-    mlp = new SwiGLUVulkan(config.mlp_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
-    norm1 = new RMSNormVulkan(config.norm_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
-    norm2 = new RMSNormVulkan(config.norm_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
+    attention = std::make_unique<AttentionVulkan>(config.attention_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
+    mlp = std::make_unique<SwiGLUVulkan>(config.mlp_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
+    norm1 = std::make_unique<RMSNormVulkan>(config.norm_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
+    norm2 = std::make_unique<RMSNormVulkan>(config.norm_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
 }
 
 BlockVulkan::~BlockVulkan() {
     std::cout << "Destroying BlockVulkan..." << std::endl;
-    delete attention;
-    delete mlp;
-    delete norm1;
-    delete norm2;
+    // Smart pointers automatically clean up
 }
 
 Tensor BlockVulkan::forward(const Tensor& input, const CosSin& cos_sin) {

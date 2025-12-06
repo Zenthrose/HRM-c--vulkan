@@ -3,6 +3,7 @@
 #include <locale>
 #include <sstream>
 #include <regex>
+#include <filesystem>
 
 // Define the static constant
 const char32_t CharacterTextDataset::UNKNOWN_CHAR = 0xFFFD;
@@ -143,7 +144,8 @@ std::string CharacterTextDataset::decode_tensor_to_characters(const Tensor& tens
         if (char_id >= 0 && char_id < static_cast<int>(id_to_char_.size())) {
             codepoints.push_back(id_to_char_[char_id]);
         } else {
-            codepoints.push_back(UNKNOWN_CHAR);
+            // Handle out-of-bounds character IDs gracefully
+            codepoints.push_back('?');  // Use question mark for unknown characters
         }
     }
 

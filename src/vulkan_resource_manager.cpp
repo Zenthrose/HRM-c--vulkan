@@ -9,6 +9,9 @@ VulkanResourceManager::VulkanResourceManager(VkDevice device, VkPhysicalDevice p
 }
 
 VulkanResourceManager::~VulkanResourceManager() {
+    // Cleanup memory pool first
+    cleanupMemoryPool();
+
     // Destroy all tracked buffers in reverse order
     for (auto it = trackedBuffers.rbegin(); it != trackedBuffers.rend(); ++it) {
         if (it->buffer != VK_NULL_HANDLE) {
@@ -24,6 +27,13 @@ VulkanResourceManager::~VulkanResourceManager() {
 }
 
 void VulkanResourceManager::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory) {
+    // Try to get from pool first
+    buffer = getPooledBuffer(size, usage, bufferMemory);
+    if (buffer != VK_NULL_HANDLE) {
+        return;
+    }
+
+    // Create new buffer if not available in pool
     VkBufferCreateInfo bufferInfo{};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.size = size;
@@ -140,6 +150,82 @@ void VulkanResourceManager::destroyCommandPool() {
     if (commandPool != VK_NULL_HANDLE) {
         vkDestroyCommandPool(device, commandPool, nullptr);
         commandPool = VK_NULL_HANDLE;
+    }
+}
+
+VkBuffer VulkanResourceManager::getPooledBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkDeviceMemory& memory) {
+    std::lock_guard<std::mutex> lock(poolMutex);
+    
+    PooledBuffer candidate;
+    if (findCompatibleBuffer(size, usage, candidate)) {
+        candidate.inUse = true;
+        memory = candidate.memory;
+        return candidate.buffer;
+    }
+    
+    return VK_NULL_HANDLE; // No suitable buffer found
+}
+
+void VulkanResourceManager::releaseBuffer(VkBuffer buffer, VkDeviceMemory memory) {
+    std::lock_guard<std::mutex> lock(poolMutex);
+    
+    for (auto& pooled : bufferPool) {
+        if (pooled.buffer == buffer && pooled.memory == memory) {
+            pooled.inUse = false;
+            return;
+        }
+    }
+}
+
+bool VulkanResourceManager::findCompatibleBuffer(VkDeviceSize size, VkBufferUsageFlags usage, PooledBuffer& result) {
+    VkDeviceSize totalPoolSize = 0;
+    
+    for (const auto& pooled : bufferPool) {
+        totalPoolSize += pooled.size;
+        if (!pooled.inUse && pooled.size >= size && (pooled.usage & usage) == usage) {
+            result = pooled;
+            return true;
+        }
+    }
+    
+    // Check if adding new buffer would exceed pool limit
+    if (totalPoolSize + size > MAX_POOL_SIZE) {
+        return false;
+    }
+    
+    return false;
+}
+
+void VulkanResourceManager::cleanupMemoryPool() {
+    std::lock_guard<std::mutex> lock(poolMutex);
+    
+    for (auto& pooled : bufferPool) {
+        if (pooled.buffer != VK_NULL_HANDLE) {
+            vkDestroyBuffer(device, pooled.buffer, nullptr);
+        }
+        if (pooled.memory != VK_NULL_HANDLE) {
+            vkFreeMemory(device, pooled.memory, nullptr);
+        }
+    }
+    bufferPool.clear();
+}
+
+void VulkanResourceManager::cleanupUnusedBuffers() {
+    std::lock_guard<std::mutex> lock(poolMutex);
+    
+    auto it = bufferPool.begin();
+    while (it != bufferPool.end()) {
+        if (!it->inUse) {
+            if (it->buffer != VK_NULL_HANDLE) {
+                vkDestroyBuffer(device, it->buffer, nullptr);
+            }
+            if (it->memory != VK_NULL_HANDLE) {
+                vkFreeMemory(device, it->memory, nullptr);
+            }
+            it = bufferPool.erase(it);
+        } else {
+            ++it;
+        }
     }
 }
 

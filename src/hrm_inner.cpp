@@ -4,23 +4,27 @@
 #include <random>
 #include <algorithm>
 
-// Helper function for tensor addition
+// Helper function for tensor addition with memory optimization
 Tensor tensor_add(const Tensor& a, const Tensor& b) {
     if (a.data.size() != b.data.size()) {
         throw std::runtime_error("Tensor size mismatch in addition");
     }
     Tensor result;
+    result.data.reserve(a.data.size()); // Reserve exact size to avoid reallocations
     result.data.resize(a.data.size());
     for (size_t i = 0; i < a.data.size(); ++i) {
         result.data[i] = a.data[i] + b.data[i];
     }
+    result.data.shrink_to_fit(); // Free any excess capacity
     return result;
 }
 
-// Helper function to create tensor with specific size
-Tensor create_tensor(size_t size, float value = 0.0f) {
+// Helper function to create tensor with specific size and memory optimization
+Tensor create_tensor(size_t size, float value) {
     Tensor result;
+    result.data.reserve(size); // Reserve exact size
     result.data.resize(size, value);
+    result.data.shrink_to_fit(); // Ensure no excess capacity
     return result;
 }
 
@@ -126,7 +130,7 @@ HRMInnerCarry HRMInner::reset_carry(const std::vector<bool>& reset_flag, const H
     for (size_t b = 0; b < reset_flag.size(); ++b) {
         if (reset_flag[b]) {
             // Reset to H_init and L_init
-            size_t offset = b * (config_.seq_len + puzzle_emb_len_) * config_.hidden_size;
+            size_t offset = b * config_.hidden_size;
             for (int i = 0; i < config_.hidden_size; ++i) {
                 new_carry.z_H.data[offset + i] = H_init_.data[i];
                 new_carry.z_L.data[offset + i] = L_init_.data[i];
@@ -158,6 +162,9 @@ std::tuple<HRMInnerCarry, Tensor, std::pair<Tensor, Tensor>> HRMInner::forward(
         val *= embed_scale_;
     }
 
+    // Debug: Print tensor sizes
+    std::cout << "Debug: input_embeddings size: " << input_embeddings.data.size() << std::endl;
+
     // Forward iterations (simplified - no torch.no_grad for now)
     Tensor z_H = carry.z_H;
     Tensor z_L = carry.z_L;
@@ -186,8 +193,8 @@ std::tuple<HRMInnerCarry, Tensor, std::pair<Tensor, Tensor>> HRMInner::forward(
     Tensor q_logits = q_head_->forward(z_H);
 
     // Extract q_halt and q_continue from q_logits
-    Tensor q_halt = create_tensor(q_logits.data.size() / 2);
-    Tensor q_continue = create_tensor(q_logits.data.size() / 2);
+    Tensor q_halt = create_tensor(q_logits.data.size() / 2, 0.0f);
+    Tensor q_continue = create_tensor(q_logits.data.size() / 2, 0.0f);
     for (size_t i = 0; i < q_halt.data.size(); ++i) {
         q_halt.data[i] = q_logits.data[i * 2];
         q_continue.data[i] = q_logits.data[i * 2 + 1];

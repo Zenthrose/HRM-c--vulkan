@@ -23,14 +23,23 @@ Tensor HierarchicalReasoningModule::forward(const Tensor& hidden_states, const T
 
     // Input injection (add)
     Tensor current_states = hidden_states;
-    // Add input_injection to current_states
+    // Add input_injection to current_states (with bounds checking)
+    if (input_injection.data.size() != current_states.data.size()) {
+        std::cerr << "Error: input_injection size mismatch in hierarchical reasoning" << std::endl;
+        return current_states;
+    }
     for (size_t i = 0; i < current_states.data.size(); ++i) {
         current_states.data[i] += input_injection.data[i];
     }
 
-    // Apply layers
-    for (auto& layer : layers_) {
-        current_states = layer->forward(current_states, cos_sin);
+    // Apply layers with cleanup between passes
+    for (size_t i = 0; i < layers_.size(); ++i) {
+        current_states = layers_[i]->forward(current_states, cos_sin);
+        
+        // Force cleanup after each layer to prevent memory accumulation
+        if (i % 2 == 1) { // Cleanup every 2 layers
+            current_states.data.shrink_to_fit();
+        }
     }
 
     return current_states;

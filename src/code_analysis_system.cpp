@@ -4,6 +4,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+#include <unordered_map>
 
 CodeAnalysisSystem::CodeAnalysisSystem(const std::string& project_root)
     : project_root_(project_root) {

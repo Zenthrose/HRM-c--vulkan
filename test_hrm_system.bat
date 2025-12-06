@@ -2,7 +2,7 @@
 REM HRM System End-to-End Test Script for Windows
 REM This script tests the complete HRM system functionality
 
-echo 🧪 HRM System End-to-End Testing
+echo HRM System End-to-End Testing
 echo =================================
 
 REM Colors for output (Windows CMD)
@@ -32,7 +32,7 @@ if not exist "src\hrm_vulkan.exe" (
     echo Warning: hrm_vulkan.exe executable not found. Some tests will be skipped.
 )
 
-echo 📋 Running System Tests...
+echo Running System Tests...
 echo.
 
 REM Test 1: Basic functionality test
@@ -130,7 +130,7 @@ if exist "..\config\hrm_config.txt" (
 )
 
 echo.
-echo 📊 Test Results Summary:
+echo Test Results Summary:
 echo ========================
 echo Tests Run: %TESTS_RUN%
 echo Tests Passed: %TESTS_PASSED%
@@ -138,10 +138,10 @@ set /a SUCCESS_RATE=TESTS_PASSED*100/TESTS_RUN
 echo Success Rate: %SUCCESS_RATE%%%
 
 if %TESTS_PASSED% equ %TESTS_RUN% (
-    echo 🎉 All tests passed! HRM system is ready for production use.
+    echo All tests passed! HRM system is ready for production use.
     exit /b 0
 ) else (
-    echo ❌ Some tests failed. Please check the output above for details.
+    echo Some tests failed. Please check the output above for details.
     exit /b 1
 )
 

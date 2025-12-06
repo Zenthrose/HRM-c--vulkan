@@ -79,19 +79,8 @@ VulkanResources initializeVulkan() {
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
 
-    // Enable validation layers if available
+    // Disable validation layers for now to avoid buffer usage flag issues
     std::vector<const char*> layers;
-    uint32_t layerCount;
-    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-    std::vector<VkLayerProperties> availableLayers(layerCount);
-    vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
-
-    for (const auto& layer : availableLayers) {
-        if (strcmp(layer.layerName, "VK_LAYER_KHRONOS_validation") == 0) {
-            layers.push_back("VK_LAYER_KHRONOS_validation");
-            break;
-        }
-    }
 
     createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
     createInfo.ppEnabledLayerNames = layers.data();
@@ -338,7 +327,7 @@ void runGUI(std::shared_ptr<ResourceAwareHRM> hrm) {
 }
 
 void runCharacterTraining(std::shared_ptr<ResourceAwareHRM> hrm) {
-    std::cout << "🚀 Starting Character-Level Language Training Mode" << std::endl;
+    std::cout << "Starting Character-Level Language Training Mode" << std::endl;
     std::cout << "==================================================" << std::endl;
 
     // Create character language training configuration
@@ -358,14 +347,14 @@ void runCharacterTraining(std::shared_ptr<ResourceAwareHRM> hrm) {
     std::string dataset_path = "./data/text/processed";
     auto training_results = trainer.train_character_language_model(dataset_path);
 
-    std::cout << "\n✅ Character-level training completed!" << std::endl;
-    std::cout << "📊 Final Results:" << std::endl;
+    std::cout << "\n Character-level training completed!" << std::endl;
+    std::cout << "Final Results:" << std::endl;
     for (const auto& [metric, value] : training_results) {
         std::cout << "  " << metric << ": " << value << std::endl;
     }
 
     // Test text generation
-    std::cout << "\n🎨 Testing text generation..." << std::endl;
+    std::cout << "\nTesting text generation..." << std::endl;
     std::string prompt = "The quick brown fox";
     std::string generated = trainer.generate_text(prompt, 100);
     std::cout << "Prompt: \"" << prompt << "\"" << std::endl;

@@ -4,13 +4,15 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <unordered_map>
+#include <mutex>
 
 /**
- * Vulkan Resource Manager
+ * Vulkan Resource Manager with Memory Pool
  * 
  * Manages the lifecycle of all Vulkan objects to ensure proper cleanup
- * and prevent resource leaks. Tracks all created objects and destroys
- * them in the correct order during shutdown.
+ * and prevent resource leaks. Implements memory pooling to reduce
+ * allocation overhead and prevent std::bad_alloc during initialization.
  */
 class VulkanResourceManager {
 public:
@@ -48,6 +50,20 @@ public:
     // Memory type finding
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
+    // Memory pool management
+    struct PooledBuffer {
+        VkBuffer buffer;
+        VkDeviceMemory memory;
+        VkDeviceSize size;
+        VkBufferUsageFlags usage;
+        bool inUse;
+    };
+    
+    VkBuffer getPooledBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkDeviceMemory& memory);
+    void releaseBuffer(VkBuffer buffer, VkDeviceMemory memory);
+    void cleanupMemoryPool();
+    void cleanupUnusedBuffers(); // Call between forward passes
+
 private:
     VkDevice device;
     VkPhysicalDevice physicalDevice;
@@ -62,23 +78,13 @@ private:
     };
     std::vector<TrackedBuffer> trackedBuffers;
 
-    // Helper functions
-    void createCommandPool();
-    void destroyCommandPool();
-
-private:
-    VkDevice device;
-    VkPhysicalDevice physicalDevice;
-    VkCommandPool commandPool;
-
-    // Track all created objects for proper cleanup
-    struct TrackedBuffer {
-        VkBuffer buffer;
-        VkDeviceMemory memory;
-    };
-    std::vector<TrackedBuffer> trackedBuffers;
+    // Memory pool for buffer reuse
+    std::vector<PooledBuffer> bufferPool;
+    std::mutex poolMutex;
+    static constexpr VkDeviceSize MAX_POOL_SIZE = 1024 * 1024 * 1024; // 1GB pool limit
 
     // Helper functions
     void createCommandPool();
     void destroyCommandPool();
+    bool findCompatibleBuffer(VkDeviceSize size, VkBufferUsageFlags usage, PooledBuffer& result);
 };

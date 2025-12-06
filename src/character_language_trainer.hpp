@@ -208,6 +208,16 @@ private:
     void save_training_stats(const std::string& stats_path) const;
 
     /**
+     * Save epoch results to text file
+     * @param epoch Epoch number
+     * @param train_metrics Training metrics
+     * @param val_metrics Validation metrics
+     */
+    void save_epoch_results(int epoch, 
+                          const std::unordered_map<std::string, float>& train_metrics,
+                          const std::unordered_map<std::string, float>& val_metrics);
+
+    /**
      * Load training data from file
      * @param data_path Path to training data
      * @return Loaded sequences

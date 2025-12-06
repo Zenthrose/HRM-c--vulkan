@@ -2,6 +2,7 @@
 #include "linear.hpp"
 #include <iostream>
 #include <cmath>
+#include <memory>
 
 SwiGLUVulkan::SwiGLUVulkan(const SwiGLUConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool) {
@@ -12,17 +13,16 @@ SwiGLUVulkan::SwiGLUVulkan(const SwiGLUConfig& config, VkPhysicalDevice physical
 
     // Create gate_up projection: hidden_size -> inter * 2 (gate + up)
     LinearConfig gate_up_config = {config.hidden_size, inter * 2, false}; // No bias
-    gate_up_proj = new LinearVulkan(gate_up_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
+    gate_up_proj = std::make_unique<LinearVulkan>(gate_up_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
 
     // Create down projection: inter -> hidden_size
     LinearConfig down_config = {inter, config.hidden_size, false}; // No bias
-    down_proj = new LinearVulkan(down_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
+    down_proj = std::make_unique<LinearVulkan>(down_config, physicalDevice, device, computeQueue, computeQueueFamilyIndex, commandPool);
 }
 
 SwiGLUVulkan::~SwiGLUVulkan() {
     std::cout << "Destroying SwiGLUVulkan layer..." << std::endl;
-    delete gate_up_proj;
-    delete down_proj;
+    // Smart pointers automatically clean up
 }
 
 Tensor SwiGLUVulkan::forward(const Tensor& input) {

@@ -3,6 +3,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "attention.hpp" // For Tensor
 #include "linear.hpp" // For LinearVulkan
@@ -27,7 +28,7 @@ private:
     uint32_t computeQueueFamilyIndex;
     VkCommandPool commandPool;
 
-    LinearVulkan* gate_up_proj;
-    LinearVulkan* down_proj;
+    std::unique_ptr<LinearVulkan> gate_up_proj;
+    std::unique_ptr<LinearVulkan> down_proj;
 };
 

@@ -3,6 +3,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "attention.hpp"
 #include "mlp.hpp"
@@ -29,8 +30,8 @@ private:
     uint32_t computeQueueFamilyIndex;
     VkCommandPool commandPool;
 
-    AttentionVulkan* attention;
-    SwiGLUVulkan* mlp;
-    RMSNormVulkan* norm1;
-    RMSNormVulkan* norm2;
+    std::unique_ptr<AttentionVulkan> attention;
+    std::unique_ptr<SwiGLUVulkan> mlp;
+    std::unique_ptr<RMSNormVulkan> norm1;
+    std::unique_ptr<RMSNormVulkan> norm2;
 };

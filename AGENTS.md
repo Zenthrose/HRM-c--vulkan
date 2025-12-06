@@ -6,7 +6,7 @@
 
 # Build Commands
 - C++ Build (Linux/macOS): `mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc)`
-- C++ Build (Windows): `mkdir build && cd build && cmake .. && cmake --build . --config Release -j 4`
+- C++ Build (Windows): `set PATH=C:\msys64\mingw64\bin;%PATH% && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=C:\msys64\mingw64\bin\g++.exe -DCMAKE_C_COMPILER=C:\msys64\mingw64\bin\gcc.exe && cmake --build . --config Release -j 1`
 - Python Install: `pip install -r requirements.txt`
 - Test Suite (Linux/macOS): `./test_hrm_system.sh`
 - Test Suite (Windows): `.\test_hrm_system.bat` (basic Windows compatibility added)
