@@ -25,7 +25,7 @@ def main():
     print("Config loaded")
 
     # Check for dataset
-    dataset_path = "data/text/processed/training_corpus.txt"
+    dataset_path = "data/text/processed/comprehensive_training_corpus.txt"
     if not os.path.exists(dataset_path):
         print(f"Dataset not found: {dataset_path}")
         print("Run: ./prepare_language_dataset.sh")

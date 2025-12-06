@@ -13,7 +13,7 @@ struct CharacterLanguageModelConfig {
     // Model architecture (optimized for character-level processing)
     int char_vocab_size = 100000;  // UTF-8 character vocabulary (much larger than tokens)
     int hidden_size = 768;
-    int num_layers = 12;
+    int num_layers = 4;  // Original HRM design: 4 layers per reasoning module
     int num_heads = 12;
     int max_seq_length = 2048;  // Longer sequences for character-level models
 

@@ -43,7 +43,6 @@ EmbeddingVulkan::~EmbeddingVulkan() {
 }
 
 Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
-    std::cout << "Performing forward pass in EmbeddingVulkan..." << std::endl;
 
     if (!device) {
         // CPU fallback implementation
@@ -432,6 +431,11 @@ void EmbeddingVulkan::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
 }
 
 void EmbeddingVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+    // Check if device is still valid before operations
+    if (device == VK_NULL_HANDLE || computeQueue == VK_NULL_HANDLE) {
+        return; // Device already destroyed, skip copy
+    }
+    
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;

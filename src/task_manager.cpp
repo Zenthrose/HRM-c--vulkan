@@ -93,8 +93,8 @@ TaskManager::TaskManager(std::shared_ptr<ResourceMonitor> resource_monitor)
 
     // Set default resource limits
     resource_limits_ = {
-        80.0,  // max_cpu_usage_percent
-        85.0,  // max_memory_usage_percent
+        95.0,  // max_cpu_usage_percent (raised for neural network training)
+        90.0,  // max_memory_usage_percent
         100 * 1024 * 1024,  // min_available_memory_bytes (100MB)
         90.0,  // max_disk_usage_percent
         1024 * 1024 * 1024   // min_available_disk_bytes (1GB)

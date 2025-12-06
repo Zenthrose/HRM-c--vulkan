@@ -7,6 +7,7 @@
 
 HRM::HRM(const HRMConfig& config) : config_(config) {
     std::cout << "Initializing HRM..." << std::endl;
+    std::cout << "Initializing HRM..." << std::endl;
     inner_ = std::make_unique<HRMInner>(config.inner_config);
     std::cout << "HRM initialized" << std::endl;
 }
@@ -38,7 +39,7 @@ std::pair<HRMCarry, std::unordered_map<std::string, Tensor>> HRM::forward(
     const HRMCarry& carry,
     const std::unordered_map<std::string, Tensor>& batch
 ) {
-    std::cout << "HRM forward..." << std::endl;
+    
 
     // Update data, carry (removing halted sequences)
     HRMInnerCarry new_inner_carry = inner_->reset_carry(carry.halted, carry.inner_carry);

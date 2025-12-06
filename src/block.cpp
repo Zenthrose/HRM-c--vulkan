@@ -16,7 +16,6 @@ BlockVulkan::~BlockVulkan() {
 }
 
 Tensor BlockVulkan::forward(const Tensor& input, const CosSin& cos_sin) {
-    std::cout << "BlockVulkan forward..." << std::endl;
     
     // Post-norm: norm -> attn -> residual -> norm -> mlp -> residual
     Tensor normed = norm1->forward(input);

@@ -55,7 +55,6 @@ AttentionVulkan::~AttentionVulkan() {
 }
 
 Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_sin) {
-    std::cout << "Performing forward pass in AttentionVulkan..." << std::endl;
 
     // 1. Map uniform buffer and copy config data
     void* uniformData;
@@ -387,6 +386,11 @@ void AttentionVulkan::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
 }
 
 void AttentionVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+    // Check if device is still valid before operations
+    if (device == VK_NULL_HANDLE || computeQueue == VK_NULL_HANDLE) {
+        return; // Device already destroyed, skip copy
+    }
+    
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;

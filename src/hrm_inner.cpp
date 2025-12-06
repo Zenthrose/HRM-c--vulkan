@@ -145,7 +145,7 @@ std::tuple<HRMInnerCarry, Tensor, std::pair<Tensor, Tensor>> HRMInner::forward(
     const HRMInnerCarry& carry,
     const std::unordered_map<std::string, Tensor>& batch
 ) {
-    std::cout << "HRMInner forward..." << std::endl;
+    
 
     // Get inputs from batch
     auto inputs_it = batch.find("inputs");
@@ -162,24 +162,37 @@ std::tuple<HRMInnerCarry, Tensor, std::pair<Tensor, Tensor>> HRMInner::forward(
         val *= embed_scale_;
     }
 
-    // Debug: Print tensor sizes
-    std::cout << "Debug: input_embeddings size: " << input_embeddings.data.size() << std::endl;
-
-    // Forward iterations (simplified - no torch.no_grad for now)
+    // Forward iterations - matching original HRM design exactly
     Tensor z_H = carry.z_H;
     Tensor z_L = carry.z_L;
 
     for (int H_step = 0; H_step < config_.H_cycles; ++H_step) {
         for (int L_step = 0; L_step < config_.L_cycles; ++L_step) {
             if (!(H_step == config_.H_cycles - 1 && L_step == config_.L_cycles - 1)) {
-                z_L = L_level_->forward(z_L, tensor_add(z_H, input_embeddings), rotary_emb_);
+                // L_level forward - apply individual layers directly (matching original Python design)
+                Tensor L_input = tensor_add(z_H, input_embeddings);
+                
+                // Apply L layers sequentially like original Python code
+                for (size_t i = 0; i < config_.L_layers; ++i) {
+                    L_input = L_level_->get_layer(i)->forward(L_input, rotary_emb_);
+                }
+                z_L = L_input;
             }
         }
 
         if (H_step != config_.H_cycles - 1) {
-            z_H = H_level_->forward(z_H, z_L, rotary_emb_);
+            // H_level forward - apply individual layers directly (matching original Python design)
+            Tensor H_input = z_L;
+            
+            // Apply H layers sequentially like original Python code
+            for (size_t i = 0; i < config_.H_layers; ++i) {
+                H_input = H_level_->get_layer(i)->forward(H_input, rotary_emb_);
+            }
+            z_H = H_input;
         }
     }
+    
+    
 
     // 1-step grad
     z_L = L_level_->forward(z_L, tensor_add(z_H, input_embeddings), rotary_emb_);

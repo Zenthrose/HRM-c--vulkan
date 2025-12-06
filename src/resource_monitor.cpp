@@ -57,7 +57,14 @@ void ResourceMonitor::start_monitoring(std::chrono::milliseconds interval) {
 
     monitoring_thread_ = std::thread([this]() {
         while (monitoring_active_) {
-            auto usage = collect_linux_resources(); // Assuming Linux for now
+            ResourceUsage usage;
+#ifdef _WIN32
+            usage = collect_windows_resources();
+#elif defined(__APPLE__)
+            usage = collect_macos_resources();
+#else
+            usage = collect_linux_resources();
+#endif
             add_usage_sample(usage);
             check_thresholds(usage);
             cleanup_old_data();
@@ -296,8 +303,40 @@ ResourceUsage ResourceMonitor::collect_linux_resources() {
 }
 
 ResourceUsage ResourceMonitor::collect_windows_resources() {
-    // Placeholder for Windows implementation
-    return ResourceUsage{};
+    ResourceUsage usage;
+    usage.timestamp = std::chrono::system_clock::now();
+
+    // CPU usage
+    usage.cpu_usage_percent = get_cpu_usage_windows() * 100.0;
+
+    // Memory info
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(MEMORYSTATUSEX);
+    if (GlobalMemoryStatusEx(&memStatus)) {
+        usage.total_memory_bytes = memStatus.ullTotalPhys;
+        usage.available_memory_bytes = memStatus.ullAvailPhys;
+        usage.used_memory_bytes = usage.total_memory_bytes - usage.available_memory_bytes;
+        usage.memory_usage_percent = (1.0 - (double)memStatus.ullAvailPhys / memStatus.ullTotalPhys) * 100.0;
+    }
+
+    // Disk info
+    auto disk_info = get_disk_info();
+    usage.total_disk_bytes = disk_info.total_disk_bytes;
+    usage.available_disk_bytes = disk_info.available_disk_bytes;
+    usage.used_disk_bytes = disk_info.used_disk_bytes;
+    usage.disk_usage_percent = disk_info.disk_usage_percent;
+
+    // Network info
+    auto net_info = get_network_info();
+    usage.network_download_speed_mbps = net_info.network_download_speed_mbps;
+    usage.network_upload_speed_mbps = net_info.network_upload_speed_mbps;
+    usage.network_bytes_received = net_info.network_bytes_received;
+    usage.network_bytes_sent = net_info.network_bytes_sent;
+
+    // System load (Windows doesn't have load average, use CPU usage as approximation)
+    usage.system_load_average = usage.cpu_usage_percent;
+
+    return usage;
 }
 
 ResourceUsage ResourceMonitor::collect_macos_resources() {
@@ -566,8 +605,36 @@ void ResourceMonitor::cleanup_old_data() {
 
 #ifdef _WIN32
 double ResourceMonitor::get_cpu_usage_windows() const {
-    // Simplified CPU usage for Windows - returns 0 for now
-    // Full implementation would use PDH or performance counters
-    return 0.0;
+    static PDH_HQUERY hQuery = NULL;
+    static PDH_HCOUNTER hCounter = NULL;
+    static bool initialized = false;
+    static bool first_run = true;
+
+    if (!initialized) {
+        if (PdhOpenQueryA(NULL, 0, &hQuery) == ERROR_SUCCESS) {
+            if (PdhAddCounterA(hQuery, "\\Processor(_Total)\\% Processor Time", 0, &hCounter) == ERROR_SUCCESS) {
+                initialized = true;
+            }
+        }
+    }
+
+    if (initialized) {
+        // Collect data twice on first run to get valid reading
+        if (PdhCollectQueryData(hQuery) == ERROR_SUCCESS) {
+            if (first_run) {
+                first_run = false;
+                Sleep(100); // Small delay for first reading
+                PdhCollectQueryData(hQuery);
+            }
+            
+            PDH_FMT_COUNTERVALUE counterValue;
+            if (PdhGetFormattedCounterValue(hCounter, PDH_FMT_DOUBLE, NULL, &counterValue) == ERROR_SUCCESS) {
+                return counterValue.doubleValue / 100.0; // Return as fraction 0-1
+            }
+        }
+    }
+
+    // Fallback to basic system info if PDH fails
+    return 0.1; // 10% fallback
 }
 #endif

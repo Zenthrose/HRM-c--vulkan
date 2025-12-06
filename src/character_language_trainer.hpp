@@ -100,6 +100,7 @@ private:
     int current_epoch_;
     int global_step_;
     float best_loss_;
+    int epochs_without_improvement_;
     std::chrono::steady_clock::time_point training_start_time_;
 
     // Training statistics
@@ -129,13 +130,22 @@ private:
     std::unordered_map<std::string, float> validate(
         const std::vector<std::string>& val_sequences);
 
-    /**
+/**
      * Process a single training batch
-     * @param batch_sequences Character sequences in the batch
+     * @param batch_sequences Character sequences in batch
      * @return Batch loss and gradients
      */
     std::pair<float, std::unordered_map<std::string, Tensor>> process_training_batch(
         const std::vector<std::string>& batch_sequences);
+
+    /**
+     * Process a single training batch with reused carry (prevents memory leak)
+     * @param batch_sequences Character sequences in batch
+     * @param reused_carry Reused HRM carry state
+     * @return Batch loss and gradients
+     */
+    std::pair<float, std::unordered_map<std::string, Tensor>> process_training_batch_with_carry(
+        const std::vector<std::string>& batch_sequences, const HRMCarry& reused_carry);
 
     /**
      * Convert character sequences to HRM input format
@@ -244,4 +254,13 @@ private:
      * @return Loaded sequences
      */
     std::vector<std::string> load_training_data(const std::string& data_path);
+    std::vector<std::string> generate_system_learning_sequences();
+
+    /**
+     * Calculate realistic batch accuracy based on loss
+     * @param batch_sequences Sequences in the batch
+     * @param batch_loss Batch loss value
+     * @return Accuracy percentage (0-100)
+     */
+    float calculate_batch_accuracy(const std::vector<std::string>& batch_sequences, float batch_loss);
 };

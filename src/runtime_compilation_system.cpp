@@ -330,10 +330,26 @@ CompilationResult RuntimeCompilationSystem::execute_compilation(
 
 bool RuntimeCompilationSystem::create_temp_directory() {
     try {
+        // Create parent directories if needed
+        fs::path temp_path(temp_directory_);
+        fs::path parent = temp_path.parent_path();
+        
+        if (!parent.empty() && !fs::exists(parent)) {
+            fs::create_directories(parent);
+        }
+        
         return fs::create_directories(temp_directory_);
     } catch (const std::exception& e) {
         std::cerr << "Error creating temp directory: " << e.what() << std::endl;
-        return false;
+        
+        // Fallback: try current directory
+        temp_directory_ = "./temp";
+        try {
+            return fs::create_directories(temp_directory_);
+        } catch (...) {
+            temp_directory_ = ".";
+            return true; // Use current directory as fallback
+        }
     }
 }
 

@@ -28,7 +28,12 @@ LinearVulkan::LinearVulkan(const LinearConfig& config, VkPhysicalDevice physical
 
 LinearVulkan::~LinearVulkan() {
     std::cout << "Destroying LinearVulkan layer..." << std::endl;
-
+    
+    // Check if device is still valid before cleanup
+    if (device == VK_NULL_HANDLE) {
+        return; // Device already destroyed, skip cleanup
+    }
+    
     // Clean up staging buffers first
     for (auto& staging : stagingBuffers) {
         if (staging.first != VK_NULL_HANDLE) {
@@ -212,6 +217,11 @@ void LinearVulkan::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkM
 }
 
 void LinearVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+    // Check if device is still valid before operations
+    if (device == VK_NULL_HANDLE || computeQueue == VK_NULL_HANDLE) {
+        return; // Device already destroyed, skip copy
+    }
+    
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -264,7 +274,6 @@ uint32_t LinearVulkan::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags
 }
 
 Tensor LinearVulkan::forward(const Tensor& input) {
-    std::cout << "Performing forward pass in LinearVulkan..." << std::endl;
 
     if (device == VK_NULL_HANDLE) {
         // Fallback to CPU implementation if no Vulkan device

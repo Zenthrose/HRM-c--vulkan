@@ -423,8 +423,27 @@ bool ResourceAwareHRM::start_training_session() {
         return false;
     }
 
-    // Load training data
-    std::string data_path = "data/text/processed/training_corpus.txt";
+    // Discover and load available training data
+    std::vector<std::string> available_files = {
+        "data/text/processed/comprehensive_training_corpus.txt",
+        "data/text/processed/training_corpus.txt", 
+        "data/text/processed/arxiv_training_corpus.txt",
+        "data/arxiv/arxiv_corpus.txt"
+    };
+    
+    std::string data_path;
+    for (const auto& file : available_files) {
+        if (fs::exists(file)) {
+            data_path = file;
+            std::cout << "Discovered training data: " << file << std::endl;
+            break;
+        }
+    }
+    
+    if (data_path.empty()) {
+        std::cout << "No training data found, will learn from experience" << std::endl;
+        return true;
+    }
     if (!vulkan_trainer_->load_training_data(data_path)) {
         std::cerr << "Failed to load training data from: " << data_path << std::endl;
         return false;

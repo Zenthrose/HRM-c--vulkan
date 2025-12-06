@@ -190,22 +190,66 @@ bool VulkanTrainer::create_buffer(VkDeviceSize size, VkBufferUsageFlags usage, V
     buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
     if (vkCreateBuffer(device_, &buffer_info, nullptr, &buffer) != VK_SUCCESS) {
+        std::cerr << "Failed to create buffer of size " << size << " bytes" << std::endl;
         return false;
     }
 
     VkMemoryRequirements mem_requirements;
     vkGetBufferMemoryRequirements(device_, buffer, &mem_requirements);
 
+    // Check if requested size is reasonable (prevent excessive allocations)
+    const VkDeviceSize MAX_REASONABLE_SIZE = 1024 * 1024 * 1024; // 1GB limit
+    if (mem_requirements.size > MAX_REASONABLE_SIZE) {
+        std::cerr << "Requested buffer size " << mem_requirements.size 
+                  << " exceeds maximum reasonable size " << MAX_REASONABLE_SIZE << std::endl;
+        vkDestroyBuffer(device_, buffer, nullptr);
+        return false;
+    }
+
     VkMemoryAllocateInfo alloc_info = {};
     alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     alloc_info.allocationSize = mem_requirements.size;
     alloc_info.memoryTypeIndex = find_memory_type(mem_requirements.memoryTypeBits, properties);
 
-    if (vkAllocateMemory(device_, &alloc_info, nullptr, &memory) != VK_SUCCESS) {
+    // Try memory allocation with graceful fallback
+    VkResult alloc_result = vkAllocateMemory(device_, &alloc_info, nullptr, &memory);
+    if (alloc_result != VK_SUCCESS) {
+        std::cerr << "Failed to allocate " << mem_requirements.size << " bytes of memory (error: " << alloc_result << ")" << std::endl;
+        
+        // Try with smaller size if possible (graceful degradation)
+        if (size > 1024 * 1024) { // If original request was > 1MB
+            VkDeviceSize reduced_size = size / 2;
+            std::cerr << "Attempting graceful degradation with reduced size " << reduced_size << " bytes" << std::endl;
+            
+            // Clean up original buffer
+            vkDestroyBuffer(device_, buffer, nullptr);
+            
+            // Recreate with smaller size
+            buffer_info.size = reduced_size;
+            if (vkCreateBuffer(device_, &buffer_info, nullptr, &buffer) == VK_SUCCESS) {
+                vkGetBufferMemoryRequirements(device_, buffer, &mem_requirements);
+                alloc_info.allocationSize = mem_requirements.size;
+                
+                if (vkAllocateMemory(device_, &alloc_info, nullptr, &memory) == VK_SUCCESS) {
+                    vkBindBufferMemory(device_, buffer, memory, 0);
+                    std::cout << "Successfully allocated reduced buffer size " << reduced_size << " bytes" << std::endl;
+                    return true;
+                }
+            }
+        }
+        
+        // Final cleanup if all attempts failed
+        vkDestroyBuffer(device_, buffer, nullptr);
         return false;
     }
 
-    vkBindBufferMemory(device_, buffer, memory, 0);
+    if (vkBindBufferMemory(device_, buffer, memory, 0) != VK_SUCCESS) {
+        std::cerr << "Failed to bind buffer memory" << std::endl;
+        vkFreeMemory(device_, memory, nullptr);
+        vkDestroyBuffer(device_, buffer, nullptr);
+        return false;
+    }
+
     return true;
 }
 

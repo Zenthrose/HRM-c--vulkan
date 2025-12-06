@@ -19,7 +19,6 @@ HierarchicalReasoningModule::HierarchicalReasoningModule(const HierarchicalReaso
 }
 
 Tensor HierarchicalReasoningModule::forward(const Tensor& hidden_states, const Tensor& input_injection, const CosSin& cos_sin) {
-    std::cout << "HierarchicalReasoningModule forward..." << std::endl;
 
     // Input injection (add)
     Tensor current_states = hidden_states;

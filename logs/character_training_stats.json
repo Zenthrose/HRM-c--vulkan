@@ -1,0 +1,8 @@
+{
+  "epochs": 1,
+  "epoch_losses": [43.3649],
+  "epoch_perplexities": [1.72839e+21],
+  "epoch_accuracies": [-2.06824],
+  "best_loss": 35.6996,
+  "total_steps": 7
+}

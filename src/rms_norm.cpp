@@ -37,7 +37,6 @@ RMSNormVulkan::~RMSNormVulkan() {
 }
 
 Tensor RMSNormVulkan::forward(const Tensor& input) {
-    std::cout << "Performing forward pass in RMSNormVulkan..." << std::endl;
     
     // Map uniform buffer
     struct UniformData {
@@ -304,6 +303,11 @@ void RMSNormVulkan::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, Vk
 }
 
 void RMSNormVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+    // Check if device is still valid before operations
+    if (device == VK_NULL_HANDLE || computeQueue == VK_NULL_HANDLE) {
+        return; // Device already destroyed, skip copy
+    }
+    
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;

@@ -26,7 +26,6 @@ SwiGLUVulkan::~SwiGLUVulkan() {
 }
 
 Tensor SwiGLUVulkan::forward(const Tensor& input) {
-    std::cout << "Performing forward pass in SwiGLUVulkan..." << std::endl;
 
     // 1. Gate-up projection: input -> [gate, up]
     Tensor gate_up = gate_up_proj->forward(input);
