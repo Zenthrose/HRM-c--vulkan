@@ -638,3 +638,85 @@ double ResourceMonitor::get_cpu_usage_windows() const {
     return 0.1; // 10% fallback
 }
 #endif
+
+// Resource-aware timeout calculation methods
+std::chrono::milliseconds ResourceMonitor::calculate_adaptive_timeout(std::chrono::milliseconds base_timeout, 
+                                                                    double complexity_factor) const {
+    auto usage = get_current_usage();
+    
+    // Calculate system load factor (0.5 to 2.0)
+    double load_factor = 1.0;
+    if (usage.cpu_usage_percent > 80.0 || usage.memory_usage_percent > 80.0) {
+        load_factor = 2.0; // Double timeout under high load
+    } else if (usage.cpu_usage_percent > 60.0 || usage.memory_usage_percent > 60.0) {
+        load_factor = 1.5; // 50% increase under medium load
+    } else if (usage.cpu_usage_percent < 20.0 && usage.memory_usage_percent < 20.0) {
+        load_factor = 0.5; // Halve timeout under low load
+    }
+    
+    // Apply complexity and load factors
+    auto adaptive_timeout = std::chrono::milliseconds(
+        static_cast<long long>(base_timeout.count() * load_factor * complexity_factor)
+    );
+    
+    // Ensure reasonable bounds (1 second to 5 minutes)
+    adaptive_timeout = std::max(std::chrono::milliseconds(1000), 
+                              std::min(adaptive_timeout, std::chrono::milliseconds(300000)));
+    
+    return adaptive_timeout;
+}
+
+std::chrono::seconds ResourceMonitor::calculate_process_timeout(const std::string& operation_type) const {
+    auto usage = get_current_usage();
+    
+    // Base timeouts by operation type
+    std::unordered_map<std::string, int> base_timeouts = {
+        {"compile", 120},      // 2 minutes for compilation
+        {"test", 60},          // 1 minute for tests
+        {"network", 30},       // 30 seconds for network ops
+        {"file_io", 45},       // 45 seconds for file operations
+        {"default", 30}        // 30 seconds default
+    };
+    
+    int base_timeout = base_timeouts.count(operation_type) ? base_timeouts[operation_type] : base_timeouts["default"];
+    
+    // Adjust based on system resources
+    double system_load = usage.cpu_usage_percent + usage.memory_usage_percent;
+    if (system_load > 150.0) {
+        base_timeout *= 2; // Double under very high load
+    } else if (system_load > 100.0) {
+        base_timeout = static_cast<int>(base_timeout * 1.5); // 50% increase under high load
+    } else if (system_load < 50.0) {
+        base_timeout = static_cast<int>(base_timeout * 0.7); // 30% reduction under low load
+    }
+    
+    // Cap between 10 seconds and 10 minutes
+    base_timeout = std::max(10, std::min(base_timeout, 600));
+    
+    return std::chrono::seconds(base_timeout);
+}
+
+std::chrono::milliseconds ResourceMonitor::calculate_gpu_timeout(size_t operation_size) const {
+    auto usage = get_current_usage();
+    
+    // Base GPU timeout: 5 seconds + 1ms per operation unit
+    uint64_t base_timeout_ms = 5000 + (operation_size * 1);
+    
+    // Adjust based on system resources and GPU memory pressure
+    double load_multiplier = 1.0;
+    if (usage.memory_usage_percent > 80.0) {
+        load_multiplier = 2.0; // Double timeout under memory pressure
+    } else if (usage.cpu_usage_percent > 80.0) {
+        load_multiplier = 1.5; // 50% increase under CPU pressure
+    }
+    
+    auto adaptive_timeout = std::chrono::milliseconds(
+        static_cast<long long>(base_timeout_ms * load_multiplier)
+    );
+    
+    // Cap between 1 second and 30 seconds
+    adaptive_timeout = std::max(std::chrono::milliseconds(1000), 
+                              std::min(adaptive_timeout, std::chrono::milliseconds(30000)));
+    
+    return adaptive_timeout;
+}

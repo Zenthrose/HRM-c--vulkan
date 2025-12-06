@@ -70,10 +70,14 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
     
     std::cout << "Starting autonomous system-wide learning..." << std::endl;
     
-// 1. Scan for existing training data with resource-aware loading
+    // 1. Scan for existing training data with resource-aware loading
     std::cout << "Loading training data..." << std::endl;
-    std::vector<std::string> train_sequences;
-    std::vector<std::string> val_sequences;
+    
+    std::vector<std::string> data_sources = {
+        dataset_path + "/training_corpus.txt",
+        dataset_path + "/validation_corpus.txt",
+        dataset_path + "/comprehensive_training_corpus.txt"
+    };
     
     for (const auto& source : data_sources) {
         if (fs::exists(source)) {

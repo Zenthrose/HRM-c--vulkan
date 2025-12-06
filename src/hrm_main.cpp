@@ -345,9 +345,10 @@ void runCharacterTraining(std::shared_ptr<ResourceAwareHRM> hrm) {
 
     // Run training
     std::string dataset_path = "./data/text/processed";
+    std::unordered_map<std::string, float> training_results;
     try {
         std::cout << "Starting training with dataset path: " << dataset_path << std::endl;
-        auto training_results = trainer.train_character_language_model(dataset_path);
+        training_results = trainer.train_character_language_model(dataset_path);
         std::cout << "Training completed successfully" << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Training failed with exception: " << e.what() << std::endl;

@@ -654,8 +654,19 @@ ProgramExecutionResult SystemIntegrationManager::execute_program_windows(const s
     // Close write end of pipe
     CloseHandle(hWritePipe);
 
-    // Wait for process with timeout
-    DWORD waitResult = WaitForSingleObject(pi.hProcess, static_cast<DWORD>(timeout.count() * 1000));
+    // Resource-aware timeout calculation
+    DWORD adaptive_timeout_ms;
+    if (timeout.count() == 0) {
+        // Calculate adaptive timeout based on operation type
+        adaptive_timeout_ms = 30000; // 30 seconds base
+        if (program_path.find("compile") != std::string::npos) adaptive_timeout_ms = 120000; // 2 min for compile
+        else if (program_path.find("test") != std::string::npos) adaptive_timeout_ms = 60000; // 1 min for test
+        else if (program_path.find("network") != std::string::npos) adaptive_timeout_ms = 45000; // 45s for network
+    } else {
+        adaptive_timeout_ms = static_cast<DWORD>(timeout.count() * 1000);
+    }
+    
+    DWORD waitResult = WaitForSingleObject(pi.hProcess, adaptive_timeout_ms);
     bool timedOut = (waitResult == WAIT_TIMEOUT);
 
     DWORD exitCode = 0;

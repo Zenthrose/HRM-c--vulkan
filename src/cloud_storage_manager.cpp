@@ -6,6 +6,8 @@
 #include <random>
 #include <iomanip>
 #include <stdexcept>
+#include <memory>
+#include "resource_monitor.hpp"
 
 CloudStorageProvider::CloudStorageProvider(const CloudStorageConfig& config)
     : config_(config), last_auth_time_(std::chrono::system_clock::now()) {
@@ -506,8 +508,12 @@ CloudStorageManager::CloudStorageManager() : default_provider_(CloudProvider::LO
     local_config.compaction_directory = "./cloud_storage";
     local_config.compaction_folder_name = "compactions";
     local_config.auto_refresh_tokens = false;
-    local_config.upload_timeout = std::chrono::seconds(30);
-    local_config.download_timeout = std::chrono::seconds(30);
+    // Resource-aware timeout calculations for network operations
+    auto resource_monitor = std::make_shared<ResourceMonitor>();
+    auto upload_timeout = resource_monitor->calculate_process_timeout("network");
+    auto download_timeout = resource_monitor->calculate_process_timeout("network");
+    local_config.upload_timeout = upload_timeout;
+    local_config.download_timeout = download_timeout;
 
     auto local_provider = std::make_shared<LocalStorageProvider>(local_config);
     providers_[CloudProvider::LOCAL_STORAGE] = local_provider;

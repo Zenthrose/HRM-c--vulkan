@@ -19,7 +19,7 @@ struct HTTPRequest {
     std::string url;
     std::unordered_map<std::string, std::string> headers;
     std::string body;
-    int timeout_seconds;
+    int timeout_seconds; // 0 = resource-aware calculation
 };
 
 class HTTPClient {

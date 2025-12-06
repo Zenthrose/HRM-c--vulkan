@@ -98,6 +98,12 @@ public:
 
     // System information
     std::unordered_map<std::string, std::string> get_system_info() const;
+    
+    // Resource-aware timeout calculations
+    std::chrono::milliseconds calculate_adaptive_timeout(std::chrono::milliseconds base_timeout, 
+                                                       double complexity_factor = 1.0) const;
+    std::chrono::seconds calculate_process_timeout(const std::string& operation_type = "default") const;
+    std::chrono::milliseconds calculate_gpu_timeout(size_t operation_size = 1) const;
 
 private:
     // Monitoring thread

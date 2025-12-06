@@ -72,7 +72,14 @@
 - ✅ NaN value prevention in training computations
 - ✅ Epoch-by-epoch result saving to text files
 - ✅ **Vulkan Command Buffer Submission Fixed**: Added comprehensive error handling for all vkQueueSubmit calls across attention, embedding, linear, RMSNorm, and trainer components
-- ✅ **GPU Queue Synchronization**: Implemented fence-based synchronization with timeout protection to prevent queue overload
+- ✅ **GPU Queue Synchronization**: Implemented fence-based synchronization with resource-aware timeout protection to prevent queue overload
+- ✅ **Resource-Aware Timeout System**: Replaced all hardcoded timeouts with dynamic calculations based on system resources and operation complexity
+- ✅ **Adaptive GPU Operations**: Vulkan fence timeouts scale with operation size and system load (1s-30s range)
+- ✅ **Smart Process Execution**: System integration manager uses resource-aware timeouts based on operation type (compile/test/network/file_io)
+- ✅ **Dynamic Cloud Storage**: Upload/download timeouts adapt to current system resources (15s-120s range)
+- ✅ **Intelligent Training**: Python scripts calculate adaptive timeouts based on CPU/memory usage via psutil
+- ✅ **Self-Healing Idle Management**: Repair scheduler adapts idle timeouts based on system load (1-10 minutes)
+- ✅ **No Hardcoded Timeouts**: All timeout values now calculated dynamically from current system state
 - ✅ **Resource Cleanup**: Proper command buffer cleanup on all Vulkan submission failures
 - ✅ **Training Stability**: HRM training now runs successfully without "failed to submit compute command buffer!" errors
 - ✅ **Autonomous System-Wide Learning**: Scans entire C: drive and learns from ALL available text data

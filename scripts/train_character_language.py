@@ -98,8 +98,22 @@ def main():
         print("\nTraining interrupted by user")
         if 'process' in locals():
             process.terminate()
+            # Resource-aware timeout calculation
             try:
-                process.wait(timeout=5)
+                import psutil
+                cpu_usage = psutil.cpu_percent(interval=1)
+                memory_usage = psutil.virtual_memory().percent
+                
+                # Calculate adaptive timeout based on system resources
+                base_timeout = 30  # 30 seconds base
+                if cpu_usage > 80 or memory_usage > 80:
+                    base_timeout *= 2  # Double under high load
+                elif cpu_usage > 60 or memory_usage > 60:
+                    base_timeout = int(base_timeout * 1.5)  # 50% increase under medium load
+                elif cpu_usage < 20 and memory_usage < 20:
+                    base_timeout = int(base_timeout * 0.7)  # Reduce under low load
+                
+                process.wait(timeout=base_timeout)
             except subprocess.TimeoutExpired:
                 process.kill()
     except Exception as e:

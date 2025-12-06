@@ -14,7 +14,7 @@
 
 IdleTimeRepairScheduler::IdleTimeRepairScheduler(std::shared_ptr<ResourceMonitor> resource_monitor)
     : resource_monitor_(resource_monitor), scheduler_running_(false), repairs_paused_(false),
-      cpu_idle_threshold_(10.0), user_activity_timeout_seconds_(300.0),
+      cpu_idle_threshold_(10.0), user_activity_timeout_seconds_(0.0), // 0 = resource-aware calculation
       total_repairs_attempted_(0), total_repairs_completed_(0), total_repairs_failed_(0) {
 
     last_user_activity_ = std::chrono::system_clock::now();
@@ -44,8 +44,32 @@ SystemIdleState IdleTimeRepairScheduler::get_current_idle_state() const {
     auto time_since_activity = std::chrono::duration_cast<std::chrono::seconds>(
         now - last_user_activity_).count();
 
-    if (time_since_activity > user_activity_timeout_seconds_) {
-        return SystemIdleState::IDLE;
+    // Resource-aware idle timeout calculation
+    if (user_activity_timeout_seconds_ == 0.0) {
+        // Calculate adaptive timeout based on system resources
+        auto usage = resource_monitor_->get_current_usage();
+        double system_load = usage.cpu_usage_percent + usage.memory_usage_percent;
+        
+        // Adaptive timeout: higher load = shorter idle timeout (more aggressive repairs)
+        double adaptive_timeout;
+        if (system_load > 150.0) {
+            adaptive_timeout = 60.0; // 1 minute under very high load
+        } else if (system_load > 100.0) {
+            adaptive_timeout = 120.0; // 2 minutes under high load
+        } else if (system_load > 50.0) {
+            adaptive_timeout = 300.0; // 5 minutes under medium load
+        } else {
+            adaptive_timeout = 600.0; // 10 minutes under low load
+        }
+        
+        if (time_since_activity > adaptive_timeout) {
+            return SystemIdleState::IDLE;
+        }
+    } else {
+        // Use provided timeout
+        if (time_since_activity > user_activity_timeout_seconds_) {
+            return SystemIdleState::IDLE;
+        }
     }
 
     return SystemIdleState::ACTIVE;
