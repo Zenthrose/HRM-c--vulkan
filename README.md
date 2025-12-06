@@ -80,15 +80,15 @@
 - ✅ **Cross-Platform File Discovery**: Works on Windows, Linux, and macOS with proper path handling
 - ✅ **Resource-Aware Operation**: Adapts to available system resources automatically
 
-### 📖 Child's Book Chunking
-Large files are processed like reading a book page by page:
+### 📖 Data Chunking
+Large files are processed in manageable chunks for efficient learning:
 - **Smart Detection**: Files over 1MB trigger chunking mode
-- **Page Size**: Each chunk is 2,000 characters (like a book page)
-- **Context Preservation**: 200-character overlap between pages
+- **Chunk Size**: Each chunk is 2,000 characters for optimal processing
+- **Context Preservation**: 200-character overlap between chunks maintains continuity
 - **Memory Safe**: Limits to 1,000 chunks per file to prevent overload
 - **Progressive Learning**: Builds understanding gradually across chunks
 
-Example: A 5MB Perl library becomes 2,500 learnable "pages" that the system studies one by one, just like a child reading through a large textbook.
+Example: A 5MB library becomes 2,500 learnable chunks that the system processes sequentially, enabling learning from massive files without memory issues.
 
 ### 🔄 Epoch-Based Training
 - **Multi-Epoch Learning**: System trains in cycles with validation after each epoch
@@ -786,7 +786,7 @@ make -j$(nproc)
 | **Academic Writing** | Training framework | ⚠️ Partial | Infrastructure |
 | **Character-Level Mastery** | UTF-8 processing | ✅ Complete | Unicode support |
 | **Advanced Optimizations** | Frameworks | ⚠️ Partial | Minimal implementations |
-| **Child's Book Chunking** | Large file processing | ✅ Complete | 1MB threshold, 2K char chunks |
+| **Data Chunking** | Large file processing | ✅ Complete | 1MB threshold, 2K char chunks |
 | **Epoch-Based Training** | Multi-cycle learning | ✅ Complete | Validation and checkpointing |
 | **Memory Leak Fixes** | Resource management | ✅ Complete | Carry reuse and cleanup |
 
