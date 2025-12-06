@@ -86,9 +86,9 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
         }
     }
     
-    // 2. Scan ENTIRE SYSTEM for code files to learn programming patterns
+    // 2. Scan ENTIRE SYSTEM for code files to learn programming patterns (avoid protected folders)
     std::vector<std::string> system_code_dirs = {
-        "C:/", "C:\\Program Files", "C:\\Program Files (x86)", 
+        "C:/ProgramData", "C:/Program Files/Common Files", "C:/Documents",
         "/usr", "/opt", "/home", "/var"
     };
     
@@ -96,6 +96,14 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
         if (fs::exists(base_dir) && fs::is_directory(base_dir)) {
             std::cout << "Scanning system directory: " << base_dir << std::endl;
             try {
+                // Test directory access first
+                fs::directory_iterator test_iter(base_dir);
+                if (test_iter == fs::directory_iterator()) {
+                    std::cout << "Directory access denied: " << base_dir << std::endl;
+                    continue;
+                }
+                
+                int files_processed = 0;
                 for (const auto& entry : fs::recursive_directory_iterator(base_dir)) {
                     if (entry.is_regular_file()) {
                         std::string ext = entry.path().extension().string();
@@ -114,26 +122,44 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
                             if (!file_data.empty()) {
                                 train_sequences.insert(train_sequences.end(), file_data.begin(), file_data.end());
                                 std::cout << "Learned from system file: " << entry.path().string() << std::endl;
+                                files_processed++;
                             }
                         }
                     }
+                    
+                    // Limit files per directory to prevent overload
+                    if (files_processed >= 200) {
+                        std::cout << "Reached file limit for directory, moving to next..." << std::endl;
+                        break;
+                    }
                 }
+                std::cout << "Processed " << files_processed << " files from " << base_dir << std::endl;
+            } catch (const std::filesystem::filesystem_error& e) {
+                std::cout << "Filesystem error accessing " << base_dir << ": " << e.what() << std::endl;
             } catch (const std::exception& e) {
                 std::cout << "Could not access " << base_dir << ": " << e.what() << std::endl;
             }
         }
     }
     
-    // 3. Scan for system documentation and knowledge
+    // 3. Scan for system documentation and knowledge (with better error handling)
     std::vector<std::string> system_doc_dirs = {
-        "C:/Windows", "C:/Users", "C:/Documents", 
-        "/usr/share", "/usr/doc", "/usr/local/share", "/etc"
+        "C:/Documents", "C:/ProgramData", "C:/Program Files/Common Files",
+        "/usr/share", "/usr/doc", "/usr/local/share", "/etc", "/opt"
     };
     
     for (const auto& dir : system_doc_dirs) {
         if (fs::exists(dir) && fs::is_directory(dir)) {
             std::cout << "Scanning knowledge directory: " << dir << std::endl;
             try {
+                // Test directory access first
+                fs::directory_iterator test_iter(dir);
+                if (test_iter == fs::directory_iterator()) {
+                    std::cout << "Directory access denied: " << dir << std::endl;
+                    continue;
+                }
+                
+                int files_processed = 0;
                 for (const auto& entry : fs::recursive_directory_iterator(dir)) {
                     if (entry.is_regular_file()) {
                         std::string ext = entry.path().extension().string();
@@ -147,10 +173,20 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
                             if (!doc_data.empty()) {
                                 train_sequences.insert(train_sequences.end(), doc_data.begin(), doc_data.end());
                                 std::cout << "Learned from knowledge: " << entry.path().string() << std::endl;
+                                files_processed++;
                             }
                         }
                     }
+                    
+                    // Limit files per directory to prevent overload
+                    if (files_processed >= 100) {
+                        std::cout << "Reached file limit for directory, moving to next..." << std::endl;
+                        break;
+                    }
                 }
+                std::cout << "Processed " << files_processed << " files from " << dir << std::endl;
+            } catch (const std::filesystem::filesystem_error& e) {
+                std::cout << "Filesystem error accessing " << dir << ": " << e.what() << std::endl;
             } catch (const std::exception& e) {
                 std::cout << "Could not access " << dir << ": " << e.what() << std::endl;
             }
@@ -724,9 +760,17 @@ std::vector<std::string> CharacterLanguageTrainer::load_training_data(const std:
         return sequences;
     }
 
-    // Check file size for chunking decision
+// Check file size for chunking decision
     uintmax_t file_size = fs::file_size(data_path);
-    const uintmax_t LARGE_FILE_THRESHOLD = 1024 * 1024; // 1MB threshold
+    
+    // Adaptive thresholding: combination of size and content type
+    uintmax_t LARGE_FILE_THRESHOLD = 1024 * 1024; // 1MB base threshold
+    uintmax_t VERY_LARGE_FILE_THRESHOLD = 10 * 1024 * 1024; // 10MB for larger chunks
+    
+    // Increase chunk sizes for better processing
+    const size_t BASE_CHUNK_SIZE = 2000;  // Base chunk size
+    const size_t LARGE_CHUNK_SIZE = 5000;  // Larger chunks for big files
+    const size_t OVERLAP_SIZE = 200;  // Context overlap between chunks
     
     std::ifstream file(data_path);
     if (!file.is_open()) {
@@ -734,12 +778,9 @@ std::vector<std::string> CharacterLanguageTrainer::load_training_data(const std:
         return sequences;
     }
 
-    if (file_size > LARGE_FILE_THRESHOLD) {
-        // Child's book approach: chunk large files into manageable "pages"
-        std::cout << "Large file detected (" << file_size << " bytes), using child's book chunking..." << std::endl;
-        
-        const size_t CHUNK_SIZE = 2000; // Characters per "page"
-        const size_t OVERLAP_SIZE = 200;  // Overlap between pages for context
+    if (file_size > VERY_LARGE_FILE_THRESHOLD) {
+        // Very large files: use larger chunks for efficiency
+        std::cout << "Very large file detected (" << file_size << " bytes), using enhanced chunking..." << std::endl;
         
         std::string content;
         content.reserve(file_size);
@@ -750,15 +791,15 @@ std::vector<std::string> CharacterLanguageTrainer::load_training_data(const std:
             content += line + "\n";
         }
         
-        // Process in chunks like reading a book page by page
-        for (size_t i = 0; i < content.length(); i += CHUNK_SIZE - OVERLAP_SIZE) {
-            size_t chunk_end = std::min(i + CHUNK_SIZE, content.length());
+        // Process with larger chunks for very large files
+        for (size_t i = 0; i < content.length(); i += LARGE_CHUNK_SIZE - OVERLAP_SIZE) {
+            size_t chunk_end = std::min(i + LARGE_CHUNK_SIZE, content.length());
             std::string chunk = content.substr(i, chunk_end - i);
             
-            // Clean up chunk - remove incomplete words at boundaries
+            // Clean up chunk boundaries
             if (chunk_end < content.length()) {
                 size_t last_space = chunk.find_last_of(" \t\n");
-                if (last_space != std::string::npos && last_space > CHUNK_SIZE / 2) {
+                if (last_space != std::string::npos && last_space > LARGE_CHUNK_SIZE / 2) {
                     chunk = chunk.substr(0, last_space);
                 }
             }
@@ -766,15 +807,54 @@ std::vector<std::string> CharacterLanguageTrainer::load_training_data(const std:
             if (!chunk.empty() && chunk.length() >= config_.context_length) {
                 sequences.push_back(chunk);
                 
-                // Limit number of chunks from very large files to prevent memory issues
+                // Limit chunks from very large files
                 if (sequences.size() >= 1000) {
-                    std::cout << "Reached chunk limit for large file, moving to next file..." << std::endl;
+                    std::cout << "Reached chunk limit for very large file, moving to next..." << std::endl;
                     break;
                 }
             }
         }
         
-        std::cout << "Created " << sequences.size() << " chunks from large file (child's book approach)" << std::endl;
+        std::cout << "Created " << sequences.size() << " enhanced chunks from very large file" << std::endl;
+        
+    } else if (file_size > LARGE_FILE_THRESHOLD) {
+        // Large files: use standard chunking
+        std::cout << "Large file detected (" << file_size << " bytes), using data chunking..." << std::endl;
+        
+        std::string content;
+        content.reserve(file_size);
+        
+        // Read entire file
+        std::string line;
+        while (std::getline(file, line)) {
+            content += line + "\n";
+        }
+        
+        // Process with standard chunks for large files
+        for (size_t i = 0; i < content.length(); i += BASE_CHUNK_SIZE - OVERLAP_SIZE) {
+            size_t chunk_end = std::min(i + BASE_CHUNK_SIZE, content.length());
+            std::string chunk = content.substr(i, chunk_end - i);
+            
+            // Clean up chunk boundaries
+            if (chunk_end < content.length()) {
+                size_t last_space = chunk.find_last_of(" \t\n");
+                if (last_space != std::string::npos && last_space > BASE_CHUNK_SIZE / 2) {
+                    chunk = chunk.substr(0, last_space);
+                }
+            }
+            
+            if (!chunk.empty() && chunk.length() >= config_.context_length) {
+                sequences.push_back(chunk);
+                
+                // Limit chunks from large files
+                if (sequences.size() >= 1000) {
+                    std::cout << "Reached chunk limit for large file, moving to next..." << std::endl;
+                    break;
+                }
+            }
+        }
+        
+        std::cout << "Created " << sequences.size() << " chunks from large file (data chunking)" << std::endl;
         
     } else {
         // Small files: process normally line by line

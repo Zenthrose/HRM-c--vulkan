@@ -82,13 +82,15 @@
 
 ### 📖 Data Chunking
 Large files are processed in manageable chunks for efficient learning:
-- **Smart Detection**: Files over 1MB trigger chunking mode
-- **Chunk Size**: Each chunk is 2,000 characters for optimal processing
-- **Context Preservation**: 200-character overlap between chunks maintains continuity
-- **Memory Safe**: Limits to 1,000 chunks per file to prevent overload
-- **Progressive Learning**: Builds understanding gradually across chunks
+- **Adaptive Thresholding**: Files over 1MB trigger chunking, very large files (>10MB) get enhanced processing
+- **Variable Chunk Sizes**: 2,000 characters for standard files, 5,000 characters for very large files
+- **Context Preservation**: 200-character overlap between chunks maintains continuity and prevents context loss
+- **Memory Safe**: Limits to 1,000 chunks per file to prevent system overload
+- **Progressive Learning**: Builds understanding gradually across sequential chunks
 
-Example: A 5MB library becomes 2,500 learnable chunks that the system processes sequentially, enabling learning from massive files without memory issues.
+**Character Overlap Explained**: The 200-character overlap ensures each new chunk starts with the last 200 characters from the previous chunk, maintaining context continuity at chunk boundaries. This prevents the system from losing important information when splitting large files.
+
+Example: A 5MB library becomes 2,500 learnable chunks that the system processes sequentially, enabling learning from massive files without memory issues. A 50MB file would use 5,000-character chunks for better efficiency.
 
 ### 🔄 Epoch-Based Training
 - **Multi-Epoch Learning**: System trains in cycles with validation after each epoch
