@@ -99,8 +99,14 @@ Tensor RMSNormVulkan::forward(const Tensor& input) {
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(computeQueue);
+    if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to submit rms_norm compute command buffer!");
+    }
+    if (vkQueueWaitIdle(computeQueue) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to wait for rms_norm queue idle!");
+    }
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 
     // Transfer output
@@ -322,8 +328,14 @@ void RMSNormVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceS
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(computeQueue);
+    if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to submit rms_norm copy command buffer!");
+    }
+    if (vkQueueWaitIdle(computeQueue) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to wait for rms_norm copy queue idle!");
+    }
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }

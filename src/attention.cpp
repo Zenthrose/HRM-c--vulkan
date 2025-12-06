@@ -147,11 +147,30 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+    // Add fence for synchronization
+    VkFence fence;
+    VkFenceCreateInfo fenceInfo{};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    if (vkCreateFence(device, &fenceInfo, nullptr, &fence) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to create synchronization fence!");
+    }
+
+    if (vkQueueSubmit(computeQueue, 1, &submitInfo, fence) != VK_SUCCESS) {
+        vkDestroyFence(device, fence, nullptr);
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
         throw std::runtime_error("failed to submit compute command buffer!");
     }
-    vkQueueWaitIdle(computeQueue);
+    
+    // Wait for completion with timeout
+    VkResult waitResult = vkWaitForFences(device, 1, &fence, VK_TRUE, 10000000000ULL); // 10 second timeout
+    if (waitResult != VK_SUCCESS) {
+        vkDestroyFence(device, fence, nullptr);
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to wait for fence completion!");
+    }
+    
+    vkDestroyFence(device, fence, nullptr);
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 
     std::cout << "Compute shader dispatched and finished." << std::endl;
@@ -392,8 +411,15 @@ void AttentionVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevic
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(computeQueue);
+    if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to submit copy command buffer!");
+    }
+    
+    if (vkQueueWaitIdle(computeQueue) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to wait for queue idle!");
+    }
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }

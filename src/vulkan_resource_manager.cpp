@@ -115,8 +115,14 @@ void VulkanResourceManager::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, V
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(computeQueue);
+    if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to submit resource manager copy command buffer!");
+    }
+    if (vkQueueWaitIdle(computeQueue) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to wait for resource manager queue idle!");
+    }
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }

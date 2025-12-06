@@ -357,8 +357,14 @@ void VulkanTrainer::submit_command_buffer(VkCommandBuffer command_buffer) {
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &command_buffer;
 
-    vkQueueSubmit(compute_queue_, 1, &submit_info, VK_NULL_HANDLE);
-    vkQueueWaitIdle(compute_queue_);
+    if (vkQueueSubmit(compute_queue_, 1, &submit_info, VK_NULL_HANDLE) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device_, command_pool_, 1, &command_buffer);
+        throw std::runtime_error("failed to submit trainer command buffer!");
+    }
+    if (vkQueueWaitIdle(compute_queue_) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device_, command_pool_, 1, &command_buffer);
+        throw std::runtime_error("failed to wait for trainer queue idle!");
+    }
 
     vkFreeCommandBuffers(device_, command_pool_, 1, &command_buffer);
 }

@@ -1,0 +1,18 @@
+Epoch 1 Results
+====================
+
+Training Time: 1.16667 minutes
+Global Step: 2
+
+Training Metrics:
+  Loss: 23.0259
+  Perplexity: 9.99999e+09
+  Accuracy: -1.05129
+
+Validation Metrics:
+  Loss: 23.0259
+  Perplexity: 9.99999e+09
+  Accuracy: -0.610776
+
+Learning Rate: 1e-06
+Best Loss So Far: 3.40282e+38

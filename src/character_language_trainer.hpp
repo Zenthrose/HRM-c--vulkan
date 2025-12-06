@@ -218,6 +218,27 @@ private:
                           const std::unordered_map<std::string, float>& val_metrics);
 
     /**
+     * Generate intelligent contexts from training data
+     * @param sequences Raw training sequences
+     * @return Intelligent context sequences
+     */
+    std::vector<std::string> generate_intelligent_contexts(const std::vector<std::string>& sequences);
+
+    /**
+     * Extract semantic chunks from text
+     * @param text Input text
+     * @return Semantic chunks
+     */
+    std::vector<std::string> extract_semantic_chunks(const std::string& text);
+
+    /**
+     * Generate meta-contexts for deeper understanding
+     * @param contexts Base contexts
+     * @return Meta-contexts
+     */
+    std::vector<std::string> generate_meta_contexts(const std::vector<std::string>& contexts);
+
+    /**
      * Load training data from file
      * @param data_path Path to training data
      * @return Loaded sequences

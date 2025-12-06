@@ -238,8 +238,14 @@ void LinearVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSi
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(computeQueue);
+    if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to submit linear copy command buffer!");
+    }
+    if (vkQueueWaitIdle(computeQueue) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to wait for linear copy queue idle!");
+    }
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
@@ -427,8 +433,14 @@ Tensor LinearVulkan::forward(const Tensor& input) {
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(computeQueue);
+    if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to submit linear compute command buffer!");
+    }
+    if (vkQueueWaitIdle(computeQueue) != VK_SUCCESS) {
+        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+        throw std::runtime_error("failed to wait for linear queue idle!");
+    }
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 
