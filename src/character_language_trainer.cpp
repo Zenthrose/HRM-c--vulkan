@@ -70,13 +70,10 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
     
     std::cout << "Starting autonomous system-wide learning..." << std::endl;
     
-    // 1. Scan for existing training data
-    std::vector<std::string> data_sources = {
-        dataset_path + "/comprehensive_training_corpus.txt",
-        dataset_path + "/training_corpus.txt", 
-        dataset_path + "/arxiv_corpus.txt",
-        "data/arxiv/arxiv_corpus.txt"
-    };
+// 1. Scan for existing training data with resource-aware loading
+    std::cout << "Loading training data..." << std::endl;
+    std::vector<std::string> train_sequences;
+    std::vector<std::string> val_sequences;
     
     for (const auto& source : data_sources) {
         if (fs::exists(source)) {
@@ -96,13 +93,6 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
         if (fs::exists(base_dir) && fs::is_directory(base_dir)) {
             std::cout << "Scanning system directory: " << base_dir << std::endl;
             try {
-                // Test directory access first
-                fs::directory_iterator test_iter(base_dir);
-                if (test_iter == fs::directory_iterator()) {
-                    std::cout << "Directory access denied: " << base_dir << std::endl;
-                    continue;
-                }
-                
                 int files_processed = 0;
                 for (const auto& entry : fs::recursive_directory_iterator(base_dir)) {
                     if (entry.is_regular_file()) {

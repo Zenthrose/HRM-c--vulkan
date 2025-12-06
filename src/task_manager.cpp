@@ -254,11 +254,15 @@ void TaskManager::start_scheduler() {
 }
 
 void TaskManager::stop_scheduler() {
-    if (!scheduler_running_) return;
-
+    if (!scheduler_running_) {
+        std::cout << "Task scheduler stop called but not running" << std::endl;
+        return;
+    }
+    
+    std::cout << "Task scheduler stopping - active tasks: " << active_tasks_.size() << std::endl;
     scheduler_running_ = false;
     task_available_cv_.notify_all();
-
+    
     // Wait for worker threads to finish
     for (auto& thread : worker_threads_) {
         if (thread.joinable()) {
@@ -266,7 +270,7 @@ void TaskManager::stop_scheduler() {
         }
     }
     worker_threads_.clear();
-
+    
     std::cout << "Task scheduler stopped" << std::endl;
 }
 

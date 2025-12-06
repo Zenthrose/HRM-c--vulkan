@@ -345,7 +345,15 @@ void runCharacterTraining(std::shared_ptr<ResourceAwareHRM> hrm) {
 
     // Run training
     std::string dataset_path = "./data/text/processed";
-    auto training_results = trainer.train_character_language_model(dataset_path);
+    try {
+        std::cout << "Starting training with dataset path: " << dataset_path << std::endl;
+        auto training_results = trainer.train_character_language_model(dataset_path);
+        std::cout << "Training completed successfully" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Training failed with exception: " << e.what() << std::endl;
+        std::cerr << "This may be causing the task scheduler to stop unexpectedly" << std::endl;
+        return; // Exit early to prevent destructor issues
+    }
 
     std::cout << "\n Character-level training completed!" << std::endl;
     std::cout << "Final Results:" << std::endl;
