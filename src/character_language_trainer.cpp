@@ -724,16 +724,65 @@ std::vector<std::string> CharacterLanguageTrainer::load_training_data(const std:
         return sequences;
     }
 
+    // Check file size for chunking decision
+    uintmax_t file_size = fs::file_size(data_path);
+    const uintmax_t LARGE_FILE_THRESHOLD = 1024 * 1024; // 1MB threshold
+    
     std::ifstream file(data_path);
     if (!file.is_open()) {
         std::cerr << "Cannot open training data file: " << data_path << std::endl;
         return sequences;
     }
 
-    std::string line;
-    while (std::getline(file, line)) {
-        if (!line.empty() && line.length() >= config_.context_length) {
-            sequences.push_back(line);
+    if (file_size > LARGE_FILE_THRESHOLD) {
+        // Child's book approach: chunk large files into manageable "pages"
+        std::cout << "Large file detected (" << file_size << " bytes), using child's book chunking..." << std::endl;
+        
+        const size_t CHUNK_SIZE = 2000; // Characters per "page"
+        const size_t OVERLAP_SIZE = 200;  // Overlap between pages for context
+        
+        std::string content;
+        content.reserve(file_size);
+        
+        // Read entire file
+        std::string line;
+        while (std::getline(file, line)) {
+            content += line + "\n";
+        }
+        
+        // Process in chunks like reading a book page by page
+        for (size_t i = 0; i < content.length(); i += CHUNK_SIZE - OVERLAP_SIZE) {
+            size_t chunk_end = std::min(i + CHUNK_SIZE, content.length());
+            std::string chunk = content.substr(i, chunk_end - i);
+            
+            // Clean up chunk - remove incomplete words at boundaries
+            if (chunk_end < content.length()) {
+                size_t last_space = chunk.find_last_of(" \t\n");
+                if (last_space != std::string::npos && last_space > CHUNK_SIZE / 2) {
+                    chunk = chunk.substr(0, last_space);
+                }
+            }
+            
+            if (!chunk.empty() && chunk.length() >= config_.context_length) {
+                sequences.push_back(chunk);
+                
+                // Limit number of chunks from very large files to prevent memory issues
+                if (sequences.size() >= 1000) {
+                    std::cout << "Reached chunk limit for large file, moving to next file..." << std::endl;
+                    break;
+                }
+            }
+        }
+        
+        std::cout << "Created " << sequences.size() << " chunks from large file (child's book approach)" << std::endl;
+        
+    } else {
+        // Small files: process normally line by line
+        std::string line;
+        while (std::getline(file, line)) {
+            if (!line.empty() && line.length() >= config_.context_length) {
+                sequences.push_back(line);
+            }
         }
     }
 
