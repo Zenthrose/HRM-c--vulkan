@@ -38,7 +38,15 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/release)
 
 find_package(Vulkan REQUIRED)
-include_directories(${Vulkan_INCLUDE_DIRS})
+# Vulkan support (optional)
+option(NO_VULKAN "Build without Vulkan support" OFF)
+if(NOT NO_VULKAN)
+    find_package(Vulkan REQUIRED)
+    include_directories(${Vulkan_INCLUDE_DIRS})
+else()
+    message(STATUS "Building without Vulkan support")
+    add_definitions(-DNO_VULKAN)
+endif()
 
 # Find spdlog
 find_package(spdlog QUIET)
@@ -55,24 +63,35 @@ if(NOT spdlog_FOUND)
     endif()
 endif()
 
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/shaders)
+if(NOT NO_VULKAN)
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/shaders)
+
+    # Compile shaders to SPIR-V
+    find_program(GLSLC_COMPILER glslc)
+    if(NOT GLSLC_COMPILER)
+        message(FATAL_ERROR "glslc compiler not found! Please ensure Vulkan SDK is installed and glslc is in your PATH.")
+    endif()
+endif()
 
 add_subdirectory(src)
 add_subdirectory(dataset)
 
-# Compile shaders to SPIR-V
-find_program(GLSLC_COMPILER glslc)
-if(NOT GLSLC_COMPILER)
-    message(FATAL_ERROR "glslc compiler not found! Please ensure Vulkan SDK is installed and glslc is in your PATH.")
-endif()
+if(NOT NO_VULKAN)
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/shaders)
 
-add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/shaders/attention.spv
-    COMMAND ${GLSLC_COMPILER} --target-env=vulkan1.3 -O -o ${CMAKE_BINARY_DIR}/shaders/attention.spv ${CMAKE_SOURCE_DIR}/shaders/attention.comp
-    DEPENDS ${CMAKE_SOURCE_DIR}/shaders/attention.comp
-    COMMENT "Compiling attention.comp to SPIR-V"
-    VERBATIM
-)
+    # Compile shaders to SPIR-V
+    find_program(GLSLC_COMPILER glslc)
+    if(NOT GLSLC_COMPILER)
+        message(FATAL_ERROR "glslc compiler not found! Please ensure Vulkan SDK is installed and glslc is in your PATH.")
+    endif()
+
+    add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/shaders/attention.spv
+        COMMAND ${GLSLC_COMPILER} --target-env=vulkan1.3 -O -o ${CMAKE_BINARY_DIR}/shaders/attention.spv ${CMAKE_SOURCE_DIR}/shaders/attention.comp
+        DEPENDS ${CMAKE_SOURCE_DIR}/shaders/attention.comp
+        COMMENT "Compiling attention.comp to SPIR-V"
+        VERBATIM
+    )
 
 add_custom_command(
     OUTPUT ${CMAKE_BINARY_DIR}/shaders/swiglu.spv
@@ -146,24 +165,25 @@ add_custom_command(
     VERBATIM
 )
 
-# Generate C++ headers from SPIR-V files for embedding
-add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/shaders/attention.h
-    COMMAND ${CMAKE_COMMAND} -E echo "#pragma once" > ${CMAKE_BINARY_DIR}/shaders/attention.h
-    COMMAND ${CMAKE_COMMAND} -E echo "const unsigned char attention_spv[] = {" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
-    COMMAND ${CMAKE_COMMAND} -E echo "    // SPIR-V bytecode would be embedded here" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
-    COMMAND ${CMAKE_COMMAND} -E echo "};" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
-    COMMAND ${CMAKE_COMMAND} -E echo "const size_t attention_spv_size = sizeof(attention_spv);" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
-    DEPENDS ${CMAKE_BINARY_DIR}/shaders/attention.spv
-    COMMENT "Generating attention.h header"
-)
+    # Generate C++ headers from SPIR-V files for embedding
+    add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/shaders/attention.h
+        COMMAND ${CMAKE_COMMAND} -E echo "#pragma once" > ${CMAKE_BINARY_DIR}/shaders/attention.h
+        COMMAND ${CMAKE_COMMAND} -E echo "const unsigned char attention_spv[] = {" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
+        COMMAND ${CMAKE_COMMAND} -E echo "    // SPIR-V bytecode would be embedded here" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
+        COMMAND ${CMAKE_COMMAND} -E echo "};" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
+        COMMAND ${CMAKE_COMMAND} -E echo "const size_t attention_spv_size = sizeof(attention_spv);" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
+        DEPENDS ${CMAKE_BINARY_DIR}/shaders/attention.spv
+        COMMENT "Generating attention.h header"
+    )
 
-# Add more shader headers as needed...
+    # Add more shader headers as needed...
 
-add_custom_target(compile_shaders ALL
-    DEPENDS ${CMAKE_BINARY_DIR}/shaders/attention.spv ${CMAKE_BINARY_DIR}/shaders/swiglu.spv ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv ${CMAKE_BINARY_DIR}/shaders/linear.spv ${CMAKE_BINARY_DIR}/shaders/embedding.spv ${CMAKE_BINARY_DIR}/shaders/linear_backward.spv ${CMAKE_BINARY_DIR}/shaders/adam_optimizer.spv ${CMAKE_BINARY_DIR}/shaders/cross_entropy_loss.spv ${CMAKE_BINARY_DIR}/shaders/gradient_accumulation.spv ${CMAKE_BINARY_DIR}/shaders/rope.spv
-    ${CMAKE_BINARY_DIR}/shaders/attention.h
-)
+    add_custom_target(compile_shaders ALL
+        DEPENDS ${CMAKE_BINARY_DIR}/shaders/attention.spv ${CMAKE_BINARY_DIR}/shaders/swiglu.spv ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv ${CMAKE_BINARY_DIR}/shaders/linear.spv ${CMAKE_BINARY_DIR}/shaders/embedding.spv ${CMAKE_BINARY_DIR}/shaders/linear_backward.spv ${CMAKE_BINARY_DIR}/shaders/adam_optimizer.spv ${CMAKE_BINARY_DIR}/shaders/cross_entropy_loss.spv ${CMAKE_BINARY_DIR}/shaders/gradient_accumulation.spv ${CMAKE_BINARY_DIR}/shaders/rope.spv
+        ${CMAKE_BINARY_DIR}/shaders/attention.h
+    )
+endif()
 
 # Copy assets to build directory
 file(GLOB ASSETS assets/*)
