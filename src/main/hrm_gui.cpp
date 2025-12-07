@@ -60,7 +60,7 @@ void HRMGUI::run() {
                     handle_settings();
                     break;
                 case GUIPage::ABOUT:
-                    // TODO: Implement about page
+                    handle_about();
                     break;
             }
             draw_footer();
@@ -253,6 +253,73 @@ void HRMGUI::draw_settings() {
     std::cout << "2. Window Title: " << window_title_;
     move_cursor(2, y++);
     std::cout << "3. Back to Main Menu";
+}
+
+void HRMGUI::draw_about() {
+    int y = 3;
+    move_cursor(2, y++);
+    set_text_color(get_theme_color("title"));
+    std::cout << "About HRM - Hierarchical Reasoning Module";
+    reset_text_color();
+
+    move_cursor(2, y++);
+    std::cout << "Version: 1.0.0 (Development)";
+    move_cursor(2, y++);
+    std::cout << "Build: " << __DATE__ << " " << __TIME__;
+
+    y++;
+    move_cursor(2, y++);
+    set_text_color(get_theme_color("subtitle"));
+    std::cout << "System Information:";
+    reset_text_color();
+
+    // Get system info from resource monitor
+    auto status = hrm_system_->get_resource_aware_status();
+    move_cursor(2, y++);
+    std::cout << "CPU Cores: " << (status.count("cpu_cores") ? status.at("cpu_cores") : "Unknown");
+    move_cursor(2, y++);
+    std::cout << "RAM: " << (status.count("total_memory_mb") ? status.at("total_memory_mb") + " MB" : "Unknown");
+    move_cursor(2, y++);
+    std::cout << "GPU: " << (status.count("vulkan_available") ? (status.at("vulkan_available") == "true" ? "Vulkan Compatible" : "No Vulkan") : "Unknown");
+
+    // Get system uptime
+    uint64_t uptime_seconds = 0;
+#ifdef _WIN32
+    uptime_seconds = GetTickCount64() / 1000;
+#else
+    struct sysinfo info;
+    if (sysinfo(&info) == 0) {
+        uptime_seconds = info.uptime;
+    }
+#endif
+    uint64_t days = uptime_seconds / 86400;
+    uint64_t hours = (uptime_seconds % 86400) / 3600;
+    uint64_t minutes = (uptime_seconds % 3600) / 60;
+    move_cursor(2, y++);
+    std::cout << "System Uptime: " << days << "d " << hours << "h " << minutes << "m";
+
+    y++;
+    move_cursor(2, y++);
+    set_text_color(get_theme_color("subtitle"));
+    std::cout << "Capabilities:";
+    reset_text_color();
+
+    move_cursor(2, y++);
+    std::cout << "• Self-Modifying Code Engine";
+    move_cursor(2, y++);
+    std::cout << "• Vulkan-Accelerated Neural Networks";
+    move_cursor(2, y++);
+    std::cout << "• Character-Level Language Processing";
+    move_cursor(2, y++);
+    std::cout << "• Resource-Aware Task Management";
+    move_cursor(2, y++);
+    std::cout << "• Cross-Platform Compatibility";
+
+    y++;
+    move_cursor(2, y++);
+    set_text_color(get_theme_color("subtitle"));
+    std::cout << "Press any key to return to main menu";
+    reset_text_color();
 }
 
 void HRMGUI::draw_footer() {
@@ -490,6 +557,10 @@ void HRMGUI::handle_memory_management() {
 
 void HRMGUI::handle_settings() {
     draw_settings();
+}
+
+void HRMGUI::handle_about() {
+    draw_about();
 }
 
 void HRMGUI::send_chat_message(const std::string& message) {

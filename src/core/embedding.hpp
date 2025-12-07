@@ -9,6 +9,7 @@
 struct EmbeddingConfig {
     uint32_t num_embeddings;
     uint32_t embedding_dim;
+    uint32_t seq_len;
 };
 
 class EmbeddingVulkan {

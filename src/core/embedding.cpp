@@ -323,12 +323,12 @@ Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
     vkFreeMemory(device, outStagingBufferMemory, nullptr);
 
     // Average over sequence dimension to match HRM batch input
-    // Assuming input.shape = [batch_size, seq_len]
-    if (input.shape.size() != 2) {
-        throw std::runtime_error("Embedding input must be 2D tensor [batch, seq]");
+    // Input is flattened [batch_size * seq_len], output is [batch_size, embedding_dim]
+    uint32_t seq_len = config.seq_len;
+    if (input.size() % seq_len != 0) {
+        throw std::runtime_error("Input size must be divisible by sequence length");
     }
-    uint32_t batch_size = input.shape[0];
-    uint32_t seq_len = input.shape[1];
+    uint32_t batch_size = input.size() / seq_len;
     uint32_t embedding_dim = static_cast<uint32_t>(config.embedding_dim);
     Tensor output;
     output.data.resize(batch_size * embedding_dim, 0.0f);

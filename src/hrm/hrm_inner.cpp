@@ -35,7 +35,7 @@ HRMInner::HRMInner(const HRMInnerConfig& config) : config_(config) {
     puzzle_emb_len_ = (config.puzzle_emb_ndim + config.hidden_size - 1) / config.hidden_size; // ceil div
 
     // Initialize embeddings
-    EmbeddingConfig embed_config{static_cast<uint32_t>(config.vocab_size), static_cast<uint32_t>(config.hidden_size)};
+    EmbeddingConfig embed_config{static_cast<uint32_t>(config.vocab_size), static_cast<uint32_t>(config.hidden_size), static_cast<uint32_t>(config.seq_len)};
     embed_tokens_ = std::make_unique<EmbeddingVulkan>(
         embed_config, config.physicalDevice, config.device, config.computeQueue,
         config.computeQueueFamilyIndex, config.commandPool

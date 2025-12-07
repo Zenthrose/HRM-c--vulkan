@@ -38,6 +38,18 @@ HardwareCapabilities HardwareProfiler::profile_system() {
     return caps;
 }
 
+uint64_t HardwareProfiler::get_system_uptime_seconds() {
+#ifdef _WIN32
+    return GetTickCount64() / 1000; // Windows uptime in seconds
+#else
+    struct sysinfo info;
+    if (sysinfo(&info) == 0) {
+        return info.uptime; // Linux uptime in seconds
+    }
+    return 0; // Fallback
+#endif
+}
+
 HardwareCapabilities HardwareProfiler::detect_cpu() {
     HardwareCapabilities caps;
 

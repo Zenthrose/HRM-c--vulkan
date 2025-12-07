@@ -53,6 +53,7 @@ public:
 
     HardwareCapabilities profile_system();
     void log_capabilities(const HardwareCapabilities& caps);
+    uint64_t get_system_uptime_seconds();
 
 private:
     HardwareCapabilities detect_cpu();
