@@ -1,139 +1,143 @@
-# Hierarchical Reasoning Model (HRM)
+# HRM: Hierarchical Reasoning Model
 
-![HRM Logo](./assets/hrm.png)
+> **Autonomous AI System with Self-Modifying Code and Vulkan Acceleration**
 
-> **Ultimate Autonomous AI System**: Self-modifying, self-repairing, resource-aware AI with advanced character-level language processing and Vulkan-accelerated neural networks.
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/Zenthrose/HRM-c--vulkan)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-orange)](https://en.cppreference.com/w/cpp/17)
 
 ## Table of Contents
-- [🚀 Overview](#-overview)
-- [🎯 Key Features](#-key-features)
-- [📊 Implementation Status](#-implementation-status)
-- [⚡ Quick Start](#-quick-start)
-- [🛠️ Installation](#️-installation)
-- [🎮 Usage](#-usage)
-- [🏗️ Architecture](#️-architecture)
-- [📈 Performance](#-performance)
-- [🔬 Research & Citation](#-research--citation)
-- [🐍 Original Python Implementation](#-original-python-implementation)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Architecture](#architecture)
+- [Performance](#performance)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-## 🚀 Overview
+## Overview
 
-The Hierarchical Reasoning Model (HRM) is a cutting-edge AI system that combines:
+The Hierarchical Reasoning Model (HRM) is a cutting-edge autonomous AI system that combines advanced neural networks with self-modifying capabilities. Unlike traditional AI systems, HRM can analyze and improve its own code at runtime, adapt to new tasks through continual learning, and maintain stable operation across diverse hardware configurations.
 
-- **Self-Modifying Intelligence**: Runtime code analysis and autonomous improvement
-- **Vulkan-Accelerated Training**: Pure GPU neural network training without CUDA dependencies
-- **Character-Level Language Processing**: UTF-8 text handling for multilingual capabilities
-- **Resource-Aware Operation**: Adaptive task management and OOM prevention
-- **Cross-Platform Compatibility**: Runs on Windows, Linux, macOS, and embedded systems
+Built with C++ and Vulkan, HRM processes text at the character level (avoiding tokenization artifacts) and leverages GPU acceleration for high-performance neural computations. The system includes comprehensive resource management, cloud integration, and interactive interfaces for seamless human-AI collaboration.
 
-Built for the future of AI, HRM represents a complete autonomous learning system capable of modifying its own code, evolving through experience, and maintaining production stability across all major platforms.
+### Why HRM?
 
-## 🎯 Key Features
+- **Self-Modifying Intelligence**: Evolves its own algorithms during operation
+- **Character-Level Mastery**: Handles any Unicode text without preprocessing limitations
+- **Hardware Agnostic**: Runs on everything from embedded devices to supercomputers
+- **Production Ready**: Comprehensive error handling and resource management
 
-### Core AI Capabilities
-- 🧠 **Self-Modifying Code**: Runtime analysis and rewriting of C++ source code
-- 🔄 **Self-Evolving Intelligence**: Continual adaptation and meta-learning
-- 🛡️ **Self-Repair System**: Automatic error detection and correction
-- 💬 **Conversational AI**: Natural dialogue with context awareness
-- 🎓 **Character-Level Language**: UTF-8 processing without tokenization overhead
+## Key Features
 
-### Advanced Training & Optimization
-- ⚡ **FlashAttention**: O(n) complexity attention, 2-32x faster than standard
-- 🎯 **Mixed Precision**: FP16/BF16/FP8 support with 50-75% memory reduction
-- 🧮 **Advanced Optimizers**: Lion, Adafactor beyond AdamW
-- 📊 **Gradient Checkpointing**: Memory-efficient training for large models
-- 🔄 **Linear Attention**: Alternative O(n) attention mechanism
+### 🤖 Core AI Capabilities
+- **Hierarchical Reasoning**: Multi-level planning and decision-making
+- **Self-Modifying Code**: Runtime analysis and autonomous code improvement
+- **Character-Level Processing**: UTF-8 text handling with full Unicode support
+- **Continual Learning**: Adapts to new data and tasks without retraining
 
-### System Integration
-- 🔋 **Resource Intelligence**: Real-time monitoring and adaptive scheduling
-- ☁️ **Cloud Storage**: Memory compaction with multi-provider support
-- 🎮 **Interactive Interfaces**: CLI and GUI for human-AI communication
-- 🌐 **Network Monitoring**: HTTP client for traffic analysis
-- 🔧 **Cross-Platform**: Universal hardware support from embedded to supercomputers
-- 🧠 **CPU/RAM Offloading**: Intelligent workload distribution to prevent bottlenecking
-- 💾 **Character Sequence Caching**: RAM-based caching for efficient processing
-- ⚖️ **Hybrid Execution**: Dynamic CPU/GPU task balancing with resource monitoring
+### ⚡ Performance & Optimization
+- **Vulkan Acceleration**: GPU-accelerated neural networks (no CUDA dependency)
+- **FlashAttention**: O(n) attention complexity for efficient long-sequence processing
+- **Mixed Precision**: FP16/BF16/FP8 support for memory-efficient training
+- **CPU/RAM Offloading**: Intelligent workload distribution to prevent bottlenecks
+- **Character Caching**: RAM-based caching for optimized text processing
 
-## 📊 Implementation Status
+### 🛡️ Reliability & Safety
+- **Resource Intelligence**: Real-time monitoring and adaptive task scheduling
+- **Self-Repair System**: Automatic error detection and correction
+- **Sandbox Execution**: Safe testing of code modifications
+- **Cross-Platform**: Native support for Windows, Linux, and macOS
 
-| Component | Status | Description |
-|-----------|--------|-------------|
-| **Core Neural Networks** | ✅ Complete | HRM architecture with Vulkan acceleration |
-| **Self-Modifying System** | ✅ Complete | Runtime code modification and hot-swapping |
-| **Self-Evolution Framework** | ✅ Complete | Meta-learning and continual adaptation |
-| **Self-Repair Mechanisms** | ✅ Complete | Error detection and automatic correction |
-| **Character-Level Processing** | ✅ Complete | UTF-8 encoding/decoding with Unicode support |
-| **Advanced Training Optimizations** | ✅ Complete | FlashAttention, mixed precision, optimizers |
-| **Resource Management** | ✅ Complete | Real-time monitoring and OOM prevention |
-| **Cross-Platform Compatibility** | ✅ Complete | Windows/Linux/macOS with Vulkan |
-| **Network & Cloud Integration** | ✅ Complete | HTTP client and multi-provider storage |
-| **Interactive Interfaces** | ✅ Complete | CLI/GUI with natural language processing |
-| **Successful Compilation** | ✅ Complete | Builds without errors using standard commands |
-| **GUI About Page & Uptime** | ✅ Complete | System information display with real-time uptime tracking |
-| **Memory Compaction Controls** | ✅ Complete | GUI interface for memory management and compaction |
-| **Cloud Storage Interface** | ✅ Complete | Full cloud operations with background processing |
-| **Terminal Resize Detection** | ✅ Complete | Automatic GUI redraw on terminal size changes |
-| **CPU/RAM Offloading System** | ✅ Complete | Intelligent workload distribution to prevent bottlenecking |
-| **Character Sequence Caching** | ✅ Complete | RAM-based caching for efficient character processing |
-| **Hybrid Execution Framework** | ✅ Complete | Dynamic CPU/GPU task balancing with resource monitoring |
+### 🔧 System Integration
+- **Interactive Interfaces**: CLI and GUI for natural human-AI interaction
+- **Cloud Storage**: Multi-provider support with automatic data compaction
+- **HTTP Client**: Network monitoring and external data access
+- **Memory Management**: Intelligent compaction and OOM prevention
 
-### Platform Compatibility
-- **Windows**: Full MSYS2 MinGW GCC support with Windows API integration
-- **Linux/macOS**: GCC/Clang with system API integration
-- **Hardware**: Any Vulkan-compatible GPU or CPU fallback
-- **Build System**: CMake + Ninja with portable configuration
+## Architecture
 
-## ⚡ Quick Start
+```
+HRM System Architecture
+├── Neural Core (Vulkan-Accelerated)
+│   ├── Hierarchical Reasoning Module
+│   ├── Transformer with FlashAttention
+│   ├── RoPE Position Embeddings
+│   └── Character-Level Language Processing
+├── Autonomous Systems
+│   ├── Self-Modifying Code Engine
+│   ├── Self-Evolution Framework
+│   └── Self-Repair System
+├── Resource Management
+│   ├── CPU/RAM Offloading System
+│   ├── Hybrid Execution Framework
+│   ├── Character Sequence Caching
+│   └── Adaptive Task Scheduling
+├── User Interfaces
+│   ├── Command-Line Interface
+│   ├── Graphical User Interface
+│   │   ├── System Status & Uptime
+│   │   ├── Memory Compaction Controls
+│   │   ├── Cloud Storage Operations
+│   │   └── Terminal Resize Detection
+│   └── Natural Language Processing
+└── System Integration
+    ├── Cross-Platform Compatibility
+    ├── Cloud Storage & Networking
+    ├── HTTP Monitoring Client
+    └── Hardware Abstraction Layer
+```
+
+### Component Overview
+
+**Neural Core**: Implements transformer architecture with character-level embeddings, optimized for Vulkan compute shaders.
+
+**Autonomous Systems**: Enables runtime code modification, evolution through experience, and automatic error correction.
+
+**Resource Management**: Intelligent distribution of computational tasks across CPU cores, GPU, and system RAM.
+
+**User Interfaces**: Provides both programmatic APIs and interactive terminals for system operation and monitoring.
+
+## Performance
+
+### Benchmarks
+| Dataset | Loss Reduction | Perplexity Improvement | Notes |
+|---------|----------------|----------------------|-------|
+| Literary Texts | 19% | 63% reduction | Character-level prediction |
+| Research Papers | 19% | 64% reduction | Scientific text processing |
+
+### Acceleration Features
+- **GPU Acceleration**: 2-32x speedup via Vulkan compute shaders
+- **Memory Efficiency**: 50-75% reduction with mixed precision training
+- **Offloading**: CPU cores handle preprocessing, caching, and fallbacks
+- **Scalability**: Adapts from embedded systems to high-end workstations
+
+### System Requirements
+- **Minimum**: 4GB RAM, Vulkan-compatible GPU or CPU-only mode
+- **Recommended**: 8GB+ RAM, discrete GPU with Vulkan 1.3+
+- **Supported OS**: Windows 10+, Linux (Ubuntu 18.04+), macOS 10.15+
+
+## Installation
 
 ### Prerequisites
-- Vulkan SDK 1.3+
+- C++17 compiler (GCC 9+, Clang 10+, MSVC 2019+)
 - CMake 3.16+
-- C++17 compiler (GCC/Clang/MSVC)
-- 4GB RAM minimum, 8GB+ recommended
+- Vulkan SDK 1.3+ (for GPU acceleration)
+- 4GB RAM minimum
 
-### Build & Run (Universal)
+### Build Instructions
+
+#### Universal Build (All Platforms)
 ```bash
 git clone https://github.com/Zenthrose/HRM-c--vulkan.git
 cd HRM-c--vulkan
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)  # or cmake --build . --config Release -j 4 on Windows
-
-# Run interfaces
-./src/hrm_system --cli    # Command-line interface
-./src/hrm_system --gui    # Graphical interface
-./src/hrm_system --test   # System tests
+cmake --build . --config Release -j$(nproc)
 ```
 
-### Conversational AI Demo
-```bash
-./src/hrm_system
-HRM> Hello, how can you help with brainstorming?
-HRM> train  # Start character-level training
-```
-
-### Enhanced GUI Features
-The HRM GUI now provides comprehensive system management:
-```bash
-./src/hrm_system --gui
-```
-- **About Page**: System information, real-time uptime, capabilities overview
-- **Memory Management**: Statistics, compaction controls, cloud storage operations
-- **System Status**: CPU/RAM/GPU monitoring with uptime tracking
-- **Terminal Resize**: Automatic interface adaptation to terminal size changes
-- **Background Operations**: Async memory compaction and cloud transfers
-
-## 🛠️ Installation
-
-### Environment Setup
-```bash
-# Optional: Configure custom paths
-export HRM_CONFIG_DIR=~/.hrm/config
-export HRM_LOG_DIR=~/hrm/logs
-export HRM_MODEL_DIR=~/hrm/models
-```
-
-### Windows (MSYS2 MinGW)
+#### Windows (MSYS2 MinGW)
 ```batch
 set PATH=C:\msys64\mingw64\bin;%PATH%
 mkdir build && cd build
@@ -141,22 +145,47 @@ cmake .. -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_C_COMPILER=gcc.exe
 mingw32-make -j4
 ```
 
-### Linux/macOS
+#### Linux/macOS
 ```bash
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 
-### Docker
+### Environment Configuration
+Create `.env` file for custom paths:
 ```bash
-docker build -t hrm .
-docker run -it hrm ./hrm_system --cli
+# Optional custom directories
+HRM_CONFIG_DIR=~/.hrm/config
+HRM_LOG_DIR=~/hrm/logs
+HRM_MODEL_DIR=~/hrm/models
+HRM_DATA_ROOT=./data
+HRM_CLOUD_API_KEY=your_api_key
 ```
 
-## 🎮 Usage
+## Usage
 
-### Basic Interaction
+### Basic Operation
+```bash
+# Command-line interface
+./release/hrm_system --cli
+
+# Graphical user interface
+./release/hrm_system --gui
+
+# System testing
+./release/hrm_system --test
+```
+
+### Interactive Session
+```bash
+./release/hrm_system
+HRM> Hello, how can you help with reasoning tasks?
+HRM> analyze  # Enter analysis mode
+HRM> train   # Start character-level training
+```
+
+### Programmatic Usage
 ```cpp
 #include "resource_aware_hrm.hpp"
 
@@ -169,144 +198,55 @@ auto response = system.communicate("Explain quantum computing");
 std::cout << response.response << std::endl;
 ```
 
-### Advanced Training
+### GUI Features
+- **About Page**: System information, uptime, and capabilities
+- **Memory Management**: Real-time stats, compaction controls, cloud operations
+- **System Status**: CPU/GPU/RAM monitoring with adaptive displays
+- **Terminal Adaptation**: Automatic interface resizing
+
+### Advanced Configuration
 ```cpp
-#include "character_language_trainer.hpp"
+// Enable hybrid execution for bottleneck prevention
+config.enable_hybrid_execution = true;
 
-CharacterLanguageTrainer trainer(model, config);
-trainer.train_character_language_model("training_corpus.txt");
+// Configure character caching
+config.character_cache_size_mb = 50;
+
+// Set up cloud storage
+config.cloud_storage_manager = std::make_shared<CloudStorageManager>(cloud_config);
 ```
 
-### Self-Modification
-```cpp
-SelfModifyingHRM system(config);
-// System automatically analyzes and improves its code
-auto result = system.analyze_and_modify_self();
-```
+## Contributing
 
-### Resource Management
-```cpp
-auto usage = system.get_current_resource_usage();
-auto alerts = system.get_resource_alerts();
-// Automatic adaptation to system constraints
-```
+We welcome contributions to the HRM project! Please see our contribution guidelines:
 
-## 🏗️ Architecture
+### Development Setup
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes with comprehensive tests
+4. Ensure all builds pass: `cmake --build . --config Release`
+5. Submit a pull request
 
-```
-HRM System Architecture
-├── Core Neural Networks (Vulkan-Accelerated)
-│   ├── Hierarchical Reasoning Module (H/L levels)
-│   ├── Adaptive Computation Time (ACT)
-│   ├── Transformer with FlashAttention
-│   ├── Character-Level Language Processing
-│   └── RoPE Position Embeddings
-├── Autonomous Systems
-│   ├── Self-Modifying Code Engine
-│   ├── Self-Evolution Framework
-│   └── Self-Repair System
-├── Resource Intelligence
-│   ├── Real-Time Monitoring
-│   ├── Adaptive Task Scheduling
-│   ├── OOM Prevention
-│   ├── CPU/RAM Offloading
-│   └── Hybrid Execution Framework
-├── User Interfaces
-│   ├── Command-Line Interface
-│   ├── Graphical User Interface (Enhanced)
-│   │   ├── About Page & System Info
-│   │   ├── Memory Compaction Controls
-│   │   ├── Cloud Storage Operations
-│   │   └── Terminal Resize Detection
-│   └── Natural Language Processing
-├── Caching & Optimization
-│   ├── Character Sequence Cache (RAM)
-│   ├── Memory Compaction System
-│   └── Intelligent Workload Balancing
-└── System Integration
-    ├── Cross-Platform Compatibility
-    ├── Cloud Storage & Networking
-    ├── HTTP Client for Monitoring
-    └── Hardware Abstraction Layer
-```
+### Code Standards
+- C++17 with RAII and smart pointers
+- Comprehensive error handling
+- Cross-platform compatibility
+- Unit tests for all new features
+- Documentation for public APIs
 
-### Key Components
-
-#### Neural Network Core
-- **Hierarchical Reasoning**: Multi-level planning and execution
-- **Vulkan Acceleration**: GPU compute shaders for training/inference
-- **Character Processing**: UTF-8 handling with Unicode support
-- **Optimization Stack**: FlashAttention, mixed precision, advanced optimizers
-
-#### Autonomous Systems
-- **Self-Modification**: Runtime code analysis and patching
-- **Self-Evolution**: Learning from interactions and data
-- **Self-Repair**: Error detection and automatic correction
-- **Sandbox Testing**: Safe validation of modifications
-
-#### System Integration
-- **Resource Monitoring**: CPU, memory, GPU, network tracking
-- **Cloud Storage**: Multi-provider with memory compaction
-- **Network Client**: HTTP-based monitoring and communication
-- **Hardware Abstraction**: Universal device compatibility
-
-## 📈 Performance
-
-### Training Benchmarks
-| Dataset | Loss Reduction | Perplexity | Accuracy |
-|---------|----------------|------------|----------|
-| Pride & Prejudice | 19% (5.39→4.38) | 63% (219→80) | Character-level |
-| ArXiv Research Papers | 19% (5.22→4.20) | 64% (184→67) | 2.4% prediction |
-
-### Acceleration Features
-- **FlashAttention**: 2-32x speedup, O(n) vs O(n²) complexity
-- **Mixed Precision**: 50-75% memory savings with FP16/BF16/FP8
-- **Vulkan Optimization**: Zero CUDA dependency, universal GPU support
-- **Character-Level Efficiency**: No tokenization overhead
-- **CPU/RAM Offloading**: Intelligent workload distribution prevents bottlenecking
-- **Hybrid Execution**: Dynamic CPU/GPU balancing maximizes hardware utilization
-- **Sequence Caching**: RAM-based caching reduces redundant character processing
-
-### System Requirements
-| Component | Minimum | Recommended |
-|-----------|---------|-------------|
-| CPU | 1 core | 8+ cores |
-| RAM | 256MB | 8GB+ |
-| GPU | None (CPU mode) | Vulkan-compatible |
-| Storage | 500MB | 10GB+ |
-| OS | Any | Linux/macOS/Windows |
-
-## 🔬 Research & Citation
-
-### Key Innovations
-- **Hierarchical Reasoning**: Multi-timescale planning for complex tasks
-- **Self-Modifying AI**: Runtime code improvement and evolution
-- **Vulkan Neural Networks**: GPU acceleration without CUDA
-- **Character-Level Mastery**: UTF-8 processing for universal language support
-- **Resource-Aware Autonomy**: Adaptive operation across hardware constraints
-
-### Citation
-```bibtex
-@misc{hrm_2024,
-  title={Hierarchical Reasoning Model with Self-Modifying Code},
-  author={Zenthrose},
-  year={2024},
-  url={https://github.com/Zenthrose/HRM-c--vulkan}
-}
-```
-
-## 🐍 Original Python Implementation
-
-The HRM was originally implemented in Python/PyTorch. See the [Python README section](#python-implementation-details) for the original research implementation, training scripts, and evaluation tools.
-
-### Python Quick Start
+### Testing
 ```bash
-pip install -r requirements.txt
-python pretrain.py data_path=data/sudoku-extreme-1k-aug-1000
+# Run unit tests
+ctest --output-on-failure
+
+# Build and test all components
+cmake --build . --config Release --target test
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**Built for the future of artificial intelligence - where machines think, learn, and evolve themselves.**
-
-*© 2024 HRM Project - Autonomous AI Research*
+**HRM represents the future of autonomous AI systems - intelligent, adaptable, and self-improving.**
