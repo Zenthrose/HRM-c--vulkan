@@ -324,9 +324,6 @@ HardwareProfile HardwareAbstractionLayer::detect_gpu_capabilities() {
     return profile;
 }
 
-    return profile;
-}
-
 HardwareProfile HardwareAbstractionLayer::detect_cpu_capabilities() {
     HardwareProfile profile;
 
