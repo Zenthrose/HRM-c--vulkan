@@ -569,6 +569,9 @@ int main(int argc, char* argv[]) {
         auto memory_config = createDefaultMemoryConfig(cloud_manager, config_manager);
         auto memory_system = std::make_shared<MemoryCompactionSystem>(memory_config);
 
+        // Set memory compaction system in HRM config
+        hrm_config.memory_compaction_system = memory_system;
+
         std::shared_ptr<ResourceAwareHRM> hrm = nullptr;
 
         if (!test_mode) {

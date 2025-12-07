@@ -230,14 +230,35 @@ void HRMGUI::draw_memory_management() {
     std::cout << "Memory Management";
     reset_text_color();
 
+    // Get memory stats
+    auto mem_stats = hrm_system_->get_memory_compaction_stats();
+
     move_cursor(2, y++);
-    std::cout << "1. View Memory Statistics";
+    std::cout << "Current Memory Usage: " << (mem_stats.count("memory_current_usage") ?
+        mem_stats.at("memory_current_usage") + " bytes" : "Unknown");
+    move_cursor(2, y++);
+    std::cout << "Compacted Memory: " << (mem_stats.count("memory_compacted_size") ?
+        mem_stats.at("memory_compacted_size") + " bytes" : "Unknown");
+    move_cursor(2, y++);
+    std::cout << "Avg Compression Ratio: " << (mem_stats.count("memory_avg_compression_ratio") ?
+        mem_stats.at("memory_avg_compression_ratio") : "Unknown");
+
+    y++;
+    move_cursor(2, y++);
+    set_text_color(get_theme_color("subtitle"));
+    std::cout << "Options:";
+    reset_text_color();
+
+    move_cursor(2, y++);
+    std::cout << "1. View Detailed Memory Statistics";
     move_cursor(2, y++);
     std::cout << "2. Perform Memory Compaction";
     move_cursor(2, y++);
-    std::cout << "3. Cloud Storage Operations";
+    std::cout << "3. List Memory Compactions";
     move_cursor(2, y++);
-    std::cout << "4. Back to Main Menu";
+    std::cout << "4. Cloud Storage Operations";
+    move_cursor(2, y++);
+    std::cout << "5. Back to Main Menu";
 }
 
 void HRMGUI::draw_settings() {
@@ -613,7 +634,20 @@ void HRMGUI::show_cloud_storage_options() {
 }
 
 void HRMGUI::perform_memory_compaction() {
-    // TODO: Implement memory compaction
+    set_status_bar_text("Performing memory compaction...");
+    redraw_needed_ = true;
+
+    // Perform compaction in background
+    std::thread([this]() {
+        bool success = hrm_system_->perform_memory_compaction();
+        if (success) {
+            show_message_box("Memory Compaction", "Memory compaction completed successfully!");
+        } else {
+            show_message_box("Memory Compaction", "Memory compaction failed or no compaction needed.");
+        }
+        set_status_bar_text("Ready");
+        redraw_needed_ = true;
+    }).detach();
 }
 
 void HRMGUI::upload_to_cloud() {
@@ -836,13 +870,30 @@ void HRMGUI::handle_system_status_input(const std::string& input) {
 
 void HRMGUI::handle_memory_management_input(const std::string& input) {
     if (input == "1") {
-        // View memory statistics
-        show_message_box("Memory Statistics", format_memory_stats(hrm_system_->get_current_resource_usage()));
+        // View detailed memory statistics
+        auto mem_stats = hrm_system_->get_memory_compaction_stats();
+        std::string stats = "Detailed Memory Statistics:\n\n";
+        for (const auto& stat : mem_stats) {
+            stats += stat.first + ": " + stat.second + "\n";
+        }
+        show_message_box("Detailed Memory Statistics", stats);
     } else if (input == "2") {
         perform_memory_compaction();
     } else if (input == "3") {
+        // List memory compactions
+        auto compactions = hrm_system_->list_memory_compactions();
+        std::string list = "Memory Compactions:\n\n";
+        if (compactions.empty()) {
+            list += "No compactions found.\n";
+        } else {
+            for (const auto& id : compactions) {
+                list += "- " + id + "\n";
+            }
+        }
+        show_message_box("Memory Compactions", list);
+    } else if (input == "4") {
         show_cloud_storage_options();
-    } else if (input == "4" || input == "b" || input == "back") {
+    } else if (input == "5" || input == "b" || input == "back") {
         switch_page(GUIPage::MAIN_MENU);
     }
 }

@@ -13,6 +13,7 @@ struct ResourceAwareHRMConfig {
     std::chrono::milliseconds resource_check_interval;
     uint64_t max_memory_per_task_mb;
     double max_cpu_per_task_percent;
+    std::shared_ptr<class MemoryCompactionSystem> memory_compaction_system;
 };
 
 struct ResourceAwareTask {
@@ -47,6 +48,11 @@ public:
     std::vector<ResourceAlert> get_resource_alerts() const;
     bool are_resources_available(const TaskRequirements& requirements) const;
 
+    // Memory compaction interface
+    std::unordered_map<std::string, std::string> get_memory_compaction_stats() const;
+    bool perform_memory_compaction();
+    std::vector<std::string> list_memory_compactions() const;
+
     // Adaptive behavior
     void adapt_to_resource_constraints();
     void optimize_for_current_resources();
@@ -78,6 +84,7 @@ private:
     ResourceAwareHRMConfig config_;
     std::shared_ptr<ResourceMonitor> resource_monitor_;
     std::shared_ptr<TaskManager> task_manager_;
+    std::shared_ptr<class MemoryCompactionSystem> memory_compaction_system_;
     std::unique_ptr<VulkanTrainer> vulkan_trainer_;
 
     // Resource-aware state

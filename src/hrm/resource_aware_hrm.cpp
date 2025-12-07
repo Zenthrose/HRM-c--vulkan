@@ -3,7 +3,8 @@
 #include <algorithm>
 
 ResourceAwareHRM::ResourceAwareHRM(const ResourceAwareHRMConfig& config)
-    : SelfModifyingHRM(config.base_config), config_(config), resource_pressure_mode_(false) {
+    : SelfModifyingHRM(config.base_config), config_(config), resource_pressure_mode_(false),
+      memory_compaction_system_(config.memory_compaction_system) {
     std::cout << "Initializing Resource-Aware HRM System..." << std::endl;
 
     // Initialize resource monitoring
@@ -217,6 +218,35 @@ std::unordered_map<std::string, std::string> ResourceAwareHRM::get_resource_awar
     }
 
     return base_status;
+}
+
+std::unordered_map<std::string, std::string> ResourceAwareHRM::get_memory_compaction_stats() const {
+    std::unordered_map<std::string, std::string> stats;
+    if (memory_compaction_system_) {
+        auto mem_stats = memory_compaction_system_->get_memory_stats();
+        for (const auto& stat : mem_stats) {
+            stats["memory_" + stat.first] = std::to_string(stat.second);
+        }
+        stats["memory_current_usage"] = std::to_string(memory_compaction_system_->get_current_memory_usage());
+        stats["memory_compacted_size"] = std::to_string(memory_compaction_system_->get_compacted_memory_size());
+        stats["memory_avg_compression_ratio"] = std::to_string(memory_compaction_system_->get_average_compression_ratio());
+    }
+    return stats;
+}
+
+bool ResourceAwareHRM::perform_memory_compaction() {
+    if (memory_compaction_system_) {
+        auto result = memory_compaction_system_->compact_memory_auto();
+        return result.success;
+    }
+    return false;
+}
+
+std::vector<std::string> ResourceAwareHRM::list_memory_compactions() const {
+    if (memory_compaction_system_) {
+        return memory_compaction_system_->list_compactions();
+    }
+    return {};
 }
 
 // Private methods
