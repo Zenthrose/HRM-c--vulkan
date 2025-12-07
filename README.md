@@ -50,6 +50,9 @@ Built for the future of AI, HRM represents a complete autonomous learning system
 - 🎮 **Interactive Interfaces**: CLI and GUI for human-AI communication
 - 🌐 **Network Monitoring**: HTTP client for traffic analysis
 - 🔧 **Cross-Platform**: Universal hardware support from embedded to supercomputers
+- 🧠 **CPU/RAM Offloading**: Intelligent workload distribution to prevent bottlenecking
+- 💾 **Character Sequence Caching**: RAM-based caching for efficient processing
+- ⚖️ **Hybrid Execution**: Dynamic CPU/GPU task balancing with resource monitoring
 
 ## 📊 Implementation Status
 
@@ -66,6 +69,13 @@ Built for the future of AI, HRM represents a complete autonomous learning system
 | **Network & Cloud Integration** | ✅ Complete | HTTP client and multi-provider storage |
 | **Interactive Interfaces** | ✅ Complete | CLI/GUI with natural language processing |
 | **Successful Compilation** | ✅ Complete | Builds without errors using standard commands |
+| **GUI About Page & Uptime** | ✅ Complete | System information display with real-time uptime tracking |
+| **Memory Compaction Controls** | ✅ Complete | GUI interface for memory management and compaction |
+| **Cloud Storage Interface** | ✅ Complete | Full cloud operations with background processing |
+| **Terminal Resize Detection** | ✅ Complete | Automatic GUI redraw on terminal size changes |
+| **CPU/RAM Offloading System** | ✅ Complete | Intelligent workload distribution to prevent bottlenecking |
+| **Character Sequence Caching** | ✅ Complete | RAM-based caching for efficient character processing |
+| **Hybrid Execution Framework** | ✅ Complete | Dynamic CPU/GPU task balancing with resource monitoring |
 
 ### Platform Compatibility
 - **Windows**: Full MSYS2 MinGW GCC support with Windows API integration
@@ -101,6 +111,17 @@ make -j$(nproc)  # or cmake --build . --config Release -j 4 on Windows
 HRM> Hello, how can you help with brainstorming?
 HRM> train  # Start character-level training
 ```
+
+### Enhanced GUI Features
+The HRM GUI now provides comprehensive system management:
+```bash
+./src/hrm_system --gui
+```
+- **About Page**: System information, real-time uptime, capabilities overview
+- **Memory Management**: Statistics, compaction controls, cloud storage operations
+- **System Status**: CPU/RAM/GPU monitoring with uptime tracking
+- **Terminal Resize**: Automatic interface adaptation to terminal size changes
+- **Background Operations**: Async memory compaction and cloud transfers
 
 ## 🛠️ Installation
 
@@ -178,7 +199,8 @@ HRM System Architecture
 │   ├── Hierarchical Reasoning Module (H/L levels)
 │   ├── Adaptive Computation Time (ACT)
 │   ├── Transformer with FlashAttention
-│   └── Character-Level Language Processing
+│   ├── Character-Level Language Processing
+│   └── RoPE Position Embeddings
 ├── Autonomous Systems
 │   ├── Self-Modifying Code Engine
 │   ├── Self-Evolution Framework
@@ -186,14 +208,25 @@ HRM System Architecture
 ├── Resource Intelligence
 │   ├── Real-Time Monitoring
 │   ├── Adaptive Task Scheduling
-│   └── OOM Prevention
+│   ├── OOM Prevention
+│   ├── CPU/RAM Offloading
+│   └── Hybrid Execution Framework
 ├── User Interfaces
 │   ├── Command-Line Interface
-│   ├── Graphical User Interface
+│   ├── Graphical User Interface (Enhanced)
+│   │   ├── About Page & System Info
+│   │   ├── Memory Compaction Controls
+│   │   ├── Cloud Storage Operations
+│   │   └── Terminal Resize Detection
 │   └── Natural Language Processing
+├── Caching & Optimization
+│   ├── Character Sequence Cache (RAM)
+│   ├── Memory Compaction System
+│   └── Intelligent Workload Balancing
 └── System Integration
     ├── Cross-Platform Compatibility
     ├── Cloud Storage & Networking
+    ├── HTTP Client for Monitoring
     └── Hardware Abstraction Layer
 ```
 
@@ -230,6 +263,9 @@ HRM System Architecture
 - **Mixed Precision**: 50-75% memory savings with FP16/BF16/FP8
 - **Vulkan Optimization**: Zero CUDA dependency, universal GPU support
 - **Character-Level Efficiency**: No tokenization overhead
+- **CPU/RAM Offloading**: Intelligent workload distribution prevents bottlenecking
+- **Hybrid Execution**: Dynamic CPU/GPU balancing maximizes hardware utilization
+- **Sequence Caching**: RAM-based caching reduces redundant character processing
 
 ### System Requirements
 | Component | Minimum | Recommended |
