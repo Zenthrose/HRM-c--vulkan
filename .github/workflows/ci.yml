@@ -29,21 +29,23 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt update
-        sudo apt install -y software-properties-common
-        sudo add-apt-repository -y ppa:oibaf/graphics-drivers
+        sudo apt install -y software-properties-common wget apt-transport-https
+        wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
+        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list https://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
         sudo apt update
-        sudo apt install -y libvulkan1 mesa-vulkan-drivers vulkan-tools
+        sudo apt install -y vulkan-sdk
 
     - name: Install Vulkan SDK (macOS)
       if: runner.os == 'macOS'
       run: |
         brew install molten-vk
+        brew install spdlog googletest
 
     - name: Install Vulkan SDK (Windows)
       if: runner.os == 'Windows'
       run: |
         choco install vulkan-sdk
-        # Note: spdlog may need to be installed via vcpkg or prebuilt binaries
+        # spdlog will use fallback implementation if not found
 
     - name: Set up GCC (Linux/macOS)
       if: matrix.compiler == 'gcc' && runner.os != 'Windows'
@@ -57,26 +59,26 @@ jobs:
         sudo apt update
         sudo apt install -y clang cmake ninja-build libspdlog-dev libgtest-dev
 
-    - name: Configure CMake (GCC)
-      if: matrix.compiler == 'gcc'
+    - name: Configure CMake
       run: |
         mkdir build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -G Ninja
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -G Ninja
+        elif [ "${{ matrix.compiler }}" = "clang" ]; then
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G Ninja
+        else
+          cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja
+        fi
 
-    - name: Configure CMake (Clang)
-      if: matrix.compiler == 'clang'
+    - name: Check CMake Configuration
       run: |
-        mkdir build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G Ninja
-
-    - name: Configure CMake (MSVC)
-      if: matrix.os == 'windows-latest' && matrix.compiler == 'msvc'
-      run: |
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja
+        echo "=== CMake Cache ==="
+        grep -E "(spdlog|gtest|Vulkan|FOUND)" CMakeCache.txt || echo "No dependency info found"
+        echo "=== Available Tools ==="
+        which glslc || echo "glslc not found"
+        which cmake || echo "cmake not found"
 
     - name: Build
       run: |
