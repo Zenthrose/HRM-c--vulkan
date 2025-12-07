@@ -55,11 +55,13 @@ endif()
 # Copy MinGW DLLs for Windows portability
 if(WIN32 AND MINGW)
     add_custom_command(TARGET hrm_system POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll ${CMAKE_BINARY_DIR}/release/
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll ${CMAKE_BINARY_DIR}/release/
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:hrm_system>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll $<TARGET_FILE_DIR:hrm_system>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:hrm_system>
     )
 endif()
+
+
 
 # Evaluation tool
 add_executable(evaluate evaluate.cpp)
@@ -81,9 +83,9 @@ endif()
 # Copy MinGW DLLs for Windows portability
 if(WIN32 AND MINGW)
     add_custom_command(TARGET evaluate POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll ${CMAKE_BINARY_DIR}/release/
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll ${CMAKE_BINARY_DIR}/release/
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:evaluate>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll $<TARGET_FILE_DIR:evaluate>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:evaluate>
     )
 endif()
 
@@ -107,9 +109,9 @@ endif()
 # Copy MinGW DLLs for Windows portability
 if(WIN32 AND MINGW)
     add_custom_command(TARGET generate_test_data POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll ${CMAKE_BINARY_DIR}/release/
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll ${CMAKE_BINARY_DIR}/release/
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:generate_test_data>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll $<TARGET_FILE_DIR:generate_test_data>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:generate_test_data>
     )
 endif()
 
@@ -133,9 +135,9 @@ endif()
 # Copy MinGW DLLs for Windows portability
 if(WIN32 AND MINGW)
     add_custom_command(TARGET arc_eval POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll ${CMAKE_BINARY_DIR}/release/
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll ${CMAKE_BINARY_DIR}/release/
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:arc_eval>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll $<TARGET_FILE_DIR:arc_eval>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:arc_eval>
     )
 endif()
 
