@@ -9,6 +9,9 @@
 #include <iomanip>
 #include <limits>
 #include "../utils/logger.hpp"
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 namespace fs = std::filesystem;
 
@@ -313,6 +316,9 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_epoch(
     auto hrm_batch_all = sequences_to_hrm_batch(intelligent_sequences);
     auto initial_carry = dynamic_cast<SelfEvolvingHRM*>(hrm_system_.get())->get_hrm()->initial_carry(hrm_batch_all);
 
+    #ifdef _OPENMP
+    #pragma omp parallel for num_threads(config_.parallel_batches) schedule(dynamic)
+    #endif
     for (int batch_idx = 0; batch_idx < num_batches; ++batch_idx) {
         // Get batch sequences
         std::vector<std::string> batch_sequences;

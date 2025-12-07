@@ -48,6 +48,9 @@ struct CharacterLanguageModelConfig {
     int warmup_steps = 1000;  // Linear warmup steps
     int total_steps = 100000;  // Total training steps
     float min_lr = 1e-6;  // Minimum learning rate
+
+    // Parallel processing
+    int parallel_batches = 1;  // Number of parallel batch processors (uses OpenMP if available)
     std::chrono::seconds max_training_time = std::chrono::hours(24);  // 24 hours max
 
     // Early stopping

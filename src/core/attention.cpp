@@ -5,6 +5,9 @@
 #include <vector>
 #include <cstring>
 
+// VK_CHECK macro for Vulkan error handling
+#define VK_CHECK(x) if ((x) != VK_SUCCESS) throw std::runtime_error("Vulkan operation failed with error: " + std::to_string(x));
+
 AttentionVulkan::AttentionVulkan(const AttentionConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool),
       pipeline(VK_NULL_HANDLE), pipelineLayout(VK_NULL_HANDLE), descriptorSetLayout(VK_NULL_HANDLE), descriptorPool(VK_NULL_HANDLE) {
@@ -126,9 +129,7 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
     cmdBufAllocInfo.commandBufferCount = 1;
 
     VkCommandBuffer commandBuffer;
-    if (vkAllocateCommandBuffers(device, &cmdBufAllocInfo, &commandBuffer) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to allocate Vulkan command buffer for attention computation");
-    }
+    VK_CHECK(vkAllocateCommandBuffers(device, &cmdBufAllocInfo, &commandBuffer));
 
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -163,10 +164,10 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     if (vkCreateFence(device, &fenceInfo, nullptr, &fence) != VK_SUCCESS) {
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
-        throw std::runtime_error("Failed to create Vulkan synchronization fence for attention");
+        VK_CHECK(vkCreateFence(device, &fenceInfo, nullptr, &fence));
     }
 
-    if (vkQueueSubmit(computeQueue, 1, &submitInfo, fence) != VK_SUCCESS) {
+    VK_CHECK(vkQueueSubmit(computeQueue, 1, &submitInfo, fence));
         vkDestroyFence(device, fence, nullptr);
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
         throw std::runtime_error("failed to submit compute command buffer!");
@@ -174,11 +175,7 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
     
     // Wait for completion with timeout
     VkResult waitResult = vkWaitForFences(device, 1, &fence, VK_TRUE, 10000000000ULL); // 10 second timeout
-    if (waitResult != VK_SUCCESS) {
-        vkDestroyFence(device, fence, nullptr);
-        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
-        throw std::runtime_error("Failed to wait for Vulkan fence completion in attention computation");
-    }
+    VK_CHECK(waitResult);
     
     vkDestroyFence(device, fence, nullptr);
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
@@ -426,15 +423,8 @@ void AttentionVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevic
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
-        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
-        throw std::runtime_error("Failed to submit Vulkan copy command buffer in attention");
-    }
-
-    if (vkQueueWaitIdle(computeQueue) != VK_SUCCESS) {
-        vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
-        throw std::runtime_error("Failed to wait for Vulkan queue idle in attention");
-    }
+    VK_CHECK(vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE));
+    VK_CHECK(vkQueueWaitIdle(computeQueue));
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
