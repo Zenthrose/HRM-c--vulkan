@@ -241,3 +241,62 @@ std::vector<float> UTF8Processor::get_char_embedding(uint32_t codepoint) {
     char_embeddings_[codepoint] = embedding;
     return embedding;
 }
+
+// CPU-based character processing for offloading
+bool UTF8Processor::validate_utf8_cpu(const std::string& text) {
+    size_t i = 0;
+    while (i < text.size()) {
+        int char_len = get_utf8_char_length(static_cast<unsigned char>(text[i]));
+        if (char_len == 0 || i + char_len > text.size()) {
+            return false;
+        }
+        for (int j = 1; j < char_len; ++j) {
+            if (!is_utf8_continuation_byte(static_cast<unsigned char>(text[i + j]))) {
+                return false;
+            }
+        }
+        i += char_len;
+    }
+    return true;
+}
+
+std::string UTF8Processor::normalize_characters_cpu(const std::string& text) {
+    std::string normalized;
+    size_t i = 0;
+    while (i < text.size()) {
+        size_t pos = i;
+        uint32_t codepoint = decode_utf8_codepoint(text, pos);
+        if (codepoint == 0) break;
+
+        // Basic normalization: convert common variants
+        if (codepoint >= 0x41 && codepoint <= 0x5A) { // A-Z -> a-z
+            codepoint += 0x20;
+        }
+        // Could add more normalization rules here
+
+        normalized += encode_utf8_codepoint(codepoint);
+        i = pos;
+    }
+    return normalized;
+}
+
+std::vector<uint32_t> UTF8Processor::encode_characters_cpu(const std::string& text) {
+    std::vector<uint32_t> codes;
+    size_t i = 0;
+    while (i < text.size()) {
+        size_t pos = i;
+        uint32_t codepoint = decode_utf8_codepoint(text, pos);
+        if (codepoint == 0) break;
+        codes.push_back(codepoint);
+        i = pos;
+    }
+    return codes;
+}
+
+std::string UTF8Processor::decode_characters_cpu(const std::vector<uint32_t>& codes) {
+    std::string text;
+    for (uint32_t codepoint : codes) {
+        text += encode_utf8_codepoint(codepoint);
+    }
+    return text;
+}

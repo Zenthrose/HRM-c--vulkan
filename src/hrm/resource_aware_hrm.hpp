@@ -60,6 +60,12 @@ public:
     bool download_from_cloud(const std::string& data_id);
     std::vector<std::string> list_cloud_storage() const;
 
+    // CPU/RAM offloading interface
+    bool should_offload_to_cpu(const TaskRequirements& requirements) const;
+    void enable_hybrid_execution(bool enable);
+    bool is_hybrid_execution_enabled() const;
+    std::unordered_map<std::string, std::string> get_offloading_stats() const;
+
     // Adaptive behavior
     void adapt_to_resource_constraints();
     void optimize_for_current_resources();
@@ -94,6 +100,9 @@ private:
     std::shared_ptr<class MemoryCompactionSystem> memory_compaction_system_;
     std::shared_ptr<class CloudStorageManager> cloud_storage_manager_;
     std::unique_ptr<VulkanTrainer> vulkan_trainer_;
+    std::shared_ptr<class CharacterSequenceCache> character_cache_;
+    bool hybrid_execution_enabled_;
+    std::unordered_map<std::string, size_t> offloading_stats_;
 
     // Resource-aware state
     std::vector<ResourceAwareTask> pending_tasks_;

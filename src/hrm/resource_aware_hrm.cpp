@@ -4,7 +4,9 @@
 
 ResourceAwareHRM::ResourceAwareHRM(const ResourceAwareHRMConfig& config)
     : SelfModifyingHRM(config.base_config), config_(config), resource_pressure_mode_(false),
-      memory_compaction_system_(config.memory_compaction_system), cloud_storage_manager_(config.cloud_storage_manager) {
+      memory_compaction_system_(config.memory_compaction_system), cloud_storage_manager_(config.cloud_storage_manager),
+      character_cache_(std::make_shared<CharacterSequenceCache>(1000, 50)), // 1000 entries, 50MB max
+      hybrid_execution_enabled_(true) {
     std::cout << "Initializing Resource-Aware HRM System..." << std::endl;
 
     // Initialize resource monitoring
@@ -40,6 +42,27 @@ ResourceAwareHRM::~ResourceAwareHRM() {
 }
 
 CommunicationResult ResourceAwareHRM::communicate(const std::string& input_message) {
+    // CPU preprocessing and caching for offloading
+    std::string processed_input = input_message;
+    if (hybrid_execution_enabled_) {
+        // Validate and normalize input on CPU
+        if (!UTF8Processor::validate_utf8_cpu(input_message)) {
+            return CommunicationResult{"Invalid UTF-8 encoding in input", 0.0f};
+        }
+        processed_input = UTF8Processor::normalize_characters_cpu(input_message);
+
+        // Cache character encoding if enabled
+        std::vector<uint32_t> encoded_chars;
+        if (character_cache_->get(processed_input, encoded_chars)) {
+            offloading_stats_["cache_hits"]++;
+        } else {
+            encoded_chars = UTF8Processor::encode_characters_cpu(processed_input);
+            character_cache_->put(processed_input, encoded_chars);
+            offloading_stats_["cache_misses"]++;
+        }
+        offloading_stats_["cpu_preprocessing"]++;
+    }
+
     // Check resource availability before processing
     if (config_.enable_resource_monitoring) {
         auto current_usage = resource_monitor_->get_current_usage();
@@ -123,7 +146,13 @@ std::vector<ResourceAlert> ResourceAwareHRM::get_resource_alerts() const {
 }
 
 bool ResourceAwareHRM::are_resources_available(const TaskRequirements& requirements) const {
-    return task_manager_->can_schedule_task(requirements);
+    // Check if we can offload to CPU if GPU resources are insufficient
+    if (task_manager_->can_schedule_task(requirements)) {
+        return true;
+    }
+
+    // Consider CPU offloading for hybrid execution
+    return hybrid_execution_enabled_ && should_offload_to_cpu(requirements);
 }
 
 void ResourceAwareHRM::adapt_to_resource_constraints() {
@@ -298,6 +327,35 @@ std::vector<std::string> ResourceAwareHRM::list_cloud_storage() const {
         return file_names;
     }
     return {};
+}
+
+bool ResourceAwareHRM::should_offload_to_cpu(const TaskRequirements& requirements) const {
+    if (!hybrid_execution_enabled_) return false;
+
+    auto usage = get_current_resource_usage();
+
+    // Offload if GPU memory is limited or CPU has capacity
+    bool gpu_memory_low = usage.gpu_memory_used_bytes > (usage.gpu_memory_total_bytes * 0.8);
+    bool cpu_has_capacity = usage.cpu_usage_percent < 70.0;
+
+    return gpu_memory_low && cpu_has_capacity && requirements.memory_mb > 100;
+}
+
+void ResourceAwareHRM::enable_hybrid_execution(bool enable) {
+    hybrid_execution_enabled_ = enable;
+}
+
+bool ResourceAwareHRM::is_hybrid_execution_enabled() const {
+    return hybrid_execution_enabled_;
+}
+
+std::unordered_map<std::string, std::string> ResourceAwareHRM::get_offloading_stats() const {
+    std::unordered_map<std::string, std::string> stats;
+    stats["hybrid_execution_enabled"] = hybrid_execution_enabled_ ? "true" : "false";
+    for (const auto& stat : offloading_stats_) {
+        stats["offload_" + stat.first] = std::to_string(stat.second);
+    }
+    return stats;
 }
 
 // Private methods

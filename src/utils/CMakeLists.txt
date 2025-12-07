@@ -1,5 +1,8 @@
 add_library(utils STATIC
+    character_cache.cpp
+    character_cache.hpp
     config_manager.cpp
+    config_manager.hpp
     cpu_compatibility.cpp
     cpu_compatibility.h
     http_client.cpp

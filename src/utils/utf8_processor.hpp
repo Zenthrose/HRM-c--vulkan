@@ -34,6 +34,12 @@ public:
     bool is_valid_utf8(const std::string& text);
     std::vector<size_t> find_invalid_sequences(const std::string& text);
 
+    // CPU-based character processing for offloading
+    static bool validate_utf8_cpu(const std::string& text);
+    static std::string normalize_characters_cpu(const std::string& text);
+    static std::vector<uint32_t> encode_characters_cpu(const std::string& text);
+    static std::string decode_characters_cpu(const std::vector<uint32_t>& codes);
+
 private:
     UTF8Config config_;
 
