@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <memory>
@@ -88,3 +89,4 @@ private:
     void destroyCommandPool();
     bool findCompatibleBuffer(VkDeviceSize size, VkBufferUsageFlags usage, PooledBuffer& result);
 };
+#endif

@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <string>
@@ -43,3 +44,4 @@ private:
     static bool enumerateDevices(VulkanCompatibilityInfo& info);
     static bool checkExtensionSupport(VulkanCompatibilityInfo& info);
 };
+#endif

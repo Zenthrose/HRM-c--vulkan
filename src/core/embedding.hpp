@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
+#endif
 #include <vector>
 #include <string>
 
@@ -12,6 +14,7 @@ struct EmbeddingConfig {
     uint32_t seq_len;
 };
 
+#ifndef NO_VULKAN
 class EmbeddingVulkan {
 public:
     EmbeddingVulkan(const EmbeddingConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool);
@@ -52,3 +55,4 @@ private:
     static std::vector<char> readFile(const std::string& filename);
     void createComputePipeline();
 };
+#endif

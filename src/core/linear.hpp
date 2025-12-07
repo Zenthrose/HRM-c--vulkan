@@ -2,7 +2,9 @@
 
 #include <vector>
 #include <string>
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
+#endif
 
 #include "attention.hpp" // For Tensor
 
@@ -19,6 +21,7 @@ struct LinearParams {
     uint32_t has_bias;
 };
 
+#ifndef NO_VULKAN
 class LinearVulkan {
 public:
     LinearVulkan(const LinearConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool);
@@ -51,3 +54,4 @@ private:
 
     std::vector<std::pair<VkBuffer, VkDeviceMemory>> stagingBuffers;
 };
+#endif

@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
+#endif
 #include <vector>
 #include <string>
 #include <memory>
@@ -13,6 +15,7 @@ struct SwiGLUConfig {
     float expansion;
 };
 
+#ifndef NO_VULKAN
 class SwiGLUVulkan {
 public:
     SwiGLUVulkan(const SwiGLUConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool);
@@ -31,4 +34,4 @@ private:
     std::unique_ptr<LinearVulkan> gate_up_proj;
     std::unique_ptr<LinearVulkan> down_proj;
 };
-
+#endif

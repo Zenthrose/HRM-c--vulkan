@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
+#endif
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -26,6 +28,7 @@ struct AttentionConfig {
     bool causal;
 };
 
+#ifndef NO_VULKAN
 class AttentionVulkan {
 public:
     AttentionVulkan(const AttentionConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool);
@@ -74,3 +77,4 @@ private:
 
 
 };
+#endif

@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <memory>
@@ -143,3 +144,4 @@ private:
     void copy_data_to_buffer(VkBuffer buffer, const void* data, VkDeviceSize size);
     void copy_data_from_buffer(VkBuffer buffer, void* data, VkDeviceSize size);
 };
+#endif

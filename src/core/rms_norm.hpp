@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
+#endif
 #include <vector>
 #include <string>
 
@@ -12,6 +14,7 @@ struct RMSNormConfig {
     float variance_epsilon;
 };
 
+#ifndef NO_VULKAN
 class RMSNormVulkan {
 public:
     RMSNormVulkan(const RMSNormConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool);
@@ -47,3 +50,4 @@ private:
     static std::vector<char> readFile(const std::string& filename);
     void createComputePipeline();
 };
+#endif

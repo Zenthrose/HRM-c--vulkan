@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
+#endif
 #include <vector>
 #include <string>
 #include <memory>
@@ -15,6 +17,7 @@ struct BlockConfig {
     RMSNormConfig norm_config;
 };
 
+#ifndef NO_VULKAN
 class BlockVulkan {
 public:
     BlockVulkan(const BlockConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool);
@@ -35,3 +38,4 @@ private:
     std::unique_ptr<RMSNormVulkan> norm1;
     std::unique_ptr<RMSNormVulkan> norm2;
 };
+#endif
