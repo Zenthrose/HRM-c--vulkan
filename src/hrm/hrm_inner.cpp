@@ -94,8 +94,23 @@ HRMInner::HRMInner(const HRMInnerConfig& config) : config_(config) {
 
     // Initialize rotary embeddings if needed
     if (config.pos_encodings == "rope") {
-        // TODO: Implement RoPE
-        rotary_emb_ = CosSin{{}, {}}; // Placeholder
+        // Implement RoPE (Rotary Position Embedding)
+        int max_seq_len = config.max_seq_len;
+        int head_dim = config.hidden_size / config.num_heads;
+
+        std::vector<float> cos_emb(max_seq_len * head_dim / 2);
+        std::vector<float> sin_emb(max_seq_len * head_dim / 2);
+
+        for (int pos = 0; pos < max_seq_len; ++pos) {
+            for (int i = 0; i < head_dim / 2; ++i) {
+                float theta = std::pow(10000.0f, -2.0f * i / head_dim);
+                float angle = pos * theta;
+                cos_emb[pos * (head_dim / 2) + i] = std::cos(angle);
+                sin_emb[pos * (head_dim / 2) + i] = std::sin(angle);
+            }
+        }
+
+        rotary_emb_ = CosSin{cos_emb, sin_emb};
     }
 
     // Initialize H_init and L_init with truncated normal

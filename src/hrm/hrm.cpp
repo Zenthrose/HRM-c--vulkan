@@ -74,7 +74,7 @@ std::pair<HRMCarry, std::unordered_map<std::string, Tensor>> HRM::forward(
 
     // Simplified ACT logic (no torch.no_grad for now)
     std::vector<bool> halted = carry.halted;
-    bool is_training = false; // TODO: Add training flag
+    bool is_training = config_.is_training;
 
     for (size_t i = 0; i < new_steps.size(); ++i) {
         bool is_last_step = (new_steps[i] >= config_.inner_config.halt_max_steps);

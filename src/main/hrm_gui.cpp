@@ -253,9 +253,21 @@ void HRMGUI::draw_system_status() {
     move_cursor(2, y++);
     std::cout << "Memory: " << format_memory_stats(usage);
 
-    // Other system info
+    // System uptime
+    uint64_t uptime_seconds = 0;
+#ifdef _WIN32
+    uptime_seconds = GetTickCount64() / 1000;
+#else
+    struct sysinfo info;
+    if (sysinfo(&info) == 0) {
+        uptime_seconds = info.uptime;
+    }
+#endif
+    uint64_t days = uptime_seconds / 86400;
+    uint64_t hours = (uptime_seconds % 86400) / 3600;
+    uint64_t minutes = (uptime_seconds % 3600) / 60;
     move_cursor(2, y++);
-    std::cout << "Uptime: " << "N/A"; // TODO: Implement uptime tracking
+    std::cout << "Uptime: " << days << "d " << hours << "h " << minutes << "m";
 }
 
 void HRMGUI::draw_memory_management() {

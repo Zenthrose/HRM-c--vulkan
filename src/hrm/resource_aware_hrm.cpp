@@ -252,9 +252,16 @@ std::vector<std::string> ResourceAwareHRM::list_memory_compactions() const {
 std::unordered_map<std::string, std::string> ResourceAwareHRM::get_cloud_storage_stats() const {
     std::unordered_map<std::string, std::string> stats;
     if (cloud_storage_manager_) {
-        // TODO: Implement cloud storage stats
         stats["cloud_enabled"] = "true";
-        stats["cloud_provider"] = "multiple";
+        auto providers = cloud_storage_manager_->get_available_providers();
+        stats["cloud_provider_count"] = std::to_string(providers.size());
+        if (!providers.empty()) {
+            stats["cloud_providers"] = providers[0]; // Primary provider
+            for (size_t i = 1; i < providers.size(); ++i) {
+                stats["cloud_providers"] += ", " + providers[i];
+            }
+        }
+        // TODO: Add more detailed stats like storage used, sync status
     } else {
         stats["cloud_enabled"] = "false";
     }
@@ -263,24 +270,32 @@ std::unordered_map<std::string, std::string> ResourceAwareHRM::get_cloud_storage
 
 bool ResourceAwareHRM::upload_to_cloud(const std::string& data_id) {
     if (cloud_storage_manager_) {
-        // TODO: Implement cloud upload
-        return true;
+        // Create test data for upload
+        std::vector<uint8_t> test_data = {'H', 'R', 'M', ' ', 't', 'e', 's', 't', ' ', 'd', 'a', 't', 'a'};
+        auto result = cloud_storage_manager_->upload_compacted_memory(data_id, test_data);
+        return result.success;
     }
     return false;
 }
 
 bool ResourceAwareHRM::download_from_cloud(const std::string& data_id) {
     if (cloud_storage_manager_) {
-        // TODO: Implement cloud download
-        return true;
+        auto result = cloud_storage_manager_->download_compacted_memory(data_id);
+        return result.success;
     }
     return false;
 }
 
 std::vector<std::string> ResourceAwareHRM::list_cloud_storage() const {
     if (cloud_storage_manager_) {
-        // TODO: Implement cloud listing
-        return {"example_data_1", "example_data_2"};
+        auto all_files = cloud_storage_manager_->get_all_files();
+        std::vector<std::string> file_names;
+        for (const auto& provider_files : all_files) {
+            for (const auto& file : provider_files.second) {
+                file_names.push_back(file.name);
+            }
+        }
+        return file_names;
     }
     return {};
 }

@@ -13,6 +13,7 @@ struct HRMCarry {
 
 struct HRMConfig {
     HRMInnerConfig inner_config;
+    bool is_training = false;
 };
 
 class HRM {
@@ -25,6 +26,9 @@ public:
         const HRMCarry& carry,
         const std::unordered_map<std::string, Tensor>& batch
     );
+
+    void set_training_mode(bool training) { config_.is_training = training; }
+    bool is_training() const { return config_.is_training; }
 
 private:
     HRMConfig config_;
