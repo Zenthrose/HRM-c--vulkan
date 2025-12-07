@@ -127,7 +127,7 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
 
     VkCommandBuffer commandBuffer;
     if (vkAllocateCommandBuffers(device, &cmdBufAllocInfo, &commandBuffer) != VK_SUCCESS) {
-        throw std::runtime_error("failed to allocate command buffer!");
+        throw std::runtime_error("Failed to allocate Vulkan command buffer for attention computation");
     }
 
     VkCommandBufferBeginInfo beginInfo{};
@@ -163,7 +163,7 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     if (vkCreateFence(device, &fenceInfo, nullptr, &fence) != VK_SUCCESS) {
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
-        throw std::runtime_error("failed to create synchronization fence!");
+        throw std::runtime_error("Failed to create Vulkan synchronization fence for attention");
     }
 
     if (vkQueueSubmit(computeQueue, 1, &submitInfo, fence) != VK_SUCCESS) {
@@ -177,7 +177,7 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
     if (waitResult != VK_SUCCESS) {
         vkDestroyFence(device, fence, nullptr);
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
-        throw std::runtime_error("failed to wait for fence completion!");
+        throw std::runtime_error("Failed to wait for Vulkan fence completion in attention computation");
     }
     
     vkDestroyFence(device, fence, nullptr);
@@ -428,12 +428,12 @@ void AttentionVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevic
 
     if (vkQueueSubmit(computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
-        throw std::runtime_error("failed to submit copy command buffer!");
+        throw std::runtime_error("Failed to submit Vulkan copy command buffer in attention");
     }
-    
+
     if (vkQueueWaitIdle(computeQueue) != VK_SUCCESS) {
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
-        throw std::runtime_error("failed to wait for queue idle!");
+        throw std::runtime_error("Failed to wait for Vulkan queue idle in attention");
     }
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
