@@ -1,8 +1,6 @@
 #include "block.hpp"
 #include <iostream>
 
-#ifndef NO_VULKAN
-
 BlockVulkan::BlockVulkan(const BlockConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool) {
     std::cout << "Initializing BlockVulkan..." << std::endl;
@@ -36,4 +34,3 @@ Tensor BlockVulkan::forward(const Tensor& input, const CosSin& cos_sin) {
     
     return residual2;
 }
-#endif

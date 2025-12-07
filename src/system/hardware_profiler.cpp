@@ -97,7 +97,6 @@ HardwareCapabilities HardwareProfiler::detect_memory() {
 HardwareCapabilities HardwareProfiler::detect_gpu() {
     HardwareCapabilities caps;
 
-#ifndef NO_VULKAN
     // Vulkan detection
     VkInstance instance;
     VkApplicationInfo appInfo{};
@@ -127,31 +126,16 @@ HardwareCapabilities HardwareProfiler::detect_gpu() {
             VkPhysicalDeviceMemoryProperties memProps;
             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProps);
 
+            uint64_t totalVram = 0;
             for (uint32_t i = 0; i < memProps.memoryHeapCount; i++) {
                 if (memProps.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
-                    caps.gpu_memory_gb = memProps.memoryHeaps[i].size / (1024ULL * 1024 * 1024);
-                    break;
+                    totalVram += memProps.memoryHeaps[i].size;
                 }
             }
+            caps.vram_bytes = totalVram;
         }
 
         vkDestroyInstance(instance, nullptr);
-    }
-#endif
-
-    return caps;
-}
-            }
-        } else {
-            caps.has_gpu = false;
-            caps.vram_bytes = 0;
-            caps.gpu_name = "No Vulkan GPU";
-        }
-        vkDestroyInstance(instance, nullptr);
-    } else {
-        caps.has_gpu = false;
-        caps.vram_bytes = 0;
-        caps.gpu_name = "No Vulkan GPU";
     }
 
     return caps;

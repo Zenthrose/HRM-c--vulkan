@@ -5,8 +5,6 @@
 #include <cstring>
 #include "linear.hpp"
 
-#ifndef NO_VULKAN
-
 LinearVulkan::LinearVulkan(const LinearConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool),
       pipeline(VK_NULL_HANDLE), pipelineLayout(VK_NULL_HANDLE), descriptorSetLayout(VK_NULL_HANDLE), descriptorPool(VK_NULL_HANDLE),
@@ -472,4 +470,3 @@ Tensor LinearVulkan::forward(const Tensor& input) {
 
     return output;
 }
-#endif

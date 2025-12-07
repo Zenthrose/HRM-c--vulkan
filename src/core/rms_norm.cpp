@@ -5,8 +5,6 @@
 #include <vector>
 #include <cstring>
 
-#ifndef NO_VULKAN
-
 RMSNormVulkan::RMSNormVulkan(const RMSNormConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool),
       pipeline(VK_NULL_HANDLE), pipelineLayout(VK_NULL_HANDLE), descriptorSetLayout(VK_NULL_HANDLE), descriptorPool(VK_NULL_HANDLE) {
@@ -345,4 +343,3 @@ void RMSNormVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceS
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
-#endif

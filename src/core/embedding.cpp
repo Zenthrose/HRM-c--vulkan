@@ -1,8 +1,6 @@
 #include "embedding.hpp"
 #include "../utils/cpu_compatibility.h"
-#ifndef NO_VULKAN
 #include "../vulkan/vulkan_compatibility.h"
-#endif
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
@@ -11,8 +9,6 @@
 #include <thread>
 #include <algorithm>
 #include <numeric>
-
-#ifndef NO_VULKAN
 
 EmbeddingVulkan::EmbeddingVulkan(const EmbeddingConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool),
@@ -570,4 +566,3 @@ void EmbeddingVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevic
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
-#endif
