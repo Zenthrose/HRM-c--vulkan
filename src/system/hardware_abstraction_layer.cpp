@@ -306,6 +306,8 @@ HardwareProfile HardwareAbstractionLayer::detect_gpu_capabilities() {
                     break;
                 }
             }
+
+            profile.gpu_compute_units = deviceProperties.limits.maxComputeWorkGroupCount[0];
         }
 
         vkDestroyInstance(instance, nullptr);
