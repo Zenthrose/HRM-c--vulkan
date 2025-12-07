@@ -39,6 +39,7 @@ include_directories(${Vulkan_INCLUDE_DIRS})
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/shaders)
 
 add_subdirectory(src)
+add_subdirectory(dataset)
 
 # Compile shaders to SPIR-V
 find_program(GLSLC_COMPILER glslc)
@@ -144,4 +145,11 @@ add_custom_target(compile_shaders ALL
     DEPENDS ${CMAKE_BINARY_DIR}/shaders/attention.spv ${CMAKE_BINARY_DIR}/shaders/swiglu.spv ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv ${CMAKE_BINARY_DIR}/shaders/linear.spv ${CMAKE_BINARY_DIR}/shaders/embedding.spv ${CMAKE_BINARY_DIR}/shaders/linear_backward.spv ${CMAKE_BINARY_DIR}/shaders/adam_optimizer.spv ${CMAKE_BINARY_DIR}/shaders/cross_entropy_loss.spv ${CMAKE_BINARY_DIR}/shaders/gradient_accumulation.spv ${CMAKE_BINARY_DIR}/shaders/rope.spv
     ${CMAKE_BINARY_DIR}/shaders/attention.h
 )
+
+# Copy assets to build directory
+file(GLOB ASSETS assets/*)
+foreach(ASSET ${ASSETS})
+    get_filename_component(ASSET_NAME ${ASSET} NAME)
+    configure_file(${ASSET} ${CMAKE_BINARY_DIR}/assets/${ASSET_NAME} COPYONLY)
+endforeach()
 
