@@ -17,6 +17,19 @@
 #include <signal.h>
 #include <cstring>
 #include <cstdlib>
+#include <atomic>
+
+namespace {
+    std::atomic<bool> terminal_resized(false);
+}
+
+#ifdef _WIN32
+// Windows resize detection via polling
+#else
+void sigwinch_handler(int sig) {
+    terminal_resized = true;
+}
+#endif
 
 HRMGUI::HRMGUI(std::shared_ptr<ResourceAwareHRM> hrm_system)
     : hrm_system_(hrm_system),
@@ -30,6 +43,15 @@ HRMGUI::HRMGUI(std::shared_ptr<ResourceAwareHRM> hrm_system)
       last_update_(std::chrono::system_clock::now()) {
     initialize_menus();
     setup_terminal();
+
+#ifndef _WIN32
+    // Set up SIGWINCH handler for Unix
+    struct sigaction sa;
+    sa.sa_handler = sigwinch_handler;
+    sa.sa_flags = 0;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGWINCH, &sa, nullptr);
+#endif
 }
 
 HRMGUI::~HRMGUI() {
@@ -74,6 +96,13 @@ void HRMGUI::run() {
         std::string input = get_input();
         if (!input.empty()) {
             process_input(input);
+        }
+
+        // Check for terminal resize
+        if (terminal_resized.exchange(false)) {
+            // Terminal was resized, trigger redraw
+            redraw_needed_ = true;
+            // Could also update cached terminal size here
         }
 
         // Small delay to prevent excessive CPU usage
