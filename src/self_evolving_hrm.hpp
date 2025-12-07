@@ -59,7 +59,10 @@ public:
     // Access to core HRM model
     HRM* get_hrm() { return hrm_model_.get(); }
 
-private:
+    // Get configuration
+    const SelfEvolvingHRMConfig& get_config() const { return config_; }
+
+protected:
     SelfEvolvingHRMConfig config_;
     std::unique_ptr<HRM> hrm_model_;
     std::unique_ptr<UTF8Processor> utf8_processor_;

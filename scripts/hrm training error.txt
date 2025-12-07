@@ -1,11 +1,3 @@
-Scanning knowledge directory: C:/Windows
-Could not access C:/Windows: filesystem error: cannot increment recursive directory iterator: Invalid argument
-Scanning knowledge directory: C:/Users
-Could not access C:/Users: filesystem error: cannot increment recursive directory iterator: Invalid argument
-Loaded 41875 training sequences
-Loaded 10469 validation sequences
-Generating intelligent contexts from 41875 sequences...
-Generated 1153758 intelligent contexts
-Generated 1153758 intelligent contexts for training
 Creating initial HRM carry...
-Task scheduler stopped
+
+Training failed with return code: 3221225477

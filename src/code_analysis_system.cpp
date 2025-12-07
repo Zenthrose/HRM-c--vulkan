@@ -425,53 +425,30 @@ bool CodeAnalysisSystem::run_unit_tests(const std::vector<CodeModification>& mod
 
 // Private helper methods
 void CodeAnalysisSystem::discover_source_files() {
+    std::cout << "Discovering source files in: " << project_root_ << std::endl;
+
     try {
-        std::string project_path = fs::absolute(project_root_).string();
-        
-        // Handle Windows vs Unix path separators
-        if (project_path.back() != '/' && project_path.back() != '\\') {
-            project_path += fs::path::preferred_separator;
-        }
-        
-        std::cout << "Scanning project path: " << project_path << std::endl;
-        
-        for (const auto& entry : fs::recursive_directory_iterator(project_path)) {
-            if (entry.is_regular_file()) {
-                std::string path = entry.path().string();
-                std::string ext = entry.path().extension().string();
-                
-                // Check for source file extensions (case-insensitive)
-                std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-                if (ext == ".cpp" || ext == ".hpp" || ext == ".cc" || 
-                    ext == ".h" || ext == ".c" || ext == ".py" || 
-                    ext == ".js" || ext == ".java" || ext == ".cs") {
-                    source_files_.push_back(path);
-                    std::cout << "Found source file: " << path << std::endl;
+        for (const auto& entry : fs::recursive_directory_iterator(project_root_)) {
+            try {
+                if (entry.is_regular_file()) {
+                    std::string path = entry.path().string();
+                    std::string ext = entry.path().extension().string();
+
+                    // Only include C/C++ source files
+                    if (ext == ".cpp" || ext == ".hpp" || ext == ".c" || ext == ".h") {
+                        source_files_.push_back(path);
+                    }
                 }
+            } catch (const std::exception& e) {
+                // Skip entries that can't be accessed
+                std::cerr << "Skipping inaccessible entry: " << e.what() << std::endl;
             }
         }
     } catch (const std::exception& e) {
         std::cerr << "Error discovering source files: " << e.what() << std::endl;
-        
-        // Fallback: try common source directories
-        std::vector<std::string> fallback_dirs = {"./src", "./include", "./lib"};
-        for (const auto& dir : fallback_dirs) {
-            if (fs::exists(dir) && fs::is_directory(dir)) {
-                for (const auto& entry : fs::directory_iterator(dir)) {
-                    if (entry.is_regular_file()) {
-                        std::string path = entry.path().string();
-                        std::string ext = entry.path().extension().string();
-                        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-                        if (ext == ".cpp" || ext == ".hpp" || ext == ".cc" || 
-                            ext == ".h" || ext == ".c" || ext == ".py") {
-                            source_files_.push_back(path);
-                            std::cout << "Fallback found source: " << path << std::endl;
-                        }
-                    }
-                }
-            }
-        }
     }
+
+    std::cout << "Discovered " << source_files_.size() << " source files" << std::endl;
 }
 
 std::vector<std::string> CodeAnalysisSystem::read_file_lines(const std::string& file_path) {

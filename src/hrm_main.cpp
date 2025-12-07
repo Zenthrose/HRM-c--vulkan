@@ -15,11 +15,12 @@
 #include "hrm_cli.hpp"
 #include "hrm_gui.hpp"
 #include "character_language_trainer.hpp"
+#include "hardware_profiler.hpp"
 
 namespace fs = std::filesystem;
 
-// Default configuration
-ResourceAwareHRMConfig createDefaultHRMConfig() {
+// Default configuration with hardware adaptation
+ResourceAwareHRMConfig createDefaultHRMConfig(const HardwareCapabilities& hw_caps) {
     ResourceAwareHRMConfig config;
 
     // Base HRM config (SelfModifyingHRMConfig)
@@ -62,6 +63,123 @@ struct VulkanResources {
     uint32_t computeQueueFamilyIndex = 0;
     VkCommandPool commandPool = VK_NULL_HANDLE;
 };
+
+void adapt_config_to_hardware(ResourceAwareHRMConfig& config, const HardwareCapabilities& hw_caps, const VulkanResources& vulkan) {
+    uint64_t ram_gb = hw_caps.total_ram_bytes / (1024ULL * 1024 * 1024);
+    uint32_t cores = hw_caps.cpu_cores;
+
+    std::cout << "Adapting HRM configuration for hardware tier: ";
+    switch (hw_caps.performance_tier) {
+        case HardwareCapabilities::PerformanceTier::ULTRA_LOW:
+            std::cout << "Ultra Low" << std::endl;
+            // Minimal configuration for embedded systems
+            config.base_config.base_config.hrm_config.inner_config.hidden_size = 64;
+            config.base_config.base_config.hrm_config.inner_config.H_layers = 1;
+            config.base_config.base_config.hrm_config.inner_config.L_layers = 1;
+            config.base_config.base_config.hrm_config.inner_config.num_heads = 1;
+            config.base_config.base_config.hrm_config.inner_config.vocab_size = 10000;
+            config.base_config.base_config.hrm_config.inner_config.batch_size = 1;
+            config.base_config.base_config.hrm_config.inner_config.seq_len = 128;
+            config.max_memory_per_task_mb = 50;
+            config.base_config.enable_self_modification = false; // Too risky for minimal hardware
+            config.enable_adaptive_task_management = false;
+            break;
+
+        case HardwareCapabilities::PerformanceTier::LOW:
+            std::cout << "Low" << std::endl;
+            // Reduced configuration for low-end systems
+            config.base_config.base_config.hrm_config.inner_config.hidden_size = 128;
+            config.base_config.base_config.hrm_config.inner_config.H_layers = 2;
+            config.base_config.base_config.hrm_config.inner_config.L_layers = 2;
+            config.base_config.base_config.hrm_config.inner_config.num_heads = 2;
+            config.base_config.base_config.hrm_config.inner_config.vocab_size = 25000;
+            config.base_config.base_config.hrm_config.inner_config.batch_size = 1;
+            config.base_config.base_config.hrm_config.inner_config.seq_len = 256;
+            config.max_memory_per_task_mb = 100;
+            config.base_config.enable_self_modification = false; // Conservative
+            break;
+
+        case HardwareCapabilities::PerformanceTier::MEDIUM:
+            std::cout << "Medium" << std::endl;
+            // Balanced configuration
+            config.base_config.base_config.hrm_config.inner_config.hidden_size = 256;
+            config.base_config.base_config.hrm_config.inner_config.H_layers = 3;
+            config.base_config.base_config.hrm_config.inner_config.L_layers = 3;
+            config.base_config.base_config.hrm_config.inner_config.num_heads = 4;
+            config.base_config.base_config.hrm_config.inner_config.vocab_size = 50000;
+            config.base_config.base_config.hrm_config.inner_config.batch_size = 2;
+            config.base_config.base_config.hrm_config.inner_config.seq_len = 512;
+            config.max_memory_per_task_mb = 256;
+            config.base_config.enable_self_modification = true; // Enable with caution
+            break;
+
+        case HardwareCapabilities::PerformanceTier::HIGH:
+            std::cout << "High" << std::endl;
+            // Good performance configuration
+            config.base_config.base_config.hrm_config.inner_config.hidden_size = 512;
+            config.base_config.base_config.hrm_config.inner_config.H_layers = 4;
+            config.base_config.base_config.hrm_config.inner_config.L_layers = 4;
+            config.base_config.base_config.hrm_config.inner_config.num_heads = 8;
+            config.base_config.base_config.hrm_config.inner_config.vocab_size = 75000;
+            config.base_config.base_config.hrm_config.inner_config.batch_size = 4;
+            config.base_config.base_config.hrm_config.inner_config.seq_len = 1024;
+            config.max_memory_per_task_mb = 512;
+            config.base_config.enable_self_modification = true;
+            break;
+
+        case HardwareCapabilities::PerformanceTier::ULTRA_HIGH:
+            std::cout << "Ultra High" << std::endl;
+            // Full capability configuration (original)
+            config.base_config.base_config.hrm_config.inner_config.hidden_size = 768;
+            config.base_config.base_config.hrm_config.inner_config.H_layers = 4;
+            config.base_config.base_config.hrm_config.inner_config.L_layers = 4;
+            config.base_config.base_config.hrm_config.inner_config.num_heads = 12;
+            config.base_config.base_config.hrm_config.inner_config.vocab_size = 100000;
+            config.base_config.base_config.hrm_config.inner_config.batch_size = 8;
+            config.base_config.base_config.hrm_config.inner_config.seq_len = 2048;
+            config.max_memory_per_task_mb = 1024;
+            config.base_config.enable_self_modification = true;
+            break;
+    }
+
+    // Vulkan availability adjustments
+    if (!hw_caps.vulkan_supported || vulkan.device == VK_NULL_HANDLE) {
+        std::cout << "Vulkan not available - enabling CPU-only mode" << std::endl;
+        // CPU-only mode - reduce complexity further
+        config.base_config.base_config.hrm_config.inner_config.hidden_size = std::min(config.base_config.base_config.hrm_config.inner_config.hidden_size, 256);
+        config.base_config.base_config.hrm_config.inner_config.H_layers = std::min(config.base_config.base_config.hrm_config.inner_config.H_layers, 2);
+        config.base_config.base_config.hrm_config.inner_config.L_layers = std::min(config.base_config.base_config.hrm_config.inner_config.L_layers, 2);
+        config.base_config.enable_self_modification = false; // Too complex without GPU
+    }
+
+    // Resource monitoring adjustments
+    if (ram_gb < 2) {
+        config.enable_resource_monitoring = true;
+        config.resource_check_interval = std::chrono::seconds(30); // More frequent checks
+    } else if (ram_gb < 8) {
+        config.enable_resource_monitoring = true;
+        config.resource_check_interval = std::chrono::seconds(60);
+    } else {
+        config.enable_resource_monitoring = true;
+        config.resource_check_interval = std::chrono::seconds(120);
+    }
+
+    // Task management based on CPU cores
+    if (cores <= 1) {
+        config.enable_adaptive_task_management = false;
+        config.enable_chunking_for_large_tasks = false;
+    } else if (cores <= 2) {
+        config.enable_adaptive_task_management = true;
+        config.enable_chunking_for_large_tasks = true;
+    } else {
+        config.enable_adaptive_task_management = true;
+        config.enable_chunking_for_large_tasks = true;
+    }
+
+    std::cout << "Configuration adapted - Hidden size: " << config.base_config.base_config.hrm_config.inner_config.hidden_size
+              << ", Layers: " << config.base_config.base_config.hrm_config.inner_config.H_layers
+              << ", Self-modification: " << (config.base_config.enable_self_modification ? "Enabled" : "Disabled") << std::endl;
+}
 
 VulkanResources initializeVulkan() {
     VulkanResources res;
@@ -423,6 +541,10 @@ int main(int argc, char* argv[]) {
     std::cout << "HRM - Hierarchical Reasoning Module" << std::endl;
     std::cout << "===================================" << std::endl;
 
+    // Hardware profiling for universal compatibility
+    HardwareProfiler hw_profiler;
+    HardwareCapabilities hw_caps = hw_profiler.profile_system();
+
     // Parse command line arguments
     bool cli_mode = false;
     bool gui_mode = false;
@@ -485,7 +607,7 @@ int main(int argc, char* argv[]) {
             }
 
             // Initialize HRM system only for CLI/GUI modes
-            auto hrm_config = createDefaultHRMConfig();
+            auto hrm_config = createDefaultHRMConfig(hw_caps);
 
             // Initialize HRM inner config - restore original layer counts
             hrm_config.base_config.base_config.hrm_config.inner_config.batch_size = 1;
@@ -507,19 +629,24 @@ int main(int argc, char* argv[]) {
             hrm_config.base_config.base_config.hrm_config.inner_config.halt_exploration_prob = 0.1f;
             hrm_config.base_config.base_config.hrm_config.inner_config.forward_dtype = "float32";
 
-            // Set Vulkan resources in config
-            hrm_config.base_config.base_config.hrm_config.inner_config.physicalDevice = vulkan.physicalDevice;
-            hrm_config.base_config.base_config.hrm_config.inner_config.device = vulkan.device;
-            hrm_config.base_config.base_config.hrm_config.inner_config.computeQueue = vulkan.computeQueue;
-            hrm_config.base_config.base_config.hrm_config.inner_config.computeQueueFamilyIndex = vulkan.computeQueueFamilyIndex;
-            hrm_config.base_config.base_config.hrm_config.inner_config.commandPool = vulkan.commandPool;
+    // Adapt configuration based on hardware capabilities
+    adapt_config_to_hardware(hrm_config, hw_caps, vulkan);
 
-            // Set Vulkan resources in UTF8 config
-            hrm_config.base_config.base_config.utf8_config.physicalDevice = vulkan.physicalDevice;
-            hrm_config.base_config.base_config.utf8_config.device = vulkan.device;
-            hrm_config.base_config.base_config.utf8_config.computeQueue = vulkan.computeQueue;
-            hrm_config.base_config.base_config.utf8_config.computeQueueFamilyIndex = vulkan.computeQueueFamilyIndex;
-            hrm_config.base_config.base_config.utf8_config.commandPool = vulkan.commandPool;
+    // Set Vulkan resources in config (only if Vulkan is available)
+    if (vulkan.device != VK_NULL_HANDLE) {
+        hrm_config.base_config.base_config.hrm_config.inner_config.physicalDevice = vulkan.physicalDevice;
+        hrm_config.base_config.base_config.hrm_config.inner_config.device = vulkan.device;
+        hrm_config.base_config.base_config.hrm_config.inner_config.computeQueue = vulkan.computeQueue;
+        hrm_config.base_config.base_config.hrm_config.inner_config.computeQueueFamilyIndex = vulkan.computeQueueFamilyIndex;
+        hrm_config.base_config.base_config.hrm_config.inner_config.commandPool = vulkan.commandPool;
+
+        // Set Vulkan resources in UTF8 config
+        hrm_config.base_config.base_config.utf8_config.physicalDevice = vulkan.physicalDevice;
+        hrm_config.base_config.base_config.utf8_config.device = vulkan.device;
+        hrm_config.base_config.base_config.utf8_config.computeQueue = vulkan.computeQueue;
+        hrm_config.base_config.base_config.utf8_config.computeQueueFamilyIndex = vulkan.computeQueueFamilyIndex;
+        hrm_config.base_config.base_config.utf8_config.commandPool = vulkan.commandPool;
+    }
 
             hrm = std::make_shared<ResourceAwareHRM>(hrm_config);
         }

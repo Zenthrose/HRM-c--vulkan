@@ -5,6 +5,9 @@
 #include <cstdlib>
 #include <chrono>
 #include <algorithm>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 #ifdef _WIN32
 #include <windows.h>
 #include <process.h>
@@ -118,18 +121,74 @@ CompilationResult RuntimeCompilationSystem::modify_and_recompile(
     const std::string& modification_script,
     const std::string& output_name) {
 
-    // This is a placeholder - in a real implementation, this would:
-    // 1. Parse the modification script
-    // 2. Apply modifications to the source file
-    // 3. Recompile the modified code
-
-    std::cout << "modify_and_recompile is a placeholder implementation" << std::endl;
-    std::cout << "Source: " << source_file << std::endl;
-    std::cout << "Modification script: " << modification_script << std::endl;
-
     CompilationResult result;
-    result.success = false;
-    result.errors = {"modify_and_recompile not fully implemented"};
+
+    try {
+        // 1. Read the source file
+        std::ifstream input_file(source_file);
+        if (!input_file.is_open()) {
+            result.success = false;
+            result.errors = {"Failed to open source file: " + source_file};
+            return result;
+        }
+
+        std::string source_content((std::istreambuf_iterator<char>(input_file)),
+                                   std::istreambuf_iterator<char>());
+        input_file.close();
+
+        // 2. Parse modification script (simple format: "old_text|new_text")
+        size_t separator_pos = modification_script.find('|');
+        if (separator_pos == std::string::npos) {
+            result.success = false;
+            result.errors = {"Invalid modification script format. Expected: 'old_text|new_text'"};
+            return result;
+        }
+
+        std::string old_text = modification_script.substr(0, separator_pos);
+        std::string new_text = modification_script.substr(separator_pos + 1);
+
+        // 3. Apply modification
+        size_t pos = source_content.find(old_text);
+        if (pos == std::string::npos) {
+            result.success = false;
+            result.errors = {"Old text not found in source file"};
+            return result;
+        }
+
+        source_content.replace(pos, old_text.length(), new_text);
+
+        // 4. Write modified source to temporary file
+        std::string temp_source_file = source_file + ".modified";
+        std::ofstream output_file(temp_source_file);
+        if (!output_file.is_open()) {
+            result.success = false;
+            result.errors = {"Failed to create modified source file"};
+            return result;
+        }
+        output_file << source_content;
+        output_file.close();
+
+        // 5. Compile the modified source
+        std::vector<std::string> source_files = {temp_source_file};
+#ifdef _WIN32
+        std::string output_path = output_name + ".dll";
+#else
+        std::string output_path = output_name + ".so";
+#endif
+
+        result = compile_to_library(source_files, output_path);
+
+        // 6. Clean up temporary file
+        fs::remove(temp_source_file);
+
+        if (result.success) {
+            std::cout << "Successfully modified and recompiled: " << source_file << std::endl;
+        }
+
+    } catch (const std::exception& e) {
+        result.success = false;
+        result.errors = {"Exception during modify_and_recompile: " + std::string(e.what())};
+    }
 
     return result;
 }

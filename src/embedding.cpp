@@ -7,7 +7,8 @@
 
 EmbeddingVulkan::EmbeddingVulkan(const EmbeddingConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool),
-      pipeline(VK_NULL_HANDLE), pipelineLayout(VK_NULL_HANDLE), descriptorSetLayout(VK_NULL_HANDLE), descriptorPool(VK_NULL_HANDLE) {
+      pipeline(VK_NULL_HANDLE), pipelineLayout(VK_NULL_HANDLE), descriptorSetLayout(VK_NULL_HANDLE), descriptorPool(VK_NULL_HANDLE),
+      num_chunks((config.num_embeddings + chunk_size - 1) / chunk_size) {
     std::cout << "Initializing EmbeddingVulkan layer..." << std::endl;
     if (device) {
         init_vulkan_objects();
@@ -21,8 +22,10 @@ EmbeddingVulkan::~EmbeddingVulkan() {
 
     vkDestroyBuffer(device, inputBuffer, nullptr);
     vkFreeMemory(device, inputBufferMemory, nullptr);
-    vkDestroyBuffer(device, weightBuffer, nullptr);
-    vkFreeMemory(device, weightBufferMemory, nullptr);
+    for (size_t i = 0; i < weightBuffers.size(); ++i) {
+        vkDestroyBuffer(device, weightBuffers[i], nullptr);
+        vkFreeMemory(device, weightBufferMemories[i], nullptr);
+    }
     vkDestroyBuffer(device, outputBuffer, nullptr);
     vkFreeMemory(device, outputBufferMemory, nullptr);
     vkDestroyBuffer(device, uniformBuffer, nullptr);
@@ -86,9 +89,11 @@ Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
     struct UniformData {
         uint32_t seq_len;
         uint32_t embedding_dim;
+        uint32_t chunk_size;
     } uniformData = {
         static_cast<uint32_t>(input.size()),
-        config.embedding_dim
+        config.embedding_dim,
+        chunk_size
     };
     
     void* uniformMapped;
@@ -97,7 +102,6 @@ Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
     vkUnmapMemory(device, uniformBufferMemory);
 
     VkDeviceSize input_size = input.size() * sizeof(uint32_t);
-    VkDeviceSize weight_size = config.num_embeddings * config.embedding_dim * sizeof(float);
     VkDeviceSize output_size = input.size() * config.embedding_dim * sizeof(float);
 
     // Recreate buffers with correct sizes
@@ -109,30 +113,47 @@ Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
     vkFreeMemory(device, inputBufferMemory, nullptr);
     createBuffer(input_size, storage_buffer_usage, memory_properties, inputBuffer, inputBufferMemory);
 
-    // Recreate weightBuffer
-    vkDestroyBuffer(device, weightBuffer, nullptr);
-    vkFreeMemory(device, weightBufferMemory, nullptr);
-    createBuffer(weight_size, storage_buffer_usage, memory_properties, weightBuffer, weightBufferMemory);
-
-    // Initialize weights with pseudo-random values
-    VkBuffer weightStagingBuf;
-    VkDeviceMemory weightStagingMem;
-    createBuffer(weight_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, weightStagingBuf, weightStagingMem);
-
-    void* weightDataPtr;
-    vkMapMemory(device, weightStagingMem, 0, weight_size, 0, &weightDataPtr);
-    float* weightPtr = static_cast<float*>(weightDataPtr);
-    for (uint32_t i = 0; i < config.num_embeddings; ++i) {
-        for (uint32_t j = 0; j < config.embedding_dim; ++j) {
-            uint32_t idx = i * config.embedding_dim + j;
-            weightPtr[idx] = static_cast<float>((i * 31 + j * 17) % 1000) / 1000.0f - 0.5f;
-        }
+    // Recreate weightBuffers
+    for (size_t i = 0; i < weightBuffers.size(); ++i) {
+        vkDestroyBuffer(device, weightBuffers[i], nullptr);
+        vkFreeMemory(device, weightBufferMemories[i], nullptr);
     }
-    vkUnmapMemory(device, weightStagingMem);
+    weightBuffers.clear();
+    weightBufferMemories.clear();
+    for (uint32_t i = 0; i < num_chunks; ++i) {
+        uint32_t chunk_vocab = (i == num_chunks - 1) ? (config.num_embeddings % chunk_size) : chunk_size;
+        VkDeviceSize chunk_weight_size = chunk_vocab * config.embedding_dim * sizeof(float);
+        VkBuffer buffer;
+        VkDeviceMemory memory;
+        createBuffer(chunk_weight_size, storage_buffer_usage, memory_properties, buffer, memory);
+        weightBuffers.push_back(buffer);
+        weightBufferMemories.push_back(memory);
+    }
 
-    copyBuffer(weightStagingBuf, weightBuffer, weight_size);
-    vkDestroyBuffer(device, weightStagingBuf, nullptr);
-    vkFreeMemory(device, weightStagingMem, nullptr);
+    // Initialize weights with pseudo-random values for each chunk
+    for (uint32_t chunk = 0; chunk < num_chunks; ++chunk) {
+        uint32_t chunk_vocab = (chunk == num_chunks - 1) ? (config.num_embeddings % chunk_size) : chunk_size;
+        VkDeviceSize chunk_weight_size = chunk_vocab * config.embedding_dim * sizeof(float);
+        VkBuffer weightStagingBuf;
+        VkDeviceMemory weightStagingMem;
+        createBuffer(chunk_weight_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, weightStagingBuf, weightStagingMem);
+
+        void* weightDataPtr;
+        vkMapMemory(device, weightStagingMem, 0, chunk_weight_size, 0, &weightDataPtr);
+        float* weightPtr = static_cast<float*>(weightDataPtr);
+        for (uint32_t i = 0; i < chunk_vocab; ++i) {
+            uint32_t global_i = chunk * chunk_size + i;
+            for (uint32_t j = 0; j < config.embedding_dim; ++j) {
+                uint32_t idx = i * config.embedding_dim + j;
+                weightPtr[idx] = static_cast<float>((global_i * 31 + j * 17) % 1000) / 1000.0f - 0.5f;
+            }
+        }
+        vkUnmapMemory(device, weightStagingMem);
+
+        copyBuffer(weightStagingBuf, weightBuffers[chunk], chunk_weight_size);
+        vkDestroyBuffer(device, weightStagingBuf, nullptr);
+        vkFreeMemory(device, weightStagingMem, nullptr);
+    }
 
     // Recreate outputBuffer
     vkDestroyBuffer(device, outputBuffer, nullptr);
@@ -157,10 +178,16 @@ Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
     inputBufferInfo.offset = 0;
     inputBufferInfo.range = input_size;
 
-    VkDescriptorBufferInfo weightBufferInfo{};
-    weightBufferInfo.buffer = weightBuffer;
-    weightBufferInfo.offset = 0;
-    weightBufferInfo.range = weight_size;
+    std::vector<VkDescriptorBufferInfo> weightBufferInfos;
+    for (size_t i = 0; i < weightBuffers.size(); ++i) {
+        uint32_t chunk_vocab = (i == num_chunks - 1) ? (config.num_embeddings % chunk_size) : chunk_size;
+        VkDeviceSize chunk_weight_size = chunk_vocab * config.embedding_dim * sizeof(float);
+        VkDescriptorBufferInfo info{};
+        info.buffer = weightBuffers[i];
+        info.offset = 0;
+        info.range = chunk_weight_size;
+        weightBufferInfos.push_back(info);
+    }
 
     VkDescriptorBufferInfo outputBufferInfo{};
     outputBufferInfo.buffer = outputBuffer;
@@ -174,29 +201,22 @@ Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
 
     std::vector<VkWriteDescriptorSet> descriptorWrites = {
         {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 0, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &inputBufferInfo, nullptr},
-        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 1, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfo, nullptr},
-        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 2, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &outputBufferInfo, nullptr},
-        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 3, 0, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, nullptr, &uniformBufferInfo, nullptr}
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 1, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[0], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 2, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[1], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 3, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[2], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 4, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[3], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 5, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[4], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 6, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[5], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 7, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[6], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 8, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[7], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 9, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[8], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 10, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[9], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 11, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &weightBufferInfos[10], nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 12, 0, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, nullptr, &outputBufferInfo, nullptr},
+        {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr, descriptorSet, 13, 0, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, nullptr, &uniformBufferInfo, nullptr}
     };
 
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
-
-    // Transfer weights (initialize with random values for demo)
-    VkBuffer weightStagingBuffer;
-    VkDeviceMemory weightStagingBufferMemory;
-    createBuffer(weight_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, weightStagingBuffer, weightStagingBufferMemory);
-    std::vector<float> weights(config.num_embeddings * config.embedding_dim, 0.0f);
-    // Initialize with small random values
-    for (size_t i = 0; i < weights.size(); ++i) {
-        weights[i] = (static_cast<float>(rand()) / RAND_MAX - 0.5f) * 0.1f;
-    }
-    void* weightData;
-    vkMapMemory(device, weightStagingBufferMemory, 0, weight_size, 0, &weightData);
-    memcpy(weightData, weights.data(), weight_size);
-    vkUnmapMemory(device, weightStagingBufferMemory);
-    copyBuffer(weightStagingBuffer, weightBuffer, weight_size);
-    vkDestroyBuffer(device, weightStagingBuffer, nullptr);
-    vkFreeMemory(device, weightStagingBufferMemory, nullptr);
 
     // Dispatch
     VkCommandBufferAllocateInfo cmdBufAllocInfo{};
@@ -283,13 +303,19 @@ void EmbeddingVulkan::init_vulkan_objects() {
     VkMemoryPropertyFlags memory_properties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
     createBuffer(buffer_size, storage_buffer_usage, memory_properties, inputBuffer, inputBufferMemory);
-    createBuffer(buffer_size, storage_buffer_usage, memory_properties, weightBuffer, weightBufferMemory);
+    for (uint32_t i = 0; i < num_chunks; ++i) {
+        VkBuffer buffer;
+        VkDeviceMemory memory;
+        createBuffer(buffer_size, storage_buffer_usage, memory_properties, buffer, memory);
+        weightBuffers.push_back(buffer);
+        weightBufferMemories.push_back(memory);
+    }
     createBuffer(buffer_size, storage_buffer_usage, memory_properties, outputBuffer, outputBufferMemory);
-    createBuffer(sizeof(uint32_t) * 2, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffer, uniformBufferMemory);
+    createBuffer(sizeof(uint32_t) * 3, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffer, uniformBufferMemory);
     
     // Descriptor pool
     std::vector<VkDescriptorPoolSize> poolSizes = {
-        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 3}, // input, weights, output
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 13}, // input, 11 weights, output
         {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1}
     };
     VkDescriptorPoolCreateInfo poolInfo{};
@@ -303,9 +329,19 @@ void EmbeddingVulkan::init_vulkan_objects() {
     // Descriptor set layout
     std::vector<VkDescriptorSetLayoutBinding> bindings = {
         {0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // input
-        {1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weights
-        {2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // output
-        {3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}  // params
+        {1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight0
+        {2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight1
+        {3, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight2
+        {4, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight3
+        {5, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight4
+        {6, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight5
+        {7, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight6
+        {8, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight7
+        {9, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight8
+        {10, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight9
+        {11, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // weight10
+        {12, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}, // output
+        {13, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr}  // params
     };
 
     VkDescriptorSetLayoutCreateInfo layoutCI{};

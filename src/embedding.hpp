@@ -34,8 +34,13 @@ private:
     VkDescriptorPool descriptorPool;
     VkDescriptorSet descriptorSet;
 
-    VkBuffer inputBuffer, weightBuffer, outputBuffer;
-    VkDeviceMemory inputBufferMemory, weightBufferMemory, outputBufferMemory;
+    VkBuffer inputBuffer, outputBuffer;
+    VkDeviceMemory inputBufferMemory, outputBufferMemory;
+
+    std::vector<VkBuffer> weightBuffers;
+    std::vector<VkDeviceMemory> weightBufferMemories;
+    uint32_t chunk_size = 10000;
+    uint32_t num_chunks;
 
     VkBuffer uniformBuffer;
     VkDeviceMemory uniformBufferMemory;

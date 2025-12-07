@@ -7,6 +7,7 @@
 #include "self_evolving_hrm.hpp"
 #include "code_analysis_system.hpp"
 #include "runtime_compilation_system.hpp"
+#include <iostream>
 
 struct SelfModifyingHRMConfig {
     SelfEvolvingHRMConfig base_config;
@@ -20,6 +21,12 @@ struct SelfModifyingHRMConfig {
     std::vector<std::string> protected_files; // Files that should not be modified
 };
 
+struct CodeChange {
+    std::string file_path;
+    std::string old_code;
+    std::string new_code;
+};
+
 struct SelfModificationResult {
     bool modification_applied;
     std::string modified_file;
@@ -29,6 +36,7 @@ struct SelfModificationResult {
     bool system_restart_required;
     std::vector<std::string> potential_risks;
     std::string rollback_instructions;
+    std::vector<CodeChange> code_changes;
 };
 
 class SelfModifyingHRM : public SelfEvolvingHRM {
@@ -54,6 +62,20 @@ public:
     void log_self_modification_activity(const SelfModificationResult& modification);
     std::vector<std::string> get_self_modification_history();
 
+    // Additional methods for service integration
+    void add_boot_task(const std::function<void()>& task);
+    void add_idle_task(const std::function<void()>& task);
+    bool should_analyze_self() const;
+
+    // Enhanced safety for hot-swaps
+    bool validate_hot_swap_safety(const std::string& file_path, const std::string& new_code);
+    bool create_safety_checkpoint(const std::string& description);
+    bool restore_from_safety_checkpoint(const std::string& checkpoint_id);
+    std::vector<std::string> scan_code_for_risks(const std::string& code_content);
+    bool validate_code_integrity(const std::string& file_path, const std::string& expected_hash);
+    bool perform_dynamic_validation(const SelfModificationResult& modification);
+    bool validate_system_stability();
+
 private:
     SelfModifyingHRMConfig config_;
     std::unique_ptr<CodeAnalysisSystem> code_analyzer_;
@@ -63,6 +85,19 @@ private:
     int interactions_since_last_analysis_;
     std::vector<SelfModificationResult> modification_history_;
     std::unordered_map<std::string, std::string> active_backups_;
+    std::vector<std::function<void()>> boot_tasks_;
+    std::vector<std::function<void()>> idle_tasks_;
+    std::unordered_map<std::string, std::string> safety_checkpoints_;
+    std::vector<std::string> protected_system_files_;
+
+    // Hot-swappable function for demonstration
+    typedef void (*ModifiableFunction)(const std::string&);
+    ModifiableFunction current_modifiable_function;
+    void* loaded_module_handle;
+
+    static void default_modifiable_function(const std::string& message) {
+        std::cout << "[DEFAULT] " << message << std::endl;
+    }
 
     // Core self-modification logic
     SelfModificationResult perform_self_analysis();
