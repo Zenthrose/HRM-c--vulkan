@@ -9,14 +9,20 @@ import sys
 import time
 import subprocess
 import signal
+import argparse
 from pathlib import Path
 
 def main():
+    parser = argparse.ArgumentParser(description='HRM Character-Level Language Training')
+    parser.add_argument('--root-dir', type=str, default='.', help='Root directory for HRM project')
+    args = parser.parse_args()
+
+    root_dir = Path(args.root_dir)
     print("HRM Character-Level Language Training")
     print("=" * 40)
 
     # Check for config
-    config_path = "config/character_training_config.json"
+    config_path = root_dir / "config" / "character_training_config.json"
     if not os.path.exists(config_path):
         print(f"Config not found: {config_path}")
         print("Run: ./prepare_language_dataset.sh")
@@ -25,7 +31,7 @@ def main():
     print("Config loaded")
 
     # Check for dataset
-    dataset_path = "data/text/processed/comprehensive_training_corpus.txt"
+    dataset_path = root_dir / "data" / "text" / "processed" / "comprehensive_training_corpus.txt"
     if not os.path.exists(dataset_path):
         print(f"Dataset not found: {dataset_path}")
         print("Run: ./prepare_language_dataset.sh")
@@ -78,7 +84,7 @@ def main():
             print("HRM is now trained on character-level language patterns!")
 
             # Check for training results
-            results_file = "logs/character_training_stats.json"
+            results_file = root_dir / "logs" / "character_training_stats.json"
             if os.path.exists(results_file):
                 print(f"Training results saved to: {results_file}")
                 try:

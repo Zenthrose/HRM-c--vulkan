@@ -1,5 +1,7 @@
 import torch
 import numpy as np
+import argparse
+from pathlib import Path
 
 # Configuration matching C++ AttentionConfig
 hidden_size = 128
@@ -53,10 +55,18 @@ key_flat = key.numpy().flatten()
 value_flat = value.numpy().flatten()
 output_flat = output.numpy().flatten()
 
-# Save to text files
-np.savetxt("test_data_query.txt", query_flat)
-np.savetxt("test_data_key.txt", key_flat)
-np.savetxt("test_data_value.txt", value_flat)
-np.savetxt("test_data_output.txt", output_flat)
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Generate attention test data')
+parser.add_argument('--output-dir', type=str, default='.', help='Output directory for test data files')
+args = parser.parse_args()
 
-print("Test data (query, key, value, output) saved to text files.")
+output_dir = Path(args.output_dir)
+output_dir.mkdir(parents=True, exist_ok=True)
+
+# Save to text files
+np.savetxt(output_dir / "test_data_query.txt", query_flat)
+np.savetxt(output_dir / "test_data_key.txt", key_flat)
+np.savetxt(output_dir / "test_data_value.txt", value_flat)
+np.savetxt(output_dir / "test_data_output.txt", output_flat)
+
+print(f"Test data (query, key, value, output) saved to {output_dir}/")
