@@ -1,12 +1,11 @@
 Root & Build Files (Portability Priority: High—Make Clone-and-Run Universal)
 
-.gitignore: Covers build/logs well, but add *.user (IDE files), /.vscode/, /caches/, /temp_* for cross-platform noise. Improvement: Add .DS_Store, __pycache__, *.pyc for macOS/Python scraps; *.exe~, *.o~ for Windows. Why? Users on macOS clone, get polluted—keep it pristine for any OS.
+.gitignore: Covers build artifacts, logs, and caches—keeps the repo lean. Improvement: Add *.user (IDE files), /.vscode/, /caches/, /temp_* for cross-platform noise. Why? Users on macOS clone, get polluted—keep it pristine for any OS.
 .gitmodules: Empty (no submodules)—perfect for self-contained. Improvement: None needed. Envy: Your zero-dep stance means anyone pulls and builds—no "git submodule init" hell.
-CMakeLists.txt: Ninja + glslangValidator is envy-worthy, but hard-codes MinGW DLL paths ("C:/msys64/mingw64/bin/"). Improvement: Use find_program for DLL copies (find_program(LIBGCC libgcc_s_seh-1.dll HINTS $ENV{MINGW_PATH}/bin) and conditional blocks (if(WIN32) vs if(UNIX)). Add target_compile_definitions(hrm_system PRIVATE PORTABLE_BUILD) for path-agnostic code. Why? Your self-mod recompiles on user rigs—CMake must detect MinGW/Clang/GCC without hard paths.
+CMakeLists.txt: Ninja + glslangValidator is envy-worthy, but hard-codes MinGW DLL paths ("C:/msys64/mingw64/bin/"). Improvement: Use find_program for DLL copies (find_program(LIBGCC libgcc_s_seh-1.dll HINTS $ENV{MINGW_PATH}/bin) and conditional blocks (if(WIN32) vs if(UNIX)). Add target_compile_features(hrm_core PRIVATE cxx_std_17) and find_package(Vulkan REQUIRED) with target_link_libraries(hrm_system Vulkan::Vulkan). Why? Your self-mod recompiles on user rigs—CMake must detect MinGW/Clang/GCC without hard paths.
 AGENTS.md: Commit history snapshot—great for transparency. Improvement: Evolve to CHANGELOG.md with semantic versioning (e.g., v1.0.0: "Initial Vulkan port"). Why? Users on different forks need change diffs—makes collaboration portable.
 HRM_ENHANCEMENT_ROADMAP.md: Visionary roadmap—fuels the fire. Improvement: Add "Portability Milestones" (e.g., "Q1 2026: Cross-OS CI"). Why? Your drive-scan is Windows-heavy—roadmap must flag Linux/macOS gaps for universal adoption.
 LANGUAGE_TRAINING_PREP.md: Dataset prep steps—solid. Improvement: Add OS-agnostic examples (python -m pip install -r requirements.txt with virtualenv). Why? Users on Linux clone, hit Python path issues—prep must be copy-paste universal.
-LICENSE: Apache-2.0—open and permissive. Improvement: None. Envy: Perfect for self-mod open-source—anyone forks without license traps.
 README.md: Overview, build instructions, features—hooks users. Improvement: Add "Portability Notes" section ("Tested on Windows 10/11 (MinGW), Linux (GCC/Clang), macOS (Xcode)—no hard-coded paths"). Include Docker compose for one-command setup. Why? Your Vulkan universality is killer—README must scream "runs anywhere" to draw the masses.
 
 Data & Scripts (Portability Priority: Medium—User Data Independence)
@@ -38,7 +37,7 @@ hrm_compactions/: Compaction—runtime. Improvement: Use $TMPDIR/hrm_compactions
 logs/: Runtime—logs. Improvement: $HRM_LOG_DIR or std::filesystem::current_path() / "logs". Why? Drive-scans log—user-settable.
 models/: Checkpoints—saves. Improvement: $HRM_MODEL_DIR or ~/.hrm/models. Why? Self-evo saves here—portable paths.
 scripts/: Helpers—bash/Python. Improvement: All with #!/usr/bin/env bash/python, arg --root-dir default pwd. Why? Hard-coded ./data breaks clones.
-shaders/: GLSL/SPIR-V—compute. Improvement: CMake gen from .comp with glslc options. Why? Self-mod recompiles—automated.
+shaders/: GLSL/SPIR-V—compute. Improvement: #extension GL_EXT_buffer_reference; debug #defines; embed SPIR-V in C++. Why? Self-mod recompiles shaders—build-time gen.
 src/: Core—74 files. Improvement: Subdirs (src/core, src/vulkan, src/self_mod, src/training) with add_subdirectory. Why? Monolith scales poorly—structure for 200+ files.
 utils/: Misc—timers/loggers. Improvement: Singleton Logger with env $HRM_LOG_LEVEL=debug. Why? Autonomous logging—user-tunable.
 
