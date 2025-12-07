@@ -52,6 +52,15 @@ elseif(UNIX)
     target_link_libraries(hrm_system PRIVATE pthread dl)
 endif()
 
+# Copy MinGW DLLs for Windows portability
+if(WIN32 AND MINGW)
+    add_custom_command(TARGET hrm_system POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll ${CMAKE_BINARY_DIR}/release/
+    )
+endif()
+
 # Evaluation tool
 add_executable(evaluate evaluate.cpp)
 if(NOT NO_VULKAN)
@@ -67,6 +76,15 @@ if(WIN32)
     endif()
 elseif(UNIX)
     target_link_libraries(evaluate PRIVATE pthread dl)
+endif()
+
+# Copy MinGW DLLs for Windows portability
+if(WIN32 AND MINGW)
+    add_custom_command(TARGET evaluate POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll ${CMAKE_BINARY_DIR}/release/
+    )
 endif()
 
 # Test data generation tool
@@ -86,6 +104,15 @@ elseif(UNIX)
     target_link_libraries(generate_test_data PRIVATE pthread dl)
 endif()
 
+# Copy MinGW DLLs for Windows portability
+if(WIN32 AND MINGW)
+    add_custom_command(TARGET generate_test_data POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll ${CMAKE_BINARY_DIR}/release/
+    )
+endif()
+
 # ARC evaluation tool
 add_executable(arc_eval arc_eval.cpp)
 if(NOT NO_VULKAN)
@@ -101,6 +128,15 @@ if(WIN32)
     endif()
 elseif(UNIX)
     target_link_libraries(arc_eval PRIVATE pthread dl)
+endif()
+
+# Copy MinGW DLLs for Windows portability
+if(WIN32 AND MINGW)
+    add_custom_command(TARGET arc_eval POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libstdc++-6.dll ${CMAKE_BINARY_DIR}/release/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll ${CMAKE_BINARY_DIR}/release/
+    )
 endif()
 
 # Copy assets to build directory for portable GUI deployment
