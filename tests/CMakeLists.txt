@@ -33,11 +33,11 @@ endif()
 
 # Copy test data and shaders for tests
 add_custom_command(TARGET hrm_system_test POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:hrm_system_test>/test_data
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/test_data_key.txt $<TARGET_FILE_DIR:hrm_system_test>/test_data/
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/test_data_query.txt $<TARGET_FILE_DIR:hrm_system_test>/test_data/
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/test_data_value.txt $<TARGET_FILE_DIR:hrm_system_test>/test_data/
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/test_data_output.txt $<TARGET_FILE_DIR:hrm_system_test>/test_data/
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:hrm_system_test>/tests/data
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/test_data_key.txt $<TARGET_FILE_DIR:hrm_system_test>/tests/data/
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/test_data_query.txt $<TARGET_FILE_DIR:hrm_system_test>/tests/data/
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/test_data_value.txt $<TARGET_FILE_DIR:hrm_system_test>/tests/data/
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/test_data_output.txt $<TARGET_FILE_DIR:hrm_system_test>/tests/data/
     COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:hrm_system_test>/shaders
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/attention.spv $<TARGET_FILE_DIR:hrm_system_test>/shaders/
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/embedding.spv $<TARGET_FILE_DIR:hrm_system_test>/shaders/

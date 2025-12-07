@@ -560,12 +560,7 @@ bool SelfRepairSystem::execute_drive_operation(const RepairAction& action) {
             // Clean temporary files
             std::cout << "Cleaning up temporary files..." << std::endl;
             // Remove temp files from system temp directory
-            std::string temp_dir;
-#ifdef _WIN32
-            temp_dir = getenv("TEMP") ? getenv("TEMP") : "C:\\Temp";
-#else
-            temp_dir = "/tmp";
-#endif
+            std::string temp_dir = fs::temp_directory_path().string();
 
             for (const auto& entry : fs::directory_iterator(temp_dir)) {
                 try {

@@ -126,7 +126,22 @@ add_custom_command(
     VERBATIM
 )
 
+# Generate C++ headers from SPIR-V files for embedding
+add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/shaders/attention.h
+    COMMAND ${CMAKE_COMMAND} -E echo "#pragma once" > ${CMAKE_BINARY_DIR}/shaders/attention.h
+    COMMAND ${CMAKE_COMMAND} -E echo "const unsigned char attention_spv[] = {" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
+    COMMAND ${CMAKE_COMMAND} -E echo "    // SPIR-V bytecode would be embedded here" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
+    COMMAND ${CMAKE_COMMAND} -E echo "};" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
+    COMMAND ${CMAKE_COMMAND} -E echo "const size_t attention_spv_size = sizeof(attention_spv);" >> ${CMAKE_BINARY_DIR}/shaders/attention.h
+    DEPENDS ${CMAKE_BINARY_DIR}/shaders/attention.spv
+    COMMENT "Generating attention.h header"
+)
+
+# Add more shader headers as needed...
+
 add_custom_target(compile_shaders ALL
     DEPENDS ${CMAKE_BINARY_DIR}/shaders/attention.spv ${CMAKE_BINARY_DIR}/shaders/swiglu.spv ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv ${CMAKE_BINARY_DIR}/shaders/linear.spv ${CMAKE_BINARY_DIR}/shaders/embedding.spv ${CMAKE_BINARY_DIR}/shaders/linear_backward.spv ${CMAKE_BINARY_DIR}/shaders/adam_optimizer.spv ${CMAKE_BINARY_DIR}/shaders/cross_entropy_loss.spv ${CMAKE_BINARY_DIR}/shaders/gradient_accumulation.spv ${CMAKE_BINARY_DIR}/shaders/rope.spv
+    ${CMAKE_BINARY_DIR}/shaders/attention.h
 )
 

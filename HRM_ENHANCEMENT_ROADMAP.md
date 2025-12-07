@@ -1,5 +1,11 @@
 # 🚀 HRM Enhancement Roadmap: Next-Level Improvements
 
+## 🌍 **Portability Milestones**
+- **Q1 2025: Cross-OS CI** - GitHub Actions for Windows/Linux/macOS builds
+- **Q2 2025: Docker Universal** - Multi-stage builds for any Vulkan GPU
+- **Q3 2025: ARM64 Support** - Native Apple Silicon and ARM server compatibility
+- **Q4 2025: WebAssembly Port** - Browser-based HRM for client-side AI
+
 ## 🎯 **Phase 1: Performance & Training (Immediate Impact)**
 
 ### **1. Advanced Training Optimizations**

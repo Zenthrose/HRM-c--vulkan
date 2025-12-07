@@ -1,3 +1,8 @@
+# DEPRECATED: This Python/PyTorch implementation is deprecated.
+# The HRM system now uses a pure C++ Vulkan implementation for better performance and portability.
+# Please use the C++ Vulkan trainer instead: build the project and run ./src/hrm_system --train
+# This file is kept for reference only and may be removed in future versions.
+
 from typing import Optional, Any, Sequence, List
 from dataclasses import dataclass
 import os
