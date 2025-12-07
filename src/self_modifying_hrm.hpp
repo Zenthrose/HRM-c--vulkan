@@ -7,6 +7,7 @@
 #include "self_evolving_hrm.hpp"
 #include "code_analysis_system.hpp"
 #include "runtime_compilation_system.hpp"
+#include "sandbox_manager.hpp"
 #include <iostream>
 
 struct SelfModifyingHRMConfig {
@@ -80,6 +81,7 @@ private:
     SelfModifyingHRMConfig config_;
     std::unique_ptr<CodeAnalysisSystem> code_analyzer_;
     std::unique_ptr<RuntimeCompilationSystem> runtime_compiler_;
+    std::unique_ptr<SandboxManager> sandbox_manager_;
 
     // Self-modification state
     int interactions_since_last_analysis_;

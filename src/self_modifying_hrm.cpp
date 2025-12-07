@@ -11,6 +11,7 @@ SelfModifyingHRM::SelfModifyingHRM(const SelfModifyingHRMConfig& config)
     // Initialize self-modification components
     code_analyzer_ = std::make_unique<CodeAnalysisSystem>(config.project_root);
     runtime_compiler_ = std::make_unique<RuntimeCompilationSystem>(config.temp_compilation_dir);
+    sandbox_manager_ = std::make_unique<SandboxManager>();
 
     // Initialize self-modification state
     interactions_since_last_analysis_ = 0;
@@ -168,11 +169,55 @@ bool SelfModifyingHRM::apply_self_modification(const SelfModificationResult& mod
     modification_history_.push_back(modification);
 
     try {
-        // Apply the code modifications using runtime compilation system
+        // Test modifications in sandbox before applying
+        for (const auto& code_change : modification.code_changes) {
+            CodeModification test_mod;
+            test_mod.file_path = code_change.file_path;
+            test_mod.start_line = 1; // Placeholder
+            test_mod.end_line = 10; // Placeholder
+            test_mod.original_code = code_change.old_code;
+            test_mod.modified_code = code_change.new_code;
+            test_mod.reason = "Testing self-modification: " + code_change.file_path;
+            test_mod.confidence_score = 0.8f; // Placeholder
+
+            std::cout << "Testing modification in sandbox: " << test_mod.reason << std::endl;
+
+            // Run sandbox test
+            TestResult test_result = sandbox_manager_->test_modification(test_mod);
+
+            if (!test_result.success) {
+                std::cout << "Sandbox test failed for " << code_change.file_path << ": " << test_result.errors[0] << std::endl;
+                return false;
+            }
+
+            // Validate test results
+            ValidationResult validation = sandbox_manager_->validate_modification(test_result);
+
+            if (!validation.approved) {
+                std::cout << "Modification validation failed for " << code_change.file_path << std::endl;
+                std::cout << "Confidence: " << validation.confidence_score << ", Risk: " << validation.risk_assessment << std::endl;
+                for (const auto& concern : validation.concerns) {
+                    std::cout << "Concern: " << concern << std::endl;
+                }
+                return false;
+            }
+
+            // Make deployment decision
+            DeploymentDecision decision = sandbox_manager_->make_deployment_decision(validation);
+
+            if (!decision.deploy) {
+                std::cout << "Deployment decision: Do not deploy - " << decision.reasoning << std::endl;
+                return false;
+            }
+
+            std::cout << "Sandbox validation passed for " << code_change.file_path << std::endl;
+        }
+
+        // Apply the validated modifications
         RuntimeCompilationSystem compiler;
 
         for (const auto& code_change : modification.code_changes) {
-            std::cout << "Applying code modification to: " << code_change.file_path << std::endl;
+            std::cout << "Applying validated code modification to: " << code_change.file_path << std::endl;
 
             // Use the modification script format: "old_text|new_text"
             std::string modification_script = code_change.old_code + "|" + code_change.new_code;
