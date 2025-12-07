@@ -10,7 +10,7 @@
 #else
 #include <termios.h>
 #endif
-#include "resource_aware_hrm.hpp"
+#include "../hrm/resource_aware_hrm.hpp"
 
 enum class GUITheme {
     DARK,

@@ -9,13 +9,13 @@
 #include <algorithm>
 #include <vulkan/vulkan.h>
 
-#include "resource_aware_hrm.hpp"
-#include "memory_compaction_system.hpp"
-#include "cloud_storage_manager.hpp"
+#include "../hrm/resource_aware_hrm.hpp"
+#include "../system/memory_compaction_system.hpp"
+#include "../system/cloud_storage_manager.hpp"
 #include "hrm_cli.hpp"
 #include "hrm_gui.hpp"
-#include "character_language_trainer.hpp"
-#include "hardware_profiler.hpp"
+#include "../training/character_language_trainer.hpp"
+#include "../system/hardware_profiler.hpp"
 
 namespace fs = std::filesystem;
 
@@ -360,7 +360,7 @@ MemoryCompactionConfig createDefaultMemoryConfig(std::shared_ptr<CloudStorageMan
     }
 
     config.compaction_directory = settings.count("general.compaction_directory") ?
-        settings["general.compaction_directory"] : "./hrm_compactions";
+        settings["general.compaction_directory"] : (fs::temp_directory_path() / "hrm_compactions").string();
 
     config.cloud_storage_manager = cloud_manager;
     config.default_cloud_provider = CloudProvider::LOCAL_STORAGE;

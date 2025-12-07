@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#include "attention.hpp"  // For Tensor struct
+#include "../core/attention.hpp"  // For Tensor struct
 
 /**
  * Character-Level Language Loss Functions

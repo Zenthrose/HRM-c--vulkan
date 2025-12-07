@@ -14,3 +14,17 @@ Makefile
 # C++
 *.o
 *.out
+*.exe~
+*.o~
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# IDE and caches
+/.vscode/
+/caches/
+/temp_*

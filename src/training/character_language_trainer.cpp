@@ -10,6 +10,14 @@
 
 namespace fs = std::filesystem;
 
+std::string get_log_dir() {
+    if (const char* env = std::getenv("HRM_LOG_DIR")) {
+        return env;
+    } else {
+        return (fs::current_path() / "logs").string();
+    }
+}
+
 CharacterLanguageTrainer::CharacterLanguageTrainer(
     std::shared_ptr<ResourceAwareHRM> hrm_system,
     const CharacterLanguageModelConfig& config)
@@ -259,7 +267,7 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
     training_active_ = false;
 
     // Save final training statistics
-    save_training_stats("logs/character_training_stats.json");
+    save_training_stats(get_log_dir() + "/character_training_stats.json");
 
     auto training_duration = std::chrono::steady_clock::now() - training_start_time_;
     auto hours = std::chrono::duration_cast<std::chrono::hours>(training_duration).count();
@@ -962,10 +970,10 @@ void CharacterLanguageTrainer::save_epoch_results(int epoch,
                                                 const std::unordered_map<std::string, float>& train_metrics,
                                                 const std::unordered_map<std::string, float>& val_metrics) {
     // Create logs directory if it doesn't exist
-    fs::create_directories("logs");
-    
+    fs::create_directories(get_log_dir());
+
     // Create filename with epoch number
-    std::string filename = "logs/epoch_" + std::to_string(epoch) + "_results.txt";
+    std::string filename = get_log_dir() + "/epoch_" + std::to_string(epoch) + "_results.txt";
     
     std::ofstream file(filename);
     if (file.is_open()) {

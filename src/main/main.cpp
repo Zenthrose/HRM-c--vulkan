@@ -10,7 +10,7 @@
 #include <cstring>      // For strcmp
 #include <chrono>       // For timing measurements
 
-#include "attention.hpp"
+#include "../core/attention.hpp"
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;

@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <memory>
-#include "block.hpp"
-#include "attention.hpp" // For Tensor and CosSin
+#include "../core/block.hpp"
+#include "../core/attention.hpp" // For Tensor and CosSin
 
 struct HierarchicalReasoningConfig {
     int num_layers;

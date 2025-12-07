@@ -9,8 +9,8 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
-#include "attention.hpp"  // For Tensor struct
-#include "utf8_processor.hpp"  // For UTF-8 processing
+#include "../core/attention.hpp"  // For Tensor struct
+#include "../utils/utf8_processor.hpp"  // For UTF-8 processing
 
 namespace fs = std::filesystem;
 

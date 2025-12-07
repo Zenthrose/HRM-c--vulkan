@@ -3,9 +3,9 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "hrm.hpp"
-#include "utf8_processor.hpp"
-#include "meta_reasoning_layer.hpp"
+#include "../hrm/hrm.hpp"
+#include "../utils/utf8_processor.hpp"
+#include "../hrm/meta_reasoning_layer.hpp"
 
 struct SelfEvolvingHRMConfig {
     HRMConfig hrm_config;

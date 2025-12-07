@@ -5,8 +5,8 @@
 #include <vector>
 #include <unordered_map>
 #include <chrono>
-#include "flash_attention.hpp"
-#include "attention.hpp"  // For Tensor struct
+#include "../vulkan/flash_attention.hpp"
+#include "../core/attention.hpp"  // For Tensor struct
 
 /**
  * Mixed Precision Training Configuration

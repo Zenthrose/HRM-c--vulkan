@@ -4,9 +4,9 @@
 #include <memory>
 #include <unordered_map>
 #include "hierarchical_reasoning_module.hpp"
-#include "embedding.hpp"
-#include "linear.hpp"
-#include "attention.hpp" // For Tensor and CosSin
+#include "../core/embedding.hpp"
+#include "../core/linear.hpp"
+#include "../core/attention.hpp" // For Tensor and CosSin
 
 struct HRMInnerConfig {
     int batch_size;

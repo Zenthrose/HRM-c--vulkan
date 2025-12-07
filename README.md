@@ -45,6 +45,8 @@
 | **Character-Level Language** | ✅ Complete | UTF-8 processing, 29K training samples |
 | **Cross-Platform Build** | ✅ Complete | CMake + Clang + Ninja on Windows/Linux/macOS |
 | **Windows Compatibility** | ✅ Complete | Full Windows API integration, production-ready |
+| **Portable Configuration** | ✅ Complete | Environment variables for paths, Docker support |
+| **Source Organization** | ✅ Complete | Restructured into subdirs for scalability |
 | **Memory Management** | ✅ Complete | Smart pointers, memory pooling, NaN prevention |
 | **Epoch Result Saving** | ✅ Complete | Automatic text file output after each epoch |
 
@@ -91,6 +93,14 @@
 - ✅ **Universal Hardware Compatibility**: Runs on any device from embedded systems to high-end workstations
 - ✅ **Self-Repair Implementation**: Complete repair actions for code, config, files, and system operations
 - ✅ **Runtime Code Modification**: Functional self-modification with hot-swapping capabilities
+
+### **🔄 Portability Notes**
+- **Tested Platforms**: Windows 10/11 (MinGW GCC 15.2.0), Linux (GCC/Clang), macOS (Xcode)—no hard-coded paths
+- **Universal Builds**: Clone-and-run on any OS with Vulkan SDK; CMake detects compilers automatically
+- **Docker Support**: One-command setup with multi-stage Vulkan build (see docker/Dockerfile)
+- **Cross-Platform Paths**: Uses std::filesystem for portable directory handling
+- **Environment Variables**: Configurable via $HRM_CONFIG_DIR, $HRM_LOG_DIR, $HRM_MODEL_DIR
+- **Dependency Detection**: find_program for MinGW DLLs, conditional compilation for OS-specific features
 
 ### 📖 Data Chunking
 Large files are processed in manageable chunks for efficient learning:
@@ -198,6 +208,24 @@ HRM System
 - C++17 compiler
 - Linux, macOS, or Windows
 
+### **Environment Variables**
+Configure paths and settings with environment variables:
+
+```bash
+# Custom directories (optional)
+export HRM_CONFIG_DIR=~/.hrm/config      # Config files location
+export HRM_LOG_DIR=~/hrm/logs           # Log files location
+export HRM_MODEL_DIR=~/hrm/models       # Model checkpoints location
+
+# Cloud storage
+export HRM_CLOUD_API_KEY=your_api_key   # For cloud integration
+
+# Logging
+export HRM_LOG_LEVEL=info               # debug, info, warn, error
+```
+
+See `.env.example` for all available variables.
+
 ### **Build & Run**
 
 #### **Linux/macOS**
@@ -231,6 +259,13 @@ cmake --build . --config Release -j 4
 .\src\hrm_system.exe --gui    # Graphical interface (default)
 .\src\hrm_system.exe --test   # Run system tests
 .\src\hrm_system.exe --train  # Run character-level training
+```
+
+#### **Docker**
+```bash
+# Build and run with Docker
+docker build -t hrm .
+docker run -it hrm ./hrm_system --cli
 ```
 
 ### **Training**

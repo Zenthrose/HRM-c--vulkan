@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include "resource_aware_hrm.hpp"
+#include "../hrm/resource_aware_hrm.hpp"
 
 enum class CLICommand {
     HELP,

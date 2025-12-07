@@ -7,7 +7,7 @@
 #include <chrono>
 #include <thread>
 #include <atomic>
-#include "resource_aware_hrm.hpp"
+#include "../hrm/resource_aware_hrm.hpp"
 #include "character_language_config.hpp"
 #include "character_text_dataset.hpp"
 #include "character_language_loss.hpp"

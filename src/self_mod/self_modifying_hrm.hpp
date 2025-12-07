@@ -7,7 +7,7 @@
 #include "self_evolving_hrm.hpp"
 #include "code_analysis_system.hpp"
 #include "runtime_compilation_system.hpp"
-#include "sandbox_manager.hpp"
+#include "../system/sandbox_manager.hpp"
 #include <iostream>
 
 struct SelfModifyingHRMConfig {

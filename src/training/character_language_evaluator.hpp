@@ -6,8 +6,8 @@
 #include <memory>
 #include <random>
 #include <cmath>
-#include "attention.hpp"  // For Tensor struct
-#include "utf8_processor.hpp"
+#include "../core/attention.hpp"  // For Tensor struct
+#include "../utils/utf8_processor.hpp"
 #include "character_language_loss.hpp"
 
 /**

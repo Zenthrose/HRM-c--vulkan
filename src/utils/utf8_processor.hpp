@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include "attention.hpp" // For Tensor
+#include "../core/attention.hpp" // For Tensor
 
 struct UTF8Config {
     int max_sequence_length;

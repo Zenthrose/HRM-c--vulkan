@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <chrono>
 #include <functional>
-#include "code_analysis_system.hpp"
+#include "../self_mod/code_analysis_system.hpp"
 
 struct TestResult {
     bool success;

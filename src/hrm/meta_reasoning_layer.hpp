@@ -3,7 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
-#include "attention.hpp" // For Tensor
+#include "../core/attention.hpp" // For Tensor
 #include "hrm.hpp" // For HRM model access
 
 struct MetaReasoningConfig {

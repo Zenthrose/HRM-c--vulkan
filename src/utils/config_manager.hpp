@@ -10,8 +10,25 @@ namespace fs = std::filesystem;
 
 class ConfigManager {
 public:
-    ConfigManager(const std::string& config_dir = "./config");
-    ~ConfigManager();
+    ConfigManager(std::string config_dir = "") {
+        if (config_dir.empty()) {
+            if (const char* env = std::getenv("HRM_CONFIG_DIR")) {
+                config_dir = env;
+            } else {
+                std::string home;
+                if (const char* h = std::getenv("HOME")) home = h;
+                else if (const char* h = std::getenv("USERPROFILE")) home = h;
+                if (!home.empty()) {
+                    config_dir = home + "/.hrm/config";
+                } else {
+                    config_dir = "./config";
+                }
+            }
+        }
+        config_dir_ = config_dir;
+        fs::create_directories(config_dir_);
+    }
+    ~ConfigManager() {}
 
     // Configuration loading/saving
     bool load_config(const std::string& filename = "hrm_config.txt");

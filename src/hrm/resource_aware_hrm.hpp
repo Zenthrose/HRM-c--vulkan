@@ -1,9 +1,9 @@
 #pragma once
 
-#include "self_modifying_hrm.hpp"
-#include "resource_monitor.hpp"
-#include "task_manager.hpp"
-#include "vulkan_trainer.hpp"
+#include "../self_mod/self_modifying_hrm.hpp"
+#include "../system/resource_monitor.hpp"
+#include "../system/task_manager.hpp"
+#include "../vulkan/vulkan_trainer.hpp"
 
 struct ResourceAwareHRMConfig {
     SelfModifyingHRMConfig base_config;
