@@ -64,23 +64,26 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
 
     // Calculate actual tensor sizes based on input
     VkDeviceSize input_size = hidden_states.data.size() * sizeof(float);
+
+    // Validate input shape matches config
+    if (hidden_states.shape.size() < 3 ||
+        hidden_states.shape[0] != config.batch_size ||
+        hidden_states.shape[1] != config.seq_len) {
+        throw std::runtime_error("Input tensor shape does not match attention config");
+    }
+
+    uint32_t hidden_size = hidden_states.shape[2];
+    if (hidden_size != config.num_heads * config.head_dim) {
+        throw std::runtime_error("Hidden size does not match num_heads * head_dim");
+    }
+
     uint32_t total_elements = config.batch_size * config.seq_len * config.head_dim;
-    
+
     // For simplified attention, use same data for Q, K, V (identity attention)
     VkDeviceSize q_size = total_elements * sizeof(float);
-    VkDeviceSize k_size = total_elements * sizeof(float); 
+    VkDeviceSize k_size = total_elements * sizeof(float);
     VkDeviceSize v_size = total_elements * sizeof(float);
     VkDeviceSize out_size = input_size;
-
-    // Ensure we don't exceed input buffer
-    VkDeviceSize total_needed = q_size + k_size + v_size;
-    if (total_needed > input_size) {
-        // Scale down to fit available input
-        q_size = input_size / 3;
-        k_size = input_size / 3;
-        v_size = input_size / 3;
-        out_size = input_size;
-    }
 
     // Transfer Q (use input tensor directly for simplified attention)
     VkBuffer qStagingBuffer;
@@ -137,6 +140,14 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
 
     // Dispatch parameters: one workgroup per (batch, head, seq_i) triple
     uint32_t groupCountX = config.batch_size * config.num_heads * config.seq_len;
+
+    // Check device limits
+    VkPhysicalDeviceProperties deviceProps;
+    vkGetPhysicalDeviceProperties(physicalDevice, &deviceProps);
+    if (groupCountX > deviceProps.limits.maxComputeWorkGroupCount[0]) {
+        throw std::runtime_error("Attention dispatch size exceeds device limits");
+    }
+
     vkCmdDispatch(commandBuffer, groupCountX, 1, 1);
 
     vkEndCommandBuffer(commandBuffer);

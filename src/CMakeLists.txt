@@ -47,15 +47,15 @@ add_custom_command(TARGET hrm_vulkan POST_BUILD
 
 add_custom_command(TARGET hrm_system POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:hrm_system>/shaders
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/attention.spv $<TARGET_FILE_DIR:hrm_system>/shaders/attention.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/embedding.spv $<TARGET_FILE_DIR:hrm_system>/shaders/embedding.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/linear.spv $<TARGET_FILE_DIR:hrm_system>/shaders/linear.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/linear_backward.spv $<TARGET_FILE_DIR:hrm_system>/shaders/linear_backward.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/adam_optimizer.spv $<TARGET_FILE_DIR:hrm_system>/shaders/adam_optimizer.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/cross_entropy_loss.spv $<TARGET_FILE_DIR:hrm_system>/shaders/cross_entropy_loss.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/gradient_accumulation.spv $<TARGET_FILE_DIR:hrm_system>/shaders/gradient_accumulation.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/rms_norm.spv $<TARGET_FILE_DIR:hrm_system>/shaders/rms_norm.spv
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/swiglu.spv $<TARGET_FILE_DIR:hrm_system>/shaders/swiglu.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/attention.spv $<TARGET_FILE_DIR:hrm_system>/shaders/attention.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/embedding.spv $<TARGET_FILE_DIR:hrm_system>/shaders/embedding.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/linear.spv $<TARGET_FILE_DIR:hrm_system>/shaders/linear.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/linear_backward.spv $<TARGET_FILE_DIR:hrm_system>/shaders/linear_backward.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/adam_optimizer.spv $<TARGET_FILE_DIR:hrm_system>/shaders/adam_optimizer.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/cross_entropy_loss.spv $<TARGET_FILE_DIR:hrm_system>/shaders/cross_entropy_loss.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/gradient_accumulation.spv $<TARGET_FILE_DIR:hrm_system>/shaders/gradient_accumulation.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/rms_norm.spv $<TARGET_FILE_DIR:hrm_system>/shaders/rms_norm.spv
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/shaders/swiglu.spv $<TARGET_FILE_DIR:hrm_system>/shaders/swiglu.spv
 
 )
 

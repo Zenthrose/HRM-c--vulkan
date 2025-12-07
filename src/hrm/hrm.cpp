@@ -7,7 +7,6 @@
 
 HRM::HRM(const HRMConfig& config) : config_(config) {
     std::cout << "Initializing HRM..." << std::endl;
-    std::cout << "Initializing HRM..." << std::endl;
     inner_ = std::make_unique<HRMInner>(config.inner_config);
     std::cout << "HRM initialized" << std::endl;
 }
