@@ -1,0 +1,113 @@
+Run mkdir build
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Performing Test COMPILER_SUPPORTS_AVX
+-- Performing Test COMPILER_SUPPORTS_AVX - Success
+-- Performing Test COMPILER_SUPPORTS_AVX2
+-- Performing Test COMPILER_SUPPORTS_AVX2 - Success
+-- Performing Test COMPILER_SUPPORTS_NEON
+-- Performing Test COMPILER_SUPPORTS_NEON - Failed
+-- Building without Vulkan support
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (3.7s)
+CMake Error at src/CMakeLists.txt:62 (add_dependencies):
+  The dependency target "compile_shaders" of target "hrm_vulkan" does not
+  exist.
+
+
+CMake Error at src/CMakeLists.txt:11 (target_link_libraries):
+  Target "hrm_vulkan" links to:
+
+    Vulkan::Vulkan
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at src/CMakeLists.txt:24 (target_link_libraries):
+  Target "hrm_system" links to:
+
+    Vulkan::Vulkan
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at src/CMakeLists.txt:66 (target_link_libraries):
+  Target "evaluate" links to:
+
+    Vulkan::Vulkan
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at src/CMakeLists.txt:79 (target_link_libraries):
+  Target "generate_test_data" links to:
+
+    Vulkan::Vulkan
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at src/CMakeLists.txt:92 (target_link_libraries):
+  Target "arc_eval" links to:
+
+    Vulkan::Vulkan
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at src/core/CMakeLists.txt:18 (target_link_libraries):
+  Target "core" links to:
+
+    Vulkan::Vulkan
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+-- Generating done (0.0s)
+CMake Generate step failed.  Build files cannot be regenerated correctly.
+Error: Process completed with exit code 1.

@@ -15,4 +15,8 @@ add_library(core STATIC
     rms_norm.hpp
 )
 target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+if(NOT NO_VULKAN)
 target_link_libraries(core PRIVATE utils Vulkan::Vulkan)
+else()
+target_link_libraries(core PRIVATE utils)
+endif()
