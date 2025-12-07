@@ -4,6 +4,8 @@
 #include <cmath>
 #include <memory>
 
+#ifndef NO_VULKAN
+
 SwiGLUVulkan::SwiGLUVulkan(const SwiGLUConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool) {
     std::cout << "Initializing SwiGLUVulkan layer..." << std::endl;
@@ -62,3 +64,4 @@ Tensor SwiGLUVulkan::forward(const Tensor& input) {
 
     return output;
 }
+#endif

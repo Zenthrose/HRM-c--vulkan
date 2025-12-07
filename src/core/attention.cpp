@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstring>
 
+#ifndef NO_VULKAN
 // VK_CHECK macro for Vulkan error handling
 #define VK_CHECK(x) if ((x) != VK_SUCCESS) throw std::runtime_error("Vulkan operation failed with error: " + std::to_string(x));
 
@@ -428,3 +429,4 @@ void AttentionVulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevic
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
+#endif
