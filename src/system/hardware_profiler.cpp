@@ -97,6 +97,7 @@ HardwareCapabilities HardwareProfiler::detect_memory() {
 HardwareCapabilities HardwareProfiler::detect_gpu() {
     HardwareCapabilities caps;
 
+#ifndef NO_VULKAN
     // Vulkan detection
     VkInstance instance;
     VkApplicationInfo appInfo{};
@@ -115,22 +116,31 @@ HardwareCapabilities HardwareProfiler::detect_gpu() {
         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
         if (deviceCount > 0) {
-            caps.has_gpu = true;
             std::vector<VkPhysicalDevice> devices(deviceCount);
             vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
             VkPhysicalDeviceProperties props;
             vkGetPhysicalDeviceProperties(devices[0], &props);
+
             caps.gpu_name = props.deviceName;
 
             VkPhysicalDeviceMemoryProperties memProps;
             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProps);
 
-            for (uint32_t i = 0; i < memProps.memoryHeapCount; ++i) {
+            for (uint32_t i = 0; i < memProps.memoryHeapCount; i++) {
                 if (memProps.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
-                    caps.vram_bytes = memProps.memoryHeaps[i].size;
+                    caps.gpu_memory_gb = memProps.memoryHeaps[i].size / (1024ULL * 1024 * 1024);
                     break;
                 }
+            }
+        }
+
+        vkDestroyInstance(instance, nullptr);
+    }
+#endif
+
+    return caps;
+}
             }
         } else {
             caps.has_gpu = false;
