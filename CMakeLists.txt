@@ -37,7 +37,6 @@ endif()
 # Set output directory for executables to build root
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/release)
 
-find_package(Vulkan REQUIRED)
 # Vulkan support (optional)
 option(NO_VULKAN "Build without Vulkan support" OFF)
 if(NOT NO_VULKAN)
