@@ -267,6 +267,7 @@ void HardwareAbstractionLayer::recover_from_backend_failure(ComputeBackend backe
 HardwareProfile HardwareAbstractionLayer::detect_gpu_capabilities() {
     HardwareProfile profile;
 
+#ifndef NO_VULKAN
     // Try to detect Vulkan-capable GPU
     VkInstance instance;
     VkApplicationInfo appInfo = {};
@@ -283,9 +284,6 @@ HardwareProfile HardwareAbstractionLayer::detect_gpu_capabilities() {
 
     VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
     if (result == VK_SUCCESS) {
-        profile.vulkan_supported = true;
-
-        // Enumerate physical devices
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
@@ -293,21 +291,29 @@ HardwareProfile HardwareAbstractionLayer::detect_gpu_capabilities() {
             std::vector<VkPhysicalDevice> devices(deviceCount);
             vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-            // Get properties of first device
             VkPhysicalDeviceProperties deviceProperties;
             vkGetPhysicalDeviceProperties(devices[0], &deviceProperties);
 
             profile.gpu_name = deviceProperties.deviceName;
+            profile.vulkan_supported = true;
 
-            // Get memory properties
             VkPhysicalDeviceMemoryProperties memProperties;
             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProperties);
 
-            uint64_t totalMemory = 0;
-            for (uint32_t i = 0; i < memProperties.memoryHeapCount; ++i) {
+            for (uint32_t i = 0; i < memProperties.memoryHeapCount; i++) {
                 if (memProperties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
-                    totalMemory += memProperties.memoryHeaps[i].size;
+                    profile.gpu_memory_gb = memProperties.memoryHeaps[i].size / (1024ULL * 1024 * 1024);
+                    break;
                 }
+            }
+        }
+
+        vkDestroyInstance(instance, nullptr);
+    }
+#endif
+
+    return profile;
+}
             }
             profile.gpu_memory_mb = totalMemory / (1024 * 1024);
 
@@ -385,6 +391,7 @@ HardwareProfile HardwareAbstractionLayer::detect_system_capabilities() {
 }
 
 bool HardwareAbstractionLayer::test_vulkan_support() {
+#ifndef NO_VULKAN
     VkInstance instance;
     VkApplicationInfo appInfo = {};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -400,6 +407,9 @@ bool HardwareAbstractionLayer::test_vulkan_support() {
         return true;
     }
     return false;
+#else
+    return false;
+#endif
 }
 
 bool HardwareAbstractionLayer::test_cuda_support() {

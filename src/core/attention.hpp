@@ -7,6 +7,7 @@
 #include <string>
 #include <stdexcept>
 #include <cstring>
+#include <cstdint>
 
 // A simple tensor representation for now
 struct Tensor {

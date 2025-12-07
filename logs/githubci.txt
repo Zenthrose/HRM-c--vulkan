@@ -24,90 +24,387 @@ Run mkdir build
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
 -- Found Threads: TRUE
--- Configuring done (3.7s)
-CMake Error at src/CMakeLists.txt:62 (add_dependencies):
-  The dependency target "compile_shaders" of target "hrm_vulkan" does not
-  exist.
-
-
-CMake Error at src/CMakeLists.txt:11 (target_link_libraries):
-  Target "hrm_vulkan" links to:
-
-    Vulkan::Vulkan
-
-  but the target was not found.  Possible reasons include:
-
-    * There is a typo in the target name.
-    * A find_package call is missing for an IMPORTED target.
-    * An ALIAS target is missing.
-
-
-
-CMake Error at src/CMakeLists.txt:24 (target_link_libraries):
-  Target "hrm_system" links to:
-
-    Vulkan::Vulkan
-
-  but the target was not found.  Possible reasons include:
-
-    * There is a typo in the target name.
-    * A find_package call is missing for an IMPORTED target.
-    * An ALIAS target is missing.
-
-
-
-CMake Error at src/CMakeLists.txt:66 (target_link_libraries):
-  Target "evaluate" links to:
-
-    Vulkan::Vulkan
-
-  but the target was not found.  Possible reasons include:
-
-    * There is a typo in the target name.
-    * A find_package call is missing for an IMPORTED target.
-    * An ALIAS target is missing.
-
-
-
-CMake Error at src/CMakeLists.txt:79 (target_link_libraries):
-  Target "generate_test_data" links to:
-
-    Vulkan::Vulkan
-
-  but the target was not found.  Possible reasons include:
-
-    * There is a typo in the target name.
-    * A find_package call is missing for an IMPORTED target.
-    * An ALIAS target is missing.
-
-
-
-CMake Error at src/CMakeLists.txt:92 (target_link_libraries):
-  Target "arc_eval" links to:
-
-    Vulkan::Vulkan
-
-  but the target was not found.  Possible reasons include:
-
-    * There is a typo in the target name.
-    * A find_package call is missing for an IMPORTED target.
-    * An ALIAS target is missing.
-
-
-
-CMake Error at src/core/CMakeLists.txt:18 (target_link_libraries):
-  Target "core" links to:
-
-    Vulkan::Vulkan
-
-  but the target was not found.  Possible reasons include:
-
-    * There is a typo in the target name.
-    * A find_package call is missing for an IMPORTED target.
-    * An ALIAS target is missing.
-
-
-
--- Generating done (0.0s)
-CMake Generate step failed.  Build files cannot be regenerated correctly.
-Error: Process completed with exit code 1.
+-- Configuring done (3.8s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/runner/work/HRM-c--vulkan/HRM-c--vulkan/build
+[  1%] Building CXX object src/utils/CMakeFiles/utils.dir/character_cache.cpp.o
+[  3%] Building CXX object src/system/CMakeFiles/system.dir/cloud_storage_manager.cpp.o
+[  5%] Building CXX object src/utils/CMakeFiles/utils.dir/config_manager.cpp.o
+[  7%] Building CXX object src/utils/CMakeFiles/utils.dir/cpu_compatibility.cpp.o
+[  9%] Building CXX object src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o
+[ 11%] Building CXX object src/utils/CMakeFiles/utils.dir/http_client.cpp.o
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp: In member function ‘HardwareProfile HardwareAbstractionLayer::detect_gpu_capabilities()’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:271:5: error: ‘VkInstance’ was not declared in this scope
+  271 |     VkInstance instance;
+      |     ^~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:272:5: error: ‘VkApplicationInfo’ was not declared in this scope
+  272 |     VkApplicationInfo appInfo = {};
+      |     ^~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:273:5: error: ‘appInfo’ was not declared in this scope
+  273 |     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+      |     ^~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:273:21: error: ‘VK_STRUCTURE_TYPE_APPLICATION_INFO’ was not declared in this scope
+  273 |     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:275:34: error: ‘VK_MAKE_VERSION’ was not declared in this scope
+  275 |     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+      |                                  ^~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:278:26: error: ‘VK_API_VERSION_1_1’ was not declared in this scope
+  278 |     appInfo.apiVersion = VK_API_VERSION_1_1;
+      |                          ^~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:280:5: error: ‘VkInstanceCreateInfo’ was not declared in this scope
+  280 |     VkInstanceCreateInfo createInfo = {};
+      |     ^~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:281:5: error: ‘createInfo’ was not declared in this scope
+  281 |     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+      |     ^~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:281:24: error: ‘VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO’ was not declared in this scope
+  281 |     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:284:5: error: ‘VkResult’ was not declared in this scope
+  284 |     VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:285:9: error: ‘result’ was not declared in this scope
+  285 |     if (result == VK_SUCCESS) {
+      |         ^~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:285:19: error: ‘VK_SUCCESS’ was not declared in this scope; did you mean ‘EXIT_SUCCESS’?
+  285 |     if (result == VK_SUCCESS) {
+      |                   ^~~~~~~~~~
+      |                   EXIT_SUCCESS
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:290:36: error: ‘instance’ was not declared in this scope
+  290 |         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+      |                                    ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:290:9: error: ‘vkEnumeratePhysicalDevices’ was not declared in this scope
+  290 |         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:293:25: error: ‘VkPhysicalDevice’ was not declared in this scope
+  293 |             std::vector<VkPhysicalDevice> devices(deviceCount);
+      |                         ^~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:293:41: error: template argument 1 is invalid
+  293 |             std::vector<VkPhysicalDevice> devices(deviceCount);
+      |                                         ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:293:41: error: template argument 2 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:294:72: error: request for member ‘data’ in ‘devices’, which is of non-class type ‘int’
+  294 |             vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+      |                                                                        ^~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:297:13: error: ‘VkPhysicalDeviceProperties’ was not declared in this scope
+  297 |             VkPhysicalDeviceProperties deviceProperties;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:298:50: error: invalid types ‘int[int]’ for array subscript
+  298 |             vkGetPhysicalDeviceProperties(devices[0], &deviceProperties);
+      |                                                  ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:298:56: error: ‘deviceProperties’ was not declared in this scope
+  298 |             vkGetPhysicalDeviceProperties(devices[0], &deviceProperties);
+      |                                                        ^~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:298:13: error: ‘vkGetPhysicalDeviceProperties’ was not declared in this scope
+  298 |             vkGetPhysicalDeviceProperties(devices[0], &deviceProperties);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:303:13: error: ‘VkPhysicalDeviceMemoryProperties’ was not declared in this scope
+  303 |             VkPhysicalDeviceMemoryProperties memProperties;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:304:56: error: invalid types ‘int[int]’ for array subscript
+  304 |             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProperties);
+      |                                                        ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:304:62: error: ‘memProperties’ was not declared in this scope
+  304 |             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProperties);
+      |                                                              ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:304:13: error: ‘vkGetPhysicalDeviceMemoryProperties’ was not declared in this scope
+  304 |             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProperties);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:308:58: error: ‘VK_MEMORY_HEAP_DEVICE_LOCAL_BIT’ was not declared in this scope
+  308 |                 if (memProperties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
+      |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:317:9: error: ‘vkDestroyInstance’ was not declared in this scope
+  317 |         vkDestroyInstance(instance, nullptr);
+      |         ^~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp: In member function ‘bool HardwareAbstractionLayer::test_vulkan_support()’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:388:5: error: ‘VkInstance’ was not declared in this scope
+  388 |     VkInstance instance;
+      |     ^~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:389:5: error: ‘VkApplicationInfo’ was not declared in this scope
+  389 |     VkApplicationInfo appInfo = {};
+      |     ^~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:390:5: error: ‘appInfo’ was not declared in this scope
+  390 |     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+      |     ^~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:390:21: error: ‘VK_STRUCTURE_TYPE_APPLICATION_INFO’ was not declared in this scope
+  390 |     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:391:26: error: ‘VK_API_VERSION_1_1’ was not declared in this scope
+  391 |     appInfo.apiVersion = VK_API_VERSION_1_1;
+      |                          ^~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:393:5: error: ‘VkInstanceCreateInfo’ was not declared in this scope
+  393 |     VkInstanceCreateInfo createInfo = {};
+      |     ^~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:394:5: error: ‘createInfo’ was not declared in this scope
+  394 |     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+      |     ^~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:394:24: error: ‘VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO’ was not declared in this scope
+  394 |     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:397:5: error: ‘VkResult’ was not declared in this scope
+  397 |     VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:398:9: error: ‘result’ was not declared in this scope
+  398 |     if (result == VK_SUCCESS) {
+      |         ^~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:398:19: error: ‘VK_SUCCESS’ was not declared in this scope; did you mean ‘EXIT_SUCCESS’?
+  398 |     if (result == VK_SUCCESS) {
+      |                   ^~~~~~~~~~
+      |                   EXIT_SUCCESS
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:399:27: error: ‘instance’ was not declared in this scope
+  399 |         vkDestroyInstance(instance, nullptr);
+      |                           ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:399:9: error: ‘vkDestroyInstance’ was not declared in this scope
+  399 |         vkDestroyInstance(instance, nullptr);
+      |         ^~~~~~~~~~~~~~~~~
+make[2]: *** [src/system/CMakeFiles/system.dir/build.make:93: src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:514: src/system/CMakeFiles/system.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+[ 13%] Building CXX object src/utils/CMakeFiles/utils.dir/utf8_processor.cpp.o
+In file included from /home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:6,
+                 from /home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:1:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:14:17: error: ‘uint32_t’ was not declared in this scope
+   14 |     std::vector<uint32_t> shape;
+      |                 ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:10:1: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+    9 | #include <cstring>
+  +++ |+#include <cstdint>
+   10 | 
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:14:25: error: template argument 1 is invalid
+   14 |     std::vector<uint32_t> shape;
+      |                         ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:14:25: error: template argument 2 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:23:5: error: ‘uint32_t’ does not name a type
+   23 |     uint32_t batch_size;
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:23:5: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:24:5: error: ‘uint32_t’ does not name a type
+   24 |     uint32_t seq_len;
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:24:5: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:25:5: error: ‘uint32_t’ does not name a type
+   25 |     uint32_t head_dim;
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:25:5: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:26:5: error: ‘uint32_t’ does not name a type
+   26 |     uint32_t num_heads;
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:26:5: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:27:5: error: ‘uint32_t’ does not name a type
+   27 |     uint32_t num_key_value_heads;
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/../core/attention.hpp:27:5: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:12:5: error: ‘VkPhysicalDevice’ does not name a type
+   12 |     VkPhysicalDevice physicalDevice;
+      |     ^~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:13:5: error: ‘VkDevice’ does not name a type
+   13 |     VkDevice device;
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:14:5: error: ‘VkQueue’ does not name a type
+   14 |     VkQueue computeQueue;
+      |     ^~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:15:5: error: ‘uint32_t’ does not name a type
+   15 |     uint32_t computeQueueFamilyIndex;
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:7:1: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+    6 | #include "../core/attention.hpp" // For Tensor
+  +++ |+#include <cstdint>
+    7 | 
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:16:5: error: ‘VkCommandPool’ does not name a type
+   16 |     VkCommandPool commandPool;
+      |     ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:26:17: error: ‘uint32_t’ was not declared in this scope
+   26 |     std::vector<uint32_t> encode_utf8(const std::string& text);
+      |                 ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:26:17: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:26:25: error: template argument 1 is invalid
+   26 |     std::vector<uint32_t> encode_utf8(const std::string& text);
+      |                         ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:26:25: error: template argument 2 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:27:47: error: ‘uint32_t’ was not declared in this scope
+   27 |     std::string decode_utf8(const std::vector<uint32_t>& codes);
+      |                                               ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:27:47: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:27:55: error: template argument 1 is invalid
+   27 |     std::string decode_utf8(const std::vector<uint32_t>& codes);
+      |                                                       ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:27:55: error: template argument 2 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:40:24: error: ‘uint32_t’ was not declared in this scope
+   40 |     static std::vector<uint32_t> encode_characters_cpu(const std::string& text);
+      |                        ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:40:24: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:40:32: error: template argument 1 is invalid
+   40 |     static std::vector<uint32_t> encode_characters_cpu(const std::string& text);
+      |                                ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:40:32: error: template argument 2 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:41:64: error: ‘uint32_t’ was not declared in this scope
+   41 |     static std::string decode_characters_cpu(const std::vector<uint32_t>& codes);
+      |                                                                ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:41:64: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:41:72: error: template argument 1 is invalid
+   41 |     static std::string decode_characters_cpu(const std::vector<uint32_t>& codes);
+      |                                                                        ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:41:72: error: template argument 2 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:49:12: error: ‘uint32_t’ does not name a type
+   49 |     static uint32_t decode_utf8_codepoint(const std::string& bytes, size_t& pos);
+      |            ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:49:12: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:50:46: error: ‘uint32_t’ has not been declared
+   50 |     static std::string encode_utf8_codepoint(uint32_t codepoint);
+      |                                              ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:53:24: error: ‘uint32_t’ was not declared in this scope
+   53 |     std::unordered_map<uint32_t, std::vector<float>> char_embeddings_;
+      |                        ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:53:24: note: ‘uint32_t’ is defined in header ‘<cstdint>’; did you forget to ‘#include <cstdint>’?
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:53:51: error: template argument 1 is invalid
+   53 |     std::unordered_map<uint32_t, std::vector<float>> char_embeddings_;
+      |                                                   ^~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:53:51: error: template argument 3 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:53:51: error: template argument 4 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:53:51: error: template argument 5 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:57:43: error: ‘uint32_t’ has not been declared
+   57 |     std::vector<float> get_char_embedding(uint32_t codepoint);
+      |                                           ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: In constructor ‘UTF8Processor::UTF8Processor()’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:10:13: error: ‘struct UTF8Config’ has no member named ‘physicalDevice’
+   10 |     config_.physicalDevice = VK_NULL_HANDLE;
+      |             ^~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:10:30: error: ‘VK_NULL_HANDLE’ was not declared in this scope
+   10 |     config_.physicalDevice = VK_NULL_HANDLE;
+      |                              ^~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:11:13: error: ‘struct UTF8Config’ has no member named ‘device’
+   11 |     config_.device = VK_NULL_HANDLE;
+      |             ^~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:12:13: error: ‘struct UTF8Config’ has no member named ‘computeQueue’
+   12 |     config_.computeQueue = VK_NULL_HANDLE;
+      |             ^~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:13:13: error: ‘struct UTF8Config’ has no member named ‘computeQueueFamilyIndex’
+   13 |     config_.computeQueueFamilyIndex = 0;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:14:13: error: ‘struct UTF8Config’ has no member named ‘commandPool’
+   14 |     config_.commandPool = VK_NULL_HANDLE;
+      |             ^~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: At global scope:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:24:23: error: no declaration matches ‘std::vector<unsigned int> UTF8Processor::encode_utf8(const std::string&)’
+   24 | std::vector<uint32_t> UTF8Processor::encode_utf8(const std::string& text) {
+      |                       ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:26:27: note: candidate is: ‘int UTF8Processor::encode_utf8(const std::string&)’
+   26 |     std::vector<uint32_t> encode_utf8(const std::string& text);
+      |                           ^~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:19:7: note: ‘class UTF8Processor’ defined here
+   19 | class UTF8Processor {
+      |       ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:41:13: error: no declaration matches ‘std::string UTF8Processor::decode_utf8(const std::vector<unsigned int>&)’
+   41 | std::string UTF8Processor::decode_utf8(const std::vector<uint32_t>& codes) {
+      |             ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:27:17: note: candidate is: ‘std::string UTF8Processor::decode_utf8(const int&)’
+   27 |     std::string decode_utf8(const std::vector<uint32_t>& codes);
+      |                 ^~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:19:7: note: ‘class UTF8Processor’ defined here
+   19 | class UTF8Processor {
+      |       ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: In member function ‘Tensor UTF8Processor::process_characters(const std::string&)’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:56:34: error: request for member ‘size’ in ‘codes’, which is of non-class type ‘int’
+   56 |     for (size_t i = 0; i < codes.size(); ++i) {
+      |                                  ^~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:57:50: error: invalid types ‘int[size_t {aka long unsigned int}]’ for array subscript
+   57 |         auto embedding = get_char_embedding(codes[i]);
+      |                                                  ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: In member function ‘std::string UTF8Processor::generate_text(const Tensor&)’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:79:33: error: ‘begin’ was not declared in this scope; did you mean ‘std::begin’?
+   79 |         for (const auto& pair : char_embeddings_) {
+      |                                 ^~~~~~~~~~~~~~~~
+      |                                 std::begin
+In file included from /usr/include/c++/13/vector:69,
+                 from /home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:3:
+/usr/include/c++/13/bits/range_access.h:114:37: note: ‘std::begin’ declared here
+  114 |   template<typename _Tp> const _Tp* begin(const valarray<_Tp>&) noexcept;
+      |                                     ^~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:79:33: error: ‘end’ was not declared in this scope; did you mean ‘std::end’?
+   79 |         for (const auto& pair : char_embeddings_) {
+      |                                 ^~~~~~~~~~~~~~~~
+      |                                 std::end
+/usr/include/c++/13/bits/range_access.h:116:37: note: ‘std::end’ declared here
+  116 |   template<typename _Tp> const _Tp* end(const valarray<_Tp>&) noexcept;
+      |                                     ^~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:95:24: error: cannot convert ‘std::vector<unsigned int>’ to ‘const int&’
+   95 |     return decode_utf8(codes);
+      |                        ^~~~~
+      |                        |
+      |                        std::vector<unsigned int>
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:27:58: note:   initializing argument 1 of ‘std::string UTF8Processor::decode_utf8(const int&)’
+   27 |     std::string decode_utf8(const std::vector<uint32_t>& codes);
+      |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: In member function ‘bool UTF8Processor::is_valid_utf8(const std::string&)’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:102:13: error: ‘decode_utf8_codepoint’ was not declared in this scope; did you mean ‘encode_utf8_codepoint’?
+  102 |             decode_utf8_codepoint(text, pos);
+      |             ^~~~~~~~~~~~~~~~~~~~~
+      |             encode_utf8_codepoint
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: In member function ‘std::vector<long unsigned int> UTF8Processor::find_invalid_sequences(const std::string&)’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:117:13: error: ‘decode_utf8_codepoint’ was not declared in this scope; did you mean ‘encode_utf8_codepoint’?
+  117 |             decode_utf8_codepoint(text, pos);
+      |             ^~~~~~~~~~~~~~~~~~~~~
+      |             encode_utf8_codepoint
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: At global scope:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:140:10: error: no declaration matches ‘uint32_t UTF8Processor::decode_utf8_codepoint(const std::string&, size_t&)’
+  140 | uint32_t UTF8Processor::decode_utf8_codepoint(const std::string& bytes, size_t& pos) {
+      |          ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:140:10: note: no functions named ‘uint32_t UTF8Processor::decode_utf8_codepoint(const std::string&, size_t&)’
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:19:7: note: ‘class UTF8Processor’ defined here
+   19 | class UTF8Processor {
+      |       ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:174:13: error: no declaration matches ‘std::string UTF8Processor::encode_utf8_codepoint(uint32_t)’
+  174 | std::string UTF8Processor::encode_utf8_codepoint(uint32_t codepoint) {
+      |             ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:50:24: note: candidate is: ‘static std::string UTF8Processor::encode_utf8_codepoint(int)’
+   50 |     static std::string encode_utf8_codepoint(uint32_t codepoint);
+      |                        ^~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:19:7: note: ‘class UTF8Processor’ defined here
+   19 | class UTF8Processor {
+      |       ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: In member function ‘void UTF8Processor::initialize_char_embeddings()’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:213:25: error: invalid types ‘int[uint32_t {aka unsigned int}]’ for array subscript
+  213 |         char_embeddings_[codepoint] = embedding;
+      |                         ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:222:25: error: invalid types ‘int[uint32_t {aka unsigned int}]’ for array subscript
+  222 |         char_embeddings_[codepoint] = embedding;
+      |                         ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: At global scope:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:226:20: error: no declaration matches ‘std::vector<float> UTF8Processor::get_char_embedding(uint32_t)’
+  226 | std::vector<float> UTF8Processor::get_char_embedding(uint32_t codepoint) {
+      |                    ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:57:24: note: candidate is: ‘std::vector<float> UTF8Processor::get_char_embedding(int)’
+   57 |     std::vector<float> get_char_embedding(uint32_t codepoint);
+      |                        ^~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:19:7: note: ‘class UTF8Processor’ defined here
+   19 | class UTF8Processor {
+      |       ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: In static member function ‘static std::string UTF8Processor::normalize_characters_cpu(const std::string&)’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:269:30: error: ‘decode_utf8_codepoint’ was not declared in this scope; did you mean ‘encode_utf8_codepoint’?
+  269 |         uint32_t codepoint = decode_utf8_codepoint(text, pos);
+      |                              ^~~~~~~~~~~~~~~~~~~~~
+      |                              encode_utf8_codepoint
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp: At global scope:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:284:23: error: no declaration matches ‘std::vector<unsigned int> UTF8Processor::encode_characters_cpu(const std::string&)’
+  284 | std::vector<uint32_t> UTF8Processor::encode_characters_cpu(const std::string& text) {
+      |                       ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:40:34: note: candidate is: ‘static int UTF8Processor::encode_characters_cpu(const std::string&)’
+   40 |     static std::vector<uint32_t> encode_characters_cpu(const std::string& text);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:19:7: note: ‘class UTF8Processor’ defined here
+   19 | class UTF8Processor {
+      |       ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.cpp:297:13: error: no declaration matches ‘std::string UTF8Processor::decode_characters_cpu(const std::vector<unsigned int>&)’
+  297 | std::string UTF8Processor::decode_characters_cpu(const std::vector<uint32_t>& codes) {
+      |             ^~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:41:24: note: candidate is: ‘static std::string UTF8Processor::decode_characters_cpu(const int&)’
+   41 |     static std::string decode_characters_cpu(const std::vector<uint32_t>& codes);
+      |                        ^~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/utils/utf8_processor.hpp:19:7: note: ‘class UTF8Processor’ defined here
+   19 | class UTF8Processor {
+      |       ^~~~~~~~~~~~~
+make[2]: *** [src/utils/CMakeFiles/utils.dir/build.make:135: src/utils/CMakeFiles/utils.dir/utf8_processor.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:580: src/utils/CMakeFiles/utils.dir/all] Error 2
+make: *** [Makefile:91: all] Error 2
+Error: Process completed with exit code 2.

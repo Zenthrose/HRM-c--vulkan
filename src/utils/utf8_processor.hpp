@@ -3,17 +3,20 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <cstdint>
 #include "../core/attention.hpp" // For Tensor
 
 struct UTF8Config {
     int max_sequence_length;
     int embedding_dim;
     bool use_byte_fallback;
+#ifndef NO_VULKAN
     VkPhysicalDevice physicalDevice;
     VkDevice device;
     VkQueue computeQueue;
     uint32_t computeQueueFamilyIndex;
     VkCommandPool commandPool;
+#endif
 };
 
 class UTF8Processor {

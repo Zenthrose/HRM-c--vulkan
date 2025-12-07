@@ -7,11 +7,13 @@ UTF8Processor::UTF8Processor() : config_{} {
     config_.max_sequence_length = 1024;
     config_.embedding_dim = 768;
     config_.use_byte_fallback = true;
+#ifndef NO_VULKAN
     config_.physicalDevice = VK_NULL_HANDLE;
     config_.device = VK_NULL_HANDLE;
     config_.computeQueue = VK_NULL_HANDLE;
     config_.computeQueueFamilyIndex = 0;
     config_.commandPool = VK_NULL_HANDLE;
+#endif
     initialize_char_embeddings();
 }
 
