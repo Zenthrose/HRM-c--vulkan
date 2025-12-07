@@ -70,6 +70,7 @@ public:
 
     // Enhanced safety for hot-swaps
     bool validate_hot_swap_safety(const std::string& file_path, const std::string& new_code);
+    bool validate_code_syntax(const std::string& code);
     bool create_safety_checkpoint(const std::string& description);
     bool restore_from_safety_checkpoint(const std::string& checkpoint_id);
     std::vector<std::string> scan_code_for_risks(const std::string& code_content);

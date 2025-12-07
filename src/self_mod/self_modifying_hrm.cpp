@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <random>
 #include <fstream>
+#include <cstdio>
+#include <string>
 
 SelfModifyingHRM::SelfModifyingHRM(const SelfModifyingHRMConfig& config)
     : SelfEvolvingHRM(config.base_config), config_(config) {
@@ -486,6 +488,12 @@ bool SelfModifyingHRM::validate_hot_swap_safety(const std::string& file_path, co
         }
     }
 
+    // Basic AST validation (syntax check)
+    if (!validate_code_syntax(new_code)) {
+        std::cout << "Code syntax validation failed, cannot hot-swap" << std::endl;
+        return false;
+    }
+
     // Scan code for risks
     auto risks = scan_code_for_risks(new_code);
     if (!risks.empty()) {
@@ -545,6 +553,30 @@ std::vector<std::string> SelfModifyingHRM::scan_code_for_risks(const std::string
     }
 
     return risks;
+}
+
+bool SelfModifyingHRM::validate_code_syntax(const std::string& code) {
+    // Use clang -fsyntax-only for proper AST validation
+    // Write code to temporary file and check syntax
+    std::string temp_file = std::tmpnam(nullptr) + std::string(".cpp");
+
+    // Write code to temp file
+    std::ofstream temp_stream(temp_file);
+    if (!temp_stream.is_open()) {
+        std::cout << "Failed to create temporary file for syntax validation" << std::endl;
+        return false;
+    }
+    temp_stream << code;
+    temp_stream.close();
+
+    // Run clang syntax check
+    std::string clang_cmd = "clang++ -fsyntax-only -std=c++17 -I. -I./src " + temp_file + " 2>/dev/null";
+    int result = std::system(clang_cmd.c_str());
+
+    // Clean up temp file
+    std::remove(temp_file.c_str());
+
+    return result == 0; // 0 means syntax is valid
 }
 
 bool SelfModifyingHRM::validate_code_integrity(const std::string& file_path, const std::string& expected_hash) {

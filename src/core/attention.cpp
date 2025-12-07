@@ -167,7 +167,7 @@ Tensor AttentionVulkan::forward(const Tensor& hidden_states, const CosSin& cos_s
         VK_CHECK(vkCreateFence(device, &fenceInfo, nullptr, &fence));
     }
 
-    VK_CHECK(vkQueueSubmit(computeQueue, 1, &submitInfo, fence));
+    if (vkQueueSubmit(computeQueue, 1, &submitInfo, fence) != VK_SUCCESS) {
         vkDestroyFence(device, fence, nullptr);
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
         throw std::runtime_error("failed to submit compute command buffer!");

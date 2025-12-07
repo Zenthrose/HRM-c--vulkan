@@ -43,11 +43,11 @@ public:
 private:
     UTF8Config config_;
 
-    // UTF-8 utilities
-    int get_utf8_char_length(unsigned char first_byte);
-    bool is_utf8_continuation_byte(unsigned char byte);
-    uint32_t decode_utf8_codepoint(const std::string& bytes, size_t& pos);
-    std::string encode_utf8_codepoint(uint32_t codepoint);
+    // UTF-8 utilities (static for use in static CPU methods)
+    static int get_utf8_char_length(unsigned char first_byte);
+    static bool is_utf8_continuation_byte(unsigned char byte);
+    static uint32_t decode_utf8_codepoint(const std::string& bytes, size_t& pos);
+    static std::string encode_utf8_codepoint(uint32_t codepoint);
 
     // Character embeddings (simplified - could be learned)
     std::unordered_map<uint32_t, std::vector<float>> char_embeddings_;

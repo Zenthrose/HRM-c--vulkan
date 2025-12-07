@@ -12,3 +12,10 @@ add_library(utils STATIC
     utf8_processor.hpp
 )
 target_include_directories(utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ../core)
+
+# Link spdlog if available
+if(spdlog_FOUND)
+    target_link_libraries(utils PUBLIC spdlog::spdlog)
+elseif(SPDLOG_LIBRARIES)
+    target_link_libraries(utils PUBLIC ${SPDLOG_LIBRARIES})
+endif()

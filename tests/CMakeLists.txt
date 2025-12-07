@@ -21,6 +21,16 @@ target_link_libraries(hrm_system_test PRIVATE
 )
 target_compile_definitions(hrm_system_test PRIVATE PORTABLE_BUILD)
 
+# Self-modification integration test
+add_executable(self_mod_test integration/self_mod_test.cpp)
+target_link_libraries(self_mod_test PRIVATE
+    GTest::gtest_main
+    GTest::gmock_main
+    core hrm vulkan self_mod system training utils
+    Vulkan::Vulkan
+)
+target_compile_definitions(self_mod_test PRIVATE PORTABLE_BUILD)
+
 # Platform-specific linking
 if(WIN32)
     target_link_libraries(hrm_system_test PRIVATE ws2_32 iphlpapi pdh)
@@ -48,3 +58,4 @@ add_custom_command(TARGET hrm_system_test POST_BUILD
 
 # Register tests with CTest
 gtest_discover_tests(hrm_system_test)
+gtest_discover_tests(self_mod_test)

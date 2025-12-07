@@ -1,4 +1,7 @@
 #include "resource_aware_hrm.hpp"
+#include "../utils/character_cache.hpp"
+#include "../system/memory_compaction_system.hpp"
+#include "../system/cloud_storage_manager.hpp"
 #include <iostream>
 #include <algorithm>
 
@@ -285,9 +288,20 @@ std::unordered_map<std::string, std::string> ResourceAwareHRM::get_cloud_storage
         auto providers = cloud_storage_manager_->get_available_providers();
         stats["cloud_provider_count"] = std::to_string(providers.size());
         if (!providers.empty()) {
-            stats["cloud_providers"] = providers[0]; // Primary provider
+            auto provider_to_string = [](CloudProvider p) -> std::string {
+                switch (p) {
+                    case CloudProvider::GOOGLE_DRIVE: return "Google Drive";
+                    case CloudProvider::DROPBOX: return "Dropbox";
+                    case CloudProvider::ONEDRIVE: return "OneDrive";
+                    case CloudProvider::MEGA: return "Mega";
+                    case CloudProvider::LOCAL_STORAGE: return "Local Storage";
+                    default: return "Unknown";
+                }
+            };
+
+            stats["cloud_providers"] = provider_to_string(providers[0]); // Primary provider
             for (size_t i = 1; i < providers.size(); ++i) {
-                stats["cloud_providers"] += ", " + providers[i];
+                stats["cloud_providers"] += ", " + provider_to_string(providers[i]);
             }
         }
         // TODO: Add more detailed stats like storage used, sync status
@@ -335,10 +349,10 @@ bool ResourceAwareHRM::should_offload_to_cpu(const TaskRequirements& requirement
     auto usage = get_current_resource_usage();
 
     // Offload if GPU memory is limited or CPU has capacity
-    bool gpu_memory_low = usage.gpu_memory_used_bytes > (usage.gpu_memory_total_bytes * 0.8);
+    bool gpu_memory_low = usage.memory_usage_percent > 80.0;
     bool cpu_has_capacity = usage.cpu_usage_percent < 70.0;
 
-    return gpu_memory_low && cpu_has_capacity && requirements.memory_mb > 100;
+    return gpu_memory_low && cpu_has_capacity && requirements.estimated_memory_mb > 100;
 }
 
 void ResourceAwareHRM::enable_hybrid_execution(bool enable) {

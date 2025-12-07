@@ -95,7 +95,7 @@ HRMInner::HRMInner(const HRMInnerConfig& config) : config_(config) {
     // Initialize rotary embeddings if needed
     if (config.pos_encodings == "rope") {
         // Implement RoPE (Rotary Position Embedding)
-        int max_seq_len = config.max_seq_len;
+        int max_seq_len = config.seq_len;
         int head_dim = config.hidden_size / config.num_heads;
 
         std::vector<float> cos_emb(max_seq_len * head_dim / 2);

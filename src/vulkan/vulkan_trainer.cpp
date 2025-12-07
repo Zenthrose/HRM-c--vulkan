@@ -6,6 +6,10 @@
 #include <cstring>
 #include <stdexcept>
 #include <random>
+#include <filesystem>
+#include <future>
+#include <thread>
+#include <vector>
 
 VulkanTrainer::VulkanTrainer(VkDevice device, VkPhysicalDevice physical_device,
                            uint32_t compute_queue_family_index, VkQueue compute_queue,
@@ -503,13 +507,85 @@ bool VulkanTrainer::initialize_model() {
 }
 
 bool VulkanTrainer::prepare_training_data(const std::string& data_path) {
-    std::ifstream file(data_path);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open training data file: " << data_path << std::endl;
+    namespace fs = std::filesystem;
+
+    // Check if data_path is a file or directory
+    fs::path path(data_path);
+    std::vector<std::string> text_files;
+
+    if (fs::is_regular_file(path)) {
+        // Single file
+        text_files.push_back(data_path);
+    } else if (fs::is_directory(path)) {
+        // Directory - scan for text files asynchronously
+        const int num_threads = 4; // Configurable thread pool size
+        std::vector<std::future<std::vector<std::string>>> scan_futures;
+
+        // Get all subdirectories
+        std::vector<fs::path> subdirs;
+        for (const auto& entry : fs::directory_iterator(path)) {
+            if (entry.is_directory()) {
+                subdirs.push_back(entry.path());
+            }
+        }
+
+        // If no subdirs, scan the main directory
+        if (subdirs.empty()) {
+            subdirs.push_back(path);
+        }
+
+        // Launch async scans for each subdirectory
+        for (const auto& subdir : subdirs) {
+            scan_futures.push_back(std::async(std::launch::async, [subdir]() {
+                std::vector<std::string> files;
+                for (const auto& entry : fs::recursive_directory_iterator(subdir)) {
+                    if (entry.is_regular_file()) {
+                        std::string ext = entry.path().extension().string();
+                        if (ext == ".txt" || ext == ".md" || ext.empty()) { // Include files without extension
+                            files.push_back(entry.path().string());
+                        }
+                    }
+                }
+                return files;
+            }));
+        }
+
+        // Collect results
+        for (auto& future : scan_futures) {
+            auto files = future.get();
+            text_files.insert(text_files.end(), files.begin(), files.end());
+        }
+
+        std::cout << "Found " << text_files.size() << " text files in directory scan" << std::endl;
+    } else {
+        std::cerr << "Invalid data path: " << data_path << std::endl;
         return false;
     }
 
-    std::string text((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    // Load all text files asynchronously
+    std::string combined_text;
+    std::vector<std::future<std::string>> load_futures;
+
+    for (const auto& file_path : text_files) {
+        load_futures.push_back(std::async(std::launch::async, [file_path]() {
+            std::ifstream file(file_path);
+            if (!file.is_open()) {
+                std::cerr << "Failed to open file: " << file_path << std::endl;
+                return std::string("");
+            }
+            return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        }));
+    }
+
+    // Collect loaded text
+    for (auto& future : load_futures) {
+        combined_text += future.get();
+    }
+
+    if (combined_text.empty()) {
+        std::cerr << "No text data loaded" << std::endl;
+        return false;
+    }
 
     // Create character vocabulary
     std::unordered_map<char, uint32_t> char_to_idx;
@@ -521,19 +597,19 @@ bool VulkanTrainer::prepare_training_data(const std::string& data_path) {
 
     // Create sequences
     training_batches_.clear();
-    for (size_t i = 0; i < text.size() - config_.max_sequence_length; i += config_.batch_size * config_.max_sequence_length) {
+    for (size_t i = 0; i < combined_text.size() - config_.max_sequence_length; i += config_.batch_size * config_.max_sequence_length) {
         TrainingBatch batch;
-        batch.batch_size = std::min(config_.batch_size, (uint32_t)((text.size() - i) / config_.max_sequence_length));
+        batch.batch_size = std::min(config_.batch_size, (uint32_t)((combined_text.size() - i) / config_.max_sequence_length));
         batch.seq_length = config_.max_sequence_length;
 
         for (uint32_t b = 0; b < batch.batch_size; ++b) {
             size_t start_idx = i + b * config_.max_sequence_length;
             for (uint32_t s = 0; s < config_.max_sequence_length; ++s) {
-                char c = text[start_idx + s];
+                char c = combined_text[start_idx + s];
                 uint32_t idx = char_to_idx[c];
                 batch.input_sequences.push_back(idx);
                 if (s < config_.max_sequence_length - 1) {
-                    batch.target_sequences.push_back(char_to_idx[text[start_idx + s + 1]]);
+                    batch.target_sequences.push_back(char_to_idx[combined_text[start_idx + s + 1]]);
                 }
             }
         }
@@ -543,7 +619,8 @@ bool VulkanTrainer::prepare_training_data(const std::string& data_path) {
         }
     }
 
-    std::cout << "Prepared " << training_batches_.size() << " training batches" << std::endl;
+    std::cout << "Prepared " << training_batches_.size() << " training batches from "
+              << combined_text.size() << " characters" << std::endl;
     return true;
 }
 

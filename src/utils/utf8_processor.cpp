@@ -125,6 +125,7 @@ std::vector<size_t> UTF8Processor::find_invalid_sequences(const std::string& tex
 }
 
 int UTF8Processor::get_utf8_char_length(unsigned char first_byte) {
+    // Static implementation for UTF-8 character length detection
     if ((first_byte & 0x80) == 0) return 1;        // 0xxxxxxx
     if ((first_byte & 0xE0) == 0xC0) return 2;     // 110xxxxx
     if ((first_byte & 0xF0) == 0xE0) return 3;     // 1110xxxx

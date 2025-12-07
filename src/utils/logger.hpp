@@ -1,27 +1,13 @@
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <fstream>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
 #include <memory>
-#include <mutex>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <chrono>
-#include <iomanip>
+#include <string>
+#include <filesystem>
 
-#ifdef ERROR
-#undef ERROR
-#endif
-
-enum class LogLevel {
-    DEBUG,
-    INFO,
-    WARNING,
-    ERROR,
-    NONE
-};
+namespace fs = std::filesystem;
 
 class Logger {
 public:
@@ -30,87 +16,62 @@ public:
         return instance;
     }
 
-    void setLogLevel(LogLevel level) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        log_level_ = level;
+    std::shared_ptr<spdlog::logger> getLogger() {
+        return logger_;
     }
 
-    void setLogFile(const std::string& filename) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (log_file_.is_open()) {
-            log_file_.close();
-        }
-        log_file_.open(filename, std::ios::app);
-        if (!log_file_.is_open()) {
-            std::cerr << "Failed to open log file: " << filename << std::endl;
-        }
+    void setLogLevel(spdlog::level::level_enum level) {
+        logger_->set_level(level);
     }
 
-    void log(LogLevel level, const std::string& message) {
-        std::lock_guard<std::mutex> lock(mutex_);
-
-        if (level < log_level_) {
-            return;
-        }
-
-        std::string level_str;
-        switch (level) {
-            case LogLevel::DEBUG: level_str = "DEBUG"; break;
-            case LogLevel::INFO: level_str = "INFO"; break;
-            case LogLevel::WARNING: level_str = "WARNING"; break;
-            case LogLevel::ERROR: level_str = "ERROR"; break;
-            default: level_str = "UNKNOWN"; break;
-        }
-
-        std::string log_message = "[" + level_str + "] " + message;
-
-        // Console output
-        std::cout << log_message << std::endl;
-
-        // File output
-        if (log_file_.is_open()) {
-            log_file_ << log_message << std::endl;
-            log_file_.flush();
-        }
-    }
-
-    void debug(const std::string& message) { log(LogLevel::DEBUG, message); }
-    void info(const std::string& message) { log(LogLevel::INFO, message); }
-    void warning(const std::string& message) { log(LogLevel::WARNING, message); }
-    void error(const std::string& message) { log(LogLevel::ERROR, message); }
+    void debug(const std::string& message) { logger_->debug(message); }
+    void info(const std::string& message) { logger_->info(message); }
+    void warning(const std::string& message) { logger_->warn(message); }
+    void error(const std::string& message) { logger_->error(message); }
 
 private:
     Logger() {
-        // Initialize with environment variable
-        const char* env_level = std::getenv("HRM_LOG_LEVEL");
-        if (env_level) {
-            if (std::string(env_level) == "debug") log_level_ = LogLevel::DEBUG;
-            else if (std::string(env_level) == "info") log_level_ = LogLevel::INFO;
-            else if (std::string(env_level) == "warning") log_level_ = LogLevel::WARNING;
-            else if (std::string(env_level) == "error") log_level_ = LogLevel::ERROR;
-            else if (std::string(env_level) == "none") log_level_ = LogLevel::NONE;
-        } else {
-            log_level_ = LogLevel::INFO; // Default
-        }
+        // Create console sink
+        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        console_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
 
-        // Initialize log file if HRM_LOG_DIR is set
+        std::vector<spdlog::sink_ptr> sinks = {console_sink};
+
+        // Add file sink if HRM_LOG_DIR is set
         const char* log_dir = std::getenv("HRM_LOG_DIR");
         if (log_dir) {
             fs::path log_path = fs::path(log_dir) / "hrm_system.log";
-            setLogFile(log_path.string());
+            auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_path.string(), true);
+            file_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
+            sinks.push_back(file_sink);
         }
+
+        // Create logger
+        logger_ = std::make_shared<spdlog::logger>("hrm_logger", sinks.begin(), sinks.end());
+
+        // Set log level from environment variable
+        const char* env_level = std::getenv("HRM_LOG_LEVEL");
+        spdlog::level::level_enum level = spdlog::level::info; // Default
+        if (env_level) {
+            std::string level_str = env_level;
+            if (level_str == "debug") level = spdlog::level::debug;
+            else if (level_str == "info") level = spdlog::level::info;
+            else if (level_str == "warning") level = spdlog::level::warn;
+            else if (level_str == "error") level = spdlog::level::err;
+            else if (level_str == "none") level = spdlog::level::off;
+        }
+        logger_->set_level(level);
+
+        // Set as default logger
+        spdlog::set_default_logger(logger_);
     }
 
     ~Logger() {
-        if (log_file_.is_open()) {
-            log_file_.close();
-        }
+        spdlog::shutdown();
     }
 
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 
-    LogLevel log_level_;
-    std::ofstream log_file_;
-    std::mutex mutex_;
+    std::shared_ptr<spdlog::logger> logger_;
 };

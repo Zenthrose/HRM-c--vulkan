@@ -70,7 +70,9 @@ public:
     void draw_chat_interface();
     void draw_system_status();
     void draw_memory_management();
+    void draw_cloud_storage();
     void draw_settings();
+    void draw_about();
     void draw_footer();
 
     // Chat functionality
@@ -130,6 +132,8 @@ private:
     void handle_chat_interface();
     void handle_system_status();
     void handle_memory_management();
+    void handle_cloud_storage();
+    void handle_about();
     void handle_settings();
 
     // Chat processing
@@ -171,5 +175,6 @@ private:
     void handle_chat_input(const std::string& input);
     void handle_system_status_input(const std::string& input);
     void handle_memory_management_input(const std::string& input);
+    void handle_cloud_storage_input(const std::string& input);
     void handle_settings_input(const std::string& input);
 };

@@ -560,6 +560,9 @@ int main(int argc, char* argv[]) {
         cli_mode = true;
     }
 
+    // Initialize HRM config early so we can set memory/cloud systems
+    auto hrm_config = createDefaultHRMConfig(hw_caps);
+
     try {
         // Initialize cloud storage
         auto cloud_manager = std::make_shared<CloudStorageManager>();
@@ -587,8 +590,7 @@ int main(int argc, char* argv[]) {
                 // Continue without Vulkan - HRM will use CPU fallbacks
             }
 
-            // Initialize HRM system only for CLI/GUI modes
-            auto hrm_config = createDefaultHRMConfig(hw_caps);
+            // HRM config already initialized above
 
             // Initialize HRM inner config - restore original layer counts
             hrm_config.base_config.base_config.hrm_config.inner_config.batch_size = 1;

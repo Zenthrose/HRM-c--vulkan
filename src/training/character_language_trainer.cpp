@@ -5,6 +5,7 @@
 #include <cmath>
 #include <random>
 #include <filesystem>
+#include <future>
 #include <cstdlib>
 #include <iomanip>
 #include <limits>
@@ -137,23 +138,6 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
             std::cerr << "Error in async directory scan: " << e.what() << std::endl;
         }
     }
-                        }
-                    }
-                    
-                    // Limit files per directory to prevent overload
-                    if (files_processed >= 200) {
-                        std::cout << "Reached file limit for directory, moving to next..." << std::endl;
-                        break;
-                    }
-                }
-                std::cout << "Processed " << files_processed << " files from " << base_dir << std::endl;
-            } catch (const std::filesystem::filesystem_error& e) {
-                std::cout << "Filesystem error accessing " << base_dir << ": " << e.what() << std::endl;
-            } catch (const std::exception& e) {
-                std::cout << "Could not access " << base_dir << ": " << e.what() << std::endl;
-            }
-        }
-    }
     
     // 3. Scan for system documentation and knowledge (with better error handling)
     std::vector<std::string> system_doc_dirs = {
@@ -199,9 +183,20 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
                 }
                 std::cout << "Processed " << files_processed << " files from " << dir << std::endl;
             } catch (const std::filesystem::filesystem_error& e) {
-                std::cout << "Filesystem error accessing " << dir << ": " << e.what() << std::endl;
+                // Handle filesystem-specific errors (permission denied, not found, etc.)
+                // Autonomous learning must be resilient to access limitations
+                logger.error("Filesystem error accessing directory '" + dir + "': " + e.what());
+                // Continue to next directory instead of failing entire learning process
             } catch (const std::exception& e) {
-                std::cout << "Could not access " << dir << ": " << e.what() << std::endl;
+                // Handle general exceptions during directory access
+                // Common in diverse system environments with varying permissions
+                logger.warning("Could not access directory '" + dir + "' due to exception: " + e.what());
+                // Log warning but continue - don't crash autonomous learning
+            } catch (...) {
+                // Safety net for unexpected errors not caught above
+                // Ensures no unhandled exceptions crash the learning process
+                logger.error("Unknown error accessing directory '" + dir + "'");
+                // Continue processing - resilience is critical for system-wide learning
             }
         }
     }
