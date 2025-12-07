@@ -5,8 +5,10 @@
 #include <cmath>
 #include <random>
 #include <filesystem>
+#include <cstdlib>
 #include <iomanip>
 #include <limits>
+#include "../utils/logger.hpp"
 
 namespace fs = std::filesystem;
 
@@ -15,6 +17,14 @@ std::string get_log_dir() {
         return env;
     } else {
         return (fs::current_path() / "logs").string();
+    }
+}
+
+std::string get_model_dir() {
+    if (const char* env = std::getenv("HRM_MODEL_DIR")) {
+        return env;
+    } else {
+        return (fs::current_path() / "models").string();
     }
 }
 
@@ -32,11 +42,12 @@ CharacterLanguageTrainer::CharacterLanguageTrainer(
       training_start_time_(std::chrono::steady_clock::now()) {
 
     initialize_training_components();
-    std::cout << "CharacterLanguageTrainer initialized with:" << std::endl;
-    std::cout << "  - Character vocabulary: " << config.char_vocab_size << std::endl;
-    std::cout << "  - Max sequence length: " << config.max_seq_length << std::endl;
-    std::cout << "  - Context length: " << config.context_length << std::endl;
-    std::cout << "  - Batch size: " << config.batch_size << std::endl;
+    auto& logger = Logger::getInstance();
+    logger.info("CharacterLanguageTrainer initialized with:");
+    logger.info("  - Character vocabulary: " + std::to_string(config.char_vocab_size));
+    logger.info("  - Max sequence length: " + std::to_string(config.max_seq_length));
+    logger.info("  - Context length: " + std::to_string(config.context_length));
+    logger.info("  - Batch size: " + std::to_string(config.batch_size));
 }
 
 CharacterLanguageTrainer::~CharacterLanguageTrainer() {
@@ -65,9 +76,10 @@ void CharacterLanguageTrainer::initialize_training_components() {
 std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character_language_model(
     const std::string& dataset_path) {
 
-    std::cout << "\nStarting Character-Level Language Training" << std::endl;
-    std::cout << "Dataset: " << dataset_path << std::endl;
-    std::cout << "Configuration: " << config_.get_description() << std::endl;
+    auto& logger = Logger::getInstance();
+    logger.info("Starting Character-Level Language Training");
+    logger.info("Dataset: " + dataset_path);
+    logger.info("Configuration: " + config_.get_description());
 
     training_active_ = true;
     training_start_time_ = std::chrono::steady_clock::now();
@@ -249,7 +261,7 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
 
         // Save checkpoint
         if ((epoch + 1) % config_.save_every_epochs == 0) {
-            save_checkpoint("checkpoints/character_model_epoch_" + std::to_string(epoch + 1) + ".ckpt");
+            save_checkpoint(get_model_dir() + "/character_model_epoch_" + std::to_string(epoch + 1) + ".ckpt");
         }
 
         // Save epoch results to text file

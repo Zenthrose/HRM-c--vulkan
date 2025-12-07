@@ -99,13 +99,15 @@ public:
     CloudProvider get_provider() const { return config_.provider; }
     std::string get_provider_name() const;
 
+    // Validation
+    bool validate_config() const;
+
 protected:
     CloudStorageConfig config_;
     std::chrono::system_clock::time_point last_auth_time_;
 
     // Helper methods
     std::string generate_unique_filename(const std::string& base_name);
-    bool validate_config() const;
     std::string url_encode(const std::string& str) const;
     std::string base64_encode(const std::vector<uint8_t>& data) const;
 };
@@ -302,4 +304,5 @@ private:
     // Helper methods
     std::string generate_compaction_filename(const std::string& compaction_id) const;
     bool validate_provider(CloudProvider provider) const;
+    void load_providers_from_environment();
 };

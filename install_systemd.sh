@@ -1,9 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # HRM System Installation Script
 # Sets up HRM as a systemd service with auto-boot and idle processing
 
-set -e
+set -euo pipefail
+
+# Cross-platform detection
+if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+    echo "❌ This script is for Linux/macOS systems with systemd."
+    echo "For Windows, use install_windows_service.ps1"
+    exit 1
+fi
 
 HRM_USER="hrm"
 HRM_HOME="/opt/hrm"

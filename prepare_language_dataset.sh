@@ -1,13 +1,37 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # HRM Language Dataset Preparation Script
 # Creates a comprehensive character-level training dataset
 
+# Parse arguments
+DATA_DIR="$(pwd)/data"
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --data-dir)
+      DATA_DIR="$2"
+      shift 2
+      ;;
+    --help|-h)
+      echo "Usage: $0 [options]"
+      echo "Options:"
+      echo "  --data-dir <dir>   Data directory (default: ./data)"
+      echo "  --help, -h         Show this help"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Use --help for usage information"
+      exit 1
+      ;;
+  esac
+done
+
 echo "🎯 HRM Language Dataset Preparation"
 echo "==================================="
+echo "Using data directory: $DATA_DIR"
 
 # Create dataset directory structure
-mkdir -p data/text/{raw,processed,training,validation,test}
+mkdir -p "$DATA_DIR/text/{raw,processed,training,validation,test}"
 
 echo "📁 Created dataset directory structure"
 
@@ -18,12 +42,12 @@ echo "📥 Downloading training corpora..."
 
 # 1. OpenWebText2 (diverse web content)
 echo "Downloading OpenWebText2 sample..."
-curl -L "https://huggingface.co/datasets/openwebtext/resolve/main/plain_text/train-00000-of-00001.parquet" -o data/text/raw/openwebtext_sample.parquet 2>/dev/null || echo "OpenWebText download failed, will use local data"
+curl -L "https://huggingface.co/datasets/openwebtext/resolve/main/plain_text/train-00000-of-00001.parquet" -o $DATA_DIR/text/raw/openwebtext_sample.parquet 2>/dev/null || echo "OpenWebText download failed, will use local data"
 
 # 2. Books corpus (literary reasoning)
 echo "Setting up books corpus..."
-mkdir -p data/text/raw/books
-cat > data/text/raw/books/sample_books.txt << 'EOF'
+mkdir -p $DATA_DIR/text/raw/books
+cat > $DATA_DIR/text/raw/books/sample_books.txt << 'EOF'
 Pride and Prejudice by Jane Austen
 
 It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.
@@ -87,8 +111,8 @@ EOF
 
 # 3. Code corpus (programming reasoning)
 echo "Setting up code corpus..."
-mkdir -p data/text/raw/code
-cat > data/text/raw/code/sample_code.py << 'EOF'
+mkdir -p $DATA_DIR/text/raw/code
+cat > $DATA_DIR/text/raw/code/sample_code.py << 'EOF'
 # Python examples for reasoning and problem solving
 
 def binary_search(arr, target):
@@ -207,8 +231,8 @@ EOF
 
 # 4. Conversation corpus (dialogue reasoning)
 echo "Setting up conversation corpus..."
-mkdir -p data/text/raw/conversations
-cat > data/text/raw/conversations/sample_conversations.txt << 'EOF'
+mkdir -p $DATA_DIR/text/raw/conversations
+cat > $DATA_DIR/text/raw/conversations/sample_conversations.txt << 'EOF'
 Human: Can you explain how photosynthesis works?
 
 Assistant: Photosynthesis is the process by which plants convert light energy into chemical energy. Let me break this down step by step:
@@ -308,8 +332,8 @@ EOF
 
 # 5. Reasoning corpus (logical thinking)
 echo "Setting up reasoning corpus..."
-mkdir -p data/text/raw/reasoning
-cat > data/text/raw/reasoning/sample_reasoning.txt << 'EOF'
+mkdir -p $DATA_DIR/text/raw/reasoning
+cat > $DATA_DIR/text/raw/reasoning/sample_reasoning.txt << 'EOF'
 Logic and Reasoning Examples
 
 Syllogisms - Deductive Reasoning:
@@ -401,8 +425,8 @@ EOF
 
 # 6. Scientific corpus (evidence-based reasoning)
 echo "Setting up scientific corpus..."
-mkdir -p data/text/raw/science
-cat > data/text/raw/science/sample_science.txt << 'EOF'
+mkdir -p $DATA_DIR/text/raw/science
+cat > $DATA_DIR/text/raw/science/sample_science.txt << 'EOF'
 Scientific Reasoning and Methodology
 
 The scientific method provides a systematic approach to understanding the natural world through empirical evidence and logical reasoning.
@@ -489,39 +513,39 @@ echo "✅ Downloaded/created sample corpora"
 echo "🔄 Processing datasets..."
 
 # Combine all text files into a single training corpus
-cat data/text/raw/books/sample_books.txt > data/text/processed/training_corpus.txt
-echo "" >> data/text/processed/training_corpus.txt
-cat data/text/raw/code/sample_code.py >> data/text/processed/training_corpus.txt
-echo "" >> data/text/processed/training_corpus.txt
-cat data/text/raw/conversations/sample_conversations.txt >> data/text/processed/training_corpus.txt
-echo "" >> data/text/processed/training_corpus.txt
-if [ -f data/text/raw/conversations/generated_conversations.txt ]; then
-    cat data/text/raw/conversations/generated_conversations.txt >> data/text/processed/training_corpus.txt
-    echo "" >> data/text/processed/training_corpus.txt
+cat $DATA_DIR/text/raw/books/sample_books.txt > $DATA_DIR/text/processed/training_corpus.txt
+echo "" >> $DATA_DIR/text/processed/training_corpus.txt
+cat $DATA_DIR/text/raw/code/sample_code.py >> $DATA_DIR/text/processed/training_corpus.txt
+echo "" >> $DATA_DIR/text/processed/training_corpus.txt
+cat $DATA_DIR/text/raw/conversations/sample_conversations.txt >> $DATA_DIR/text/processed/training_corpus.txt
+echo "" >> $DATA_DIR/text/processed/training_corpus.txt
+if [ -f $DATA_DIR/text/raw/conversations/generated_conversations.txt ]; then
+    cat $DATA_DIR/text/raw/conversations/generated_conversations.txt >> $DATA_DIR/text/processed/training_corpus.txt
+    echo "" >> $DATA_DIR/text/processed/training_corpus.txt
 fi
-echo "" >> data/text/processed/training_corpus.txt
-cat data/text/raw/reasoning/sample_reasoning.txt >> data/text/processed/training_corpus.txt
-echo "" >> data/text/processed/training_corpus.txt
-cat data/text/raw/science/sample_science.txt >> data/text/processed/training_corpus.txt
+echo "" >> $DATA_DIR/text/processed/training_corpus.txt
+cat $DATA_DIR/text/raw/reasoning/sample_reasoning.txt >> $DATA_DIR/text/processed/training_corpus.txt
+echo "" >> $DATA_DIR/text/processed/training_corpus.txt
+cat $DATA_DIR/text/raw/science/sample_science.txt >> $DATA_DIR/text/processed/training_corpus.txt
 
 echo "✅ Combined training corpus created"
 
 # Create validation set (10% of data)
-head -n $(($(wc -l < data/text/processed/training_corpus.txt) / 10)) data/text/processed/training_corpus.txt > data/text/processed/validation_corpus.txt
+head -n $(($(wc -l < $DATA_DIR/text/processed/training_corpus.txt) / 10)) $DATA_DIR/text/processed/training_corpus.txt > $DATA_DIR/text/processed/validation_corpus.txt
 
 echo "✅ Validation corpus created"
 
 # Create test set (5% of data)
-head -n $(($(wc -l < data/text/processed/training_corpus.txt) / 20)) data/text/processed/training_corpus.txt > data/text/processed/test_corpus.txt
+head -n $(($(wc -l < $DATA_DIR/text/processed/training_corpus.txt) / 20)) $DATA_DIR/text/processed/training_corpus.txt > $DATA_DIR/text/processed/test_corpus.txt
 
 echo "✅ Test corpus created"
 
 # Generate statistics
 echo "📊 Dataset Statistics:"
-echo "Training samples: $(wc -l < data/text/processed/training_corpus.txt)"
-echo "Validation samples: $(wc -l < data/text/processed/validation_corpus.txt)"
-echo "Test samples: $(wc -l < data/text/processed/test_corpus.txt)"
-echo "Total characters: $(wc -c < data/text/processed/training_corpus.txt)"
+echo "Training samples: $(wc -l < $DATA_DIR/text/processed/training_corpus.txt)"
+echo "Validation samples: $(wc -l < $DATA_DIR/text/processed/validation_corpus.txt)"
+echo "Test samples: $(wc -l < $DATA_DIR/text/processed/test_corpus.txt)"
+echo "Total characters: $(wc -c < $DATA_DIR/text/processed/training_corpus.txt)"
 
 echo ""
 echo "🎯 HRM Language Dataset Ready!"

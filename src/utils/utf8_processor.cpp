@@ -3,6 +3,18 @@
 #include <random>
 #include <algorithm>
 
+UTF8Processor::UTF8Processor() : config_{} {
+    config_.max_sequence_length = 1024;
+    config_.embedding_dim = 768;
+    config_.use_byte_fallback = true;
+    config_.physicalDevice = VK_NULL_HANDLE;
+    config_.device = VK_NULL_HANDLE;
+    config_.computeQueue = VK_NULL_HANDLE;
+    config_.computeQueueFamilyIndex = 0;
+    config_.commandPool = VK_NULL_HANDLE;
+    initialize_char_embeddings();
+}
+
 UTF8Processor::UTF8Processor(const UTF8Config& config) : config_(config) {
     std::cout << "Initializing UTF-8 Processor..." << std::endl;
     initialize_char_embeddings();

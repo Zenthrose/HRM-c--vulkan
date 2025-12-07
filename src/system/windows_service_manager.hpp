@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 #include <functional>
+#include <mutex>
 
 class WindowsServiceManager {
 private:
@@ -24,6 +25,7 @@ private:
     DWORD last_input_time_;
     bool auto_boot_enabled_;
     bool idle_processing_enabled_;
+    std::mutex task_mutex_;
     
     void service_main();
     void update_service_status(DWORD current_state, DWORD exit_code = 0);
@@ -33,6 +35,7 @@ private:
     DWORD get_last_input_time() const;
     bool is_system_idle() const;
     void log_event(const std::string& message, WORD type = EVENTLOG_INFORMATION_TYPE);
+    static void WINAPI service_control_handler(DWORD control_code);
 
 public:
     WindowsServiceManager();

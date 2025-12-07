@@ -18,6 +18,7 @@ struct UTF8Config {
 
 class UTF8Processor {
 public:
+    UTF8Processor();
     UTF8Processor(const UTF8Config& config);
     ~UTF8Processor() = default;
 

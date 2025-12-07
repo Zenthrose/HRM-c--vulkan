@@ -26,6 +26,7 @@ struct RepairAction {
     std::chrono::system_clock::time_point timestamp;
     bool completed;
     double confidence;
+    std::unordered_map<std::string, std::string> parameters;
 };
 
 struct RollbackPoint {
@@ -51,7 +52,7 @@ private:
     std::string capture_system_state() const;
     bool validate_system_integrity() const;
     bool can_safely_modify(const std::string& path) const;
-    void cleanup_old_backups() const;
+    void cleanup_old_backups();
 
 public:
     SelfRepairSystem(const std::string& project_root, const std::string& backup_dir = "./backups");
@@ -59,7 +60,7 @@ public:
     
     // Core repair operations
     bool begin_repair_sequence(const std::string& description);
-    bool add_repair_action(const RepairAction& action);
+    bool add_repair_action(RepairAction& action);
     bool commit_repair_sequence();
     bool rollback_to_point(const std::string& rollback_id);
     bool rollback_last_operation();
@@ -83,12 +84,20 @@ public:
     bool has_pending_operations() const;
     std::string get_last_rollback_point() const;
     void print_repair_status() const;
-    bool emergency_rollback() const;
+    bool emergency_rollback();
     
     // Advanced features
     bool schedule_repair_for_idle_time(const RepairAction& action);
     bool validate_repair_safety(const RepairAction& action) const;
     std::vector<std::string> analyze_repair_history() const;
     bool create_safety_checkpoint(const std::string& description);
-    bool create_safety_checkpoint(const std::string& description);
+
+private:
+    bool execute_repair_action(const RepairAction& action);
+    bool execute_file_modification(const RepairAction& action);
+    bool execute_code_change(const RepairAction& action);
+    bool execute_config_update(const RepairAction& action);
+    bool execute_drive_operation(const RepairAction& action);
+    void load_rollback_history();
+    void save_rollback_history() const;
 };

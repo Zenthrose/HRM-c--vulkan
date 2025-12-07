@@ -47,8 +47,8 @@ struct AdvancedOptimizerConfig {
 
     // Adafactor specific
     bool adafactor_relative_step = true;
-    float adafactor_scale_parameter = true;
-    float adafactor_warmup_init = false;
+    float adafactor_scale_parameter = 1.0f;
+    float adafactor_warmup_init = 0.0f;
 };
 
 /**

@@ -1,10 +1,15 @@
 #include "self_repair_system.hpp"
+#include "runtime_compilation_system.hpp"
 #include <iostream>
+#include <cstdlib>
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
 #include <ctime>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 SelfRepairSystem::SelfRepairSystem(const std::string& project_root, const std::string& backup_dir)
     : project_root_(project_root), backup_directory_(backup_dir), 
@@ -57,7 +62,7 @@ bool SelfRepairSystem::begin_repair_sequence(const std::string& description) {
     return true;
 }
 
-bool SelfRepairSystem::add_repair_action(const RepairAction& action) {
+bool SelfRepairSystem::add_repair_action(RepairAction& action) {
     if (!validate_repair_safety(action)) {
         std::cout << "Error: Repair action failed safety validation: " << action.description << std::endl;
         return false;
@@ -354,7 +359,7 @@ bool SelfRepairSystem::can_safely_modify(const std::string& path) const {
     return true;
 }
 
-void SelfRepairSystem::cleanup_old_backups() const {
+void SelfRepairSystem::cleanup_old_backups() {
     if (rollback_history_.size() > max_rollback_points_) {
         // Remove oldest rollback points and their backups
         size_t to_remove = rollback_history_.size() - max_rollback_points_;
@@ -585,13 +590,13 @@ bool SelfRepairSystem::execute_drive_operation(const RepairAction& action) {
 
 void SelfRepairSystem::load_rollback_history() {
     // Load rollback history from file
-    std::string history_file = fs::path(backup_directory_) / "rollback_history.json";
+    std::string history_file = (fs::path(backup_directory_) / "rollback_history.json").string();
     // Implementation would load from JSON file
 }
 
 void SelfRepairSystem::save_rollback_history() const {
     // Save rollback history to file
-    std::string history_file = fs::path(backup_directory_) / "rollback_history.json";
+    std::string history_file = (fs::path(backup_directory_) / "rollback_history.json").string();
     // Implementation would save to JSON file
 }
 
@@ -605,16 +610,9 @@ void SelfRepairSystem::set_backup_directory(const std::string& backup_dir) { bac
 bool SelfRepairSystem::has_pending_operations() const { return !pending_actions_.empty(); }
 std::string SelfRepairSystem::get_last_rollback_point() const { return rollback_history_.empty() ? "" : rollback_history_.back().id; }
 void SelfRepairSystem::print_repair_status() const { std::cout << "Repair system operational" << std::endl; }
-bool SelfRepairSystem::emergency_rollback() const { return rollback_last_operation(); }
-bool SelfRepairSystem::schedule_repair_for_idle_time(const RepairAction& action) { return add_repair_action(action); }
+bool SelfRepairSystem::emergency_rollback() { return rollback_last_operation(); }
+bool SelfRepairSystem::schedule_repair_for_idle_time(const RepairAction& action) { RepairAction modifiable_action = action; return add_repair_action(modifiable_action); }
 std::vector<std::string> SelfRepairSystem::analyze_repair_history() const { return {}; }
-
-bool SelfRepairSystem::create_safety_checkpoint(const std::string& description) {
-    // Create a safety checkpoint
-    std::cout << "Creating safety checkpoint: " << description << std::endl;
-    // Implementation would create a system snapshot
-    return true;
-}
 
 bool SelfRepairSystem::create_safety_checkpoint(const std::string& description) {
     // Create a safety checkpoint

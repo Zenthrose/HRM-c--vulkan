@@ -505,7 +505,14 @@ CloudStorageManager::CloudStorageManager() : default_provider_(CloudProvider::LO
     // Add local storage by default for testing
     CloudStorageConfig local_config;
     local_config.provider = CloudProvider::LOCAL_STORAGE;
-    local_config.compaction_directory = "./cloud_storage";
+
+    // Use environment variable for compaction directory
+    if (const char* env_dir = std::getenv("HRM_CLOUD_STORAGE_DIR")) {
+        local_config.compaction_directory = env_dir;
+    } else {
+        local_config.compaction_directory = "./cloud_storage";
+    }
+
     local_config.compaction_folder_name = "compactions";
     local_config.auto_refresh_tokens = false;
     // Resource-aware timeout calculations for network operations
@@ -517,6 +524,53 @@ CloudStorageManager::CloudStorageManager() : default_provider_(CloudProvider::LO
 
     auto local_provider = std::make_shared<LocalStorageProvider>(local_config);
     providers_[CloudProvider::LOCAL_STORAGE] = local_provider;
+
+    // Try to load cloud providers from environment variables
+    load_providers_from_environment();
+}
+
+void CloudStorageManager::load_providers_from_environment() {
+    // Load Google Drive configuration
+    if (const char* api_key = std::getenv("HRM_CLOUD_API_KEY")) {
+        CloudStorageConfig google_config;
+        google_config.provider = CloudProvider::GOOGLE_DRIVE;
+        google_config.api_key = api_key;
+
+        if (const char* client_id = std::getenv("HRM_GOOGLE_CLIENT_ID")) {
+            google_config.client_id = client_id;
+        }
+        if (const char* client_secret = std::getenv("HRM_GOOGLE_CLIENT_SECRET")) {
+            google_config.client_secret = client_secret;
+        }
+        if (const char* refresh_token = std::getenv("HRM_GOOGLE_REFRESH_TOKEN")) {
+            google_config.refresh_token = refresh_token;
+        }
+
+        google_config.compaction_directory = "./cloud_storage";
+        google_config.compaction_folder_name = "compactions";
+        google_config.auto_refresh_tokens = true;
+
+        auto google_provider = std::make_shared<GoogleDriveProvider>(google_config);
+        if (google_provider->validate_config()) {
+            providers_[CloudProvider::GOOGLE_DRIVE] = google_provider;
+        }
+    }
+
+    // Load Dropbox configuration
+    if (const char* api_key = std::getenv("HRM_DROPBOX_API_KEY")) {
+        CloudStorageConfig dropbox_config;
+        dropbox_config.provider = CloudProvider::DROPBOX;
+        dropbox_config.api_key = api_key;
+
+        dropbox_config.compaction_directory = "./cloud_storage";
+        dropbox_config.compaction_folder_name = "compactions";
+        dropbox_config.auto_refresh_tokens = true;
+
+        auto dropbox_provider = std::make_shared<DropboxProvider>(dropbox_config);
+        if (dropbox_provider->validate_config()) {
+            providers_[CloudProvider::DROPBOX] = dropbox_provider;
+        }
+    }
 }
 
 CloudStorageManager::~CloudStorageManager() {

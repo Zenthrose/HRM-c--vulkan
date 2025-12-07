@@ -77,10 +77,8 @@ bool WindowsServiceManager::install_service() {
     
     // Set service description
     SERVICE_DESCRIPTIONA desc;
-    desc.lpDescription = "HRM Self-Evolving AI System with auto-boot and idle processing capabilities";
-    ChangeServiceConfig2A(service, SERVICE_NO_CHANGE, SERVICE_NO_CHANGE, 
-                         SERVICE_NO_CHANGE, SERVICE_NO_CHANGE, SERVICE_NO_CHANGE,
-                         &desc, nullptr, nullptr, nullptr, nullptr);
+    desc.lpDescription = const_cast<char*>("HRM Self-Evolving AI System with auto-boot and idle processing capabilities");
+    ChangeServiceConfig2A(service, SERVICE_CONFIG_DESCRIPTION, &desc);
     
     CloseServiceHandle(service);
     CloseServiceHandle(scm);
@@ -189,13 +187,13 @@ bool WindowsServiceManager::stop_service() {
 }
 
 void WindowsServiceManager::add_boot_task(const std::function<void()>& task) {
-    std::lock_guard<std::mutex> lock(task_mutex_);
+    std::lock_guard<std::mutex> guard(task_mutex_);
     boot_tasks_.push_back(task);
     std::cout << "Added boot task. Total: " << boot_tasks_.size() << std::endl;
 }
 
 void WindowsServiceManager::add_idle_task(const std::function<void()>& task) {
-    std::lock_guard<std::mutex> lock(task_mutex_);
+    std::lock_guard<std::mutex> guard(task_mutex_);
     idle_tasks_.push_back(task);
     std::cout << "Added idle task. Total: " << idle_tasks_.size() << std::endl;
 }
@@ -229,7 +227,7 @@ void WindowsServiceManager::service_main() {
     std::cout << "HRM Windows service starting..." << std::endl;
     
     // Register service control handler
-    status_handle_ = RegisterServiceCtrlHandlerA("HRMSystem", service_control_handler);
+    status_handle_ = RegisterServiceCtrlHandlerA("HRMSystem", WindowsServiceManager::service_control_handler);
     if (!status_handle_) {
         log_event("Failed to register service control handler", EVENTLOG_ERROR_TYPE);
         return;
@@ -349,7 +347,7 @@ bool WindowsServiceManager::is_system_idle() const {
 
 void WindowsServiceManager::log_event(const std::string& message, WORD type) {
     // Log to Windows Event Log
-    HANDLE hEventSource = RegisterEventSourceA(nullptr, "HRMSystem", nullptr, nullptr, nullptr, nullptr);
+    HANDLE hEventSource = RegisterEventSourceA(nullptr, "HRMSystem");
     
     if (hEventSource) {
         const char* messages[] = { message.c_str() };
@@ -391,4 +389,3 @@ void WINAPI WindowsServiceManager::service_control_handler(DWORD control_code) {
 }
 
 // Static member initialization
-std::mutex WindowsServiceManager::task_mutex_;

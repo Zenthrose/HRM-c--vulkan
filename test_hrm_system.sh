@@ -1,7 +1,30 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # HRM System End-to-End Test Script
 # This script tests the complete HRM system functionality
+
+# Parse arguments
+VERBOSE=false
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --verbose|-v)
+      VERBOSE=true
+      shift
+      ;;
+    --help|-h)
+      echo "Usage: $0 [options]"
+      echo "Options:"
+      echo "  --verbose, -v    Enable verbose output"
+      echo "  --help, -h       Show this help"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Use --help for usage information"
+      exit 1
+      ;;
+  esac
+done
 
 echo "🧪 HRM System End-to-End Testing"
 echo "================================="
@@ -25,8 +48,13 @@ run_test() {
     TESTS_RUN=$((TESTS_RUN + 1))
 
     # Run the test
-    eval "$test_command" > /tmp/test_output.log 2>&1
-    local exit_code=$?
+    if [ "$VERBOSE" = true ]; then
+        eval "$test_command"
+        local exit_code=$?
+    else
+        eval "$test_command" > /tmp/test_output.log 2>&1
+        local exit_code=$?
+    fi
 
     if [ "$expected_exit" = "success" ] && [ $exit_code -eq 0 ]; then
         echo -e "${GREEN}PASSED${NC}"
@@ -36,8 +64,10 @@ run_test() {
         TESTS_PASSED=$((TESTS_PASSED + 1))
     else
         echo -e "${RED}FAILED${NC} (exit code: $exit_code)"
-        echo "Output:"
-        cat /tmp/test_output.log
+        if [ "$VERBOSE" = false ]; then
+            echo "Output:"
+            cat /tmp/test_output.log
+        fi
     fi
 }
 

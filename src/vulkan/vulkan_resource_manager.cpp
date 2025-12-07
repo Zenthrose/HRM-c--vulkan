@@ -50,7 +50,7 @@ void VulkanResourceManager::createBuffer(VkDeviceSize size, VkBufferUsageFlags u
     VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = memRequirements.size;
-    allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+    allocInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, properties);
 
     if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
         vkDestroyBuffer(device, buffer, nullptr);
@@ -127,7 +127,7 @@ void VulkanResourceManager::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, V
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
 
-uint32_t VulkanResourceManager::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+uint32_t VulkanResourceManager::findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
     VkPhysicalDeviceMemoryProperties memProperties;
     vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
 
@@ -255,7 +255,7 @@ VulkanResourceManager::StagingBuffer::StagingBuffer(VkPhysicalDevice physDev, Vk
     VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = memRequirements.size;
-    allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+    allocInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, properties);
 
     if (vkAllocateMemory(device, &allocInfo, nullptr, &memory) != VK_SUCCESS) {
         vkDestroyBuffer(device, buffer, nullptr);
@@ -300,7 +300,7 @@ void VulkanResourceManager::StagingBuffer::copyTo(void* data, VkDeviceSize size)
     unmap();
 }
 
-uint32_t VulkanResourceManager::StagingBuffer::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+uint32_t VulkanResourceManager::StagingBuffer::findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
     VkPhysicalDeviceMemoryProperties memProperties;
     vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
 

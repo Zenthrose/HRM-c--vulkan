@@ -1,10 +1,33 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # HRM Character-Level Language Training Setup
 # This script prepares the HRM system for character-level language training
 
+# Parse arguments
+INSTALL_DEPS=false
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --install-deps)
+      INSTALL_DEPS=true
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--install-deps]"
+      exit 1
+      ;;
+  esac
+done
+
 echo "🎯 HRM Character-Level Language Training Setup"
 echo "=============================================="
+
+if [[ "$INSTALL_DEPS" == true ]]; then
+  echo "📦 Installing Python dependencies..."
+  pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu || echo "PyTorch installation failed, continuing..."
+  pip install transformers datasets huggingface_hub || echo "HuggingFace dependencies installation failed, continuing..."
+  echo "✅ Dependencies installation attempted"
+fi
 
 # Create data directory
 mkdir -p data/text

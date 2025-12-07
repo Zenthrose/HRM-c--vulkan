@@ -46,11 +46,6 @@ public:
     void set_double(const std::string& key, double value);
     void set_bool(const std::string& key, bool value);
 
-    // Section management
-    void set_section(const std::string& section);
-    std::string get_current_section() const;
-
-    // Utility
     bool has_key(const std::string& key) const;
     std::vector<std::string> get_keys() const;
     void clear();
@@ -70,13 +65,10 @@ public:
     CloudProviderConfig get_cloud_config(const std::string& provider);
     void set_cloud_config(const std::string& provider, const CloudProviderConfig& config);
 
+    // Directory access
+    std::string getConfigDir() const { return config_dir_; }
+
 private:
     std::string config_dir_;
     std::unordered_map<std::string, std::string> config_data_;
-    std::string current_section_;
-
-    std::string make_key(const std::string& key) const;
-    void parse_line(const std::string& line);
-    std::string escape_value(const std::string& value) const;
-    std::string unescape_value(const std::string& value) const;
 };

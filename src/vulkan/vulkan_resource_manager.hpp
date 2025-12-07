@@ -48,7 +48,7 @@ public:
     void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
     // Memory type finding
-    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+    uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
     // Memory pool management
     struct PooledBuffer {

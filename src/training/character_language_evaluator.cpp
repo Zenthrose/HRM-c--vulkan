@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <random>
 
 CharacterLanguageEvaluator::CharacterLanguageEvaluator(std::shared_ptr<UTF8Processor> utf8_processor)
     : utf8_processor_(utf8_processor), loss_calculator_(std::make_unique<CharacterLanguageLoss>()),

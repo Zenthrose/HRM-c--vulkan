@@ -1,9 +1,14 @@
 #include "embedding.hpp"
+#include "../utils/cpu_compatibility.h"
+#include "../vulkan/vulkan_compatibility.h"
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <vector>
 #include <cstring>
+#include <thread>
+#include <algorithm>
+#include <numeric>
 
 EmbeddingVulkan::EmbeddingVulkan(const EmbeddingConfig& config, VkPhysicalDevice physicalDevice, VkDevice device, VkQueue computeQueue, uint32_t computeQueueFamilyIndex, VkCommandPool commandPool)
     : config(config), physicalDevice(physicalDevice), device(device), computeQueue(computeQueue), computeQueueFamilyIndex(computeQueueFamilyIndex), commandPool(commandPool),
@@ -48,36 +53,81 @@ EmbeddingVulkan::~EmbeddingVulkan() {
 Tensor EmbeddingVulkan::forward(const std::vector<uint32_t>& input) {
 
     if (!device) {
-        // CPU fallback implementation
+        // CPU fallback implementation with improved performance
         Tensor raw_output;
         raw_output.shape = {static_cast<unsigned int>(input.size()), config.embedding_dim};
+
+        // Initialize output data
         raw_output.data.resize(input.size() * config.embedding_dim);
 
-        // Simple embedding lookup (random values for demo)
-        for (size_t i = 0; i < input.size(); ++i) {
-            uint32_t token_id = input[i];
-            for (size_t j = 0; j < config.embedding_dim; ++j) {
-                // Simple hash-based pseudo-random embedding
-                raw_output.data[i * config.embedding_dim + j] = static_cast<float>((token_id * 31 + j * 17) % 1000) / 1000.0f - 0.5f;
+        // Multi-threaded embedding generation
+        CpuFeatures cpu_features = CpuCompatibility::detectCpuFeatures();
+        unsigned int num_threads = std::min(cpu_features.num_threads, static_cast<int>(input.size()));
+
+        auto embedding_worker = [&](size_t start_idx, size_t end_idx) {
+            for (size_t i = start_idx; i < end_idx; ++i) {
+                uint32_t token_id = input[i];
+                for (size_t j = 0; j < config.embedding_dim; ++j) {
+                    // Improved hash-based pseudo-random embedding
+                    uint32_t hash = token_id * 31 + static_cast<uint32_t>(j) * 17;
+                    hash = (hash ^ (hash >> 15)) * 0x45d9f3b;
+                    hash = (hash ^ (hash >> 15)) * 0x45d9f3b;
+                    hash = hash ^ (hash >> 15);
+                    raw_output.data[i * config.embedding_dim + j] = static_cast<float>(hash % 2000) / 1000.0f - 1.0f;
+                }
             }
+        };
+
+        std::vector<std::thread> threads;
+        size_t chunk_size = input.size() / num_threads;
+        size_t remainder = input.size() % num_threads;
+
+        size_t start = 0;
+        for (unsigned int t = 0; t < num_threads; ++t) {
+            size_t end = start + chunk_size + (t < remainder ? 1 : 0);
+            threads.emplace_back(embedding_worker, start, end);
+            start = end;
         }
 
-        // Average over sequence dimension
-        int batch_size = 2;  // Hardcoded for now
-        int seq_len = 512;   // Hardcoded for now
+        for (auto& thread : threads) {
+            thread.join();
+        }
+
+        // Average over sequence dimension with better parameter detection
+        // For now, assume reasonable defaults - this should be passed as parameters
+        int batch_size = 1;  // Assume single batch for simplicity
+        int seq_len = static_cast<int>(input.size());  // Use actual input size
         uint32_t embedding_dim = static_cast<uint32_t>(config.embedding_dim);
+
         Tensor output;
         output.data.resize(batch_size * embedding_dim, 0.0f);
         output.shape = {static_cast<uint32_t>(batch_size), embedding_dim};
 
-        for (int i = 0; i < batch_size; ++i) {
-            for (int j = 0; j < embedding_dim; ++j) {
-                float sum = 0.0f;
-                for (int k = 0; k < seq_len; ++k) {
-                    sum += raw_output.data[(i * seq_len + k) * embedding_dim + j];
+        // Parallel averaging with SIMD acceleration
+        auto averaging_worker = [&](size_t start_dim, size_t end_dim) {
+            std::vector<float> temp_data(input.size());
+            for (size_t j = start_dim; j < end_dim; ++j) {
+                for (size_t k = 0; k < input.size(); ++k) {
+                    temp_data[k] = raw_output.data[k * embedding_dim + j];
                 }
-                output.data[i * embedding_dim + j] = sum / seq_len;
+                float sum = CpuCompatibility::vectorSum(temp_data.data(), input.size());
+                output.data[j] = sum / static_cast<float>(input.size());
             }
+        };
+
+        threads.clear();
+        chunk_size = embedding_dim / num_threads;
+        remainder = embedding_dim % num_threads;
+        start = 0;
+
+        for (unsigned int t = 0; t < num_threads; ++t) {
+            size_t end = start + chunk_size + (t < remainder ? 1 : 0);
+            threads.emplace_back(averaging_worker, start, end);
+            start = end;
+        }
+
+        for (auto& thread : threads) {
+            thread.join();
         }
 
         return output;
@@ -442,8 +492,10 @@ void EmbeddingVulkan::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
     bufferInfo.usage = usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-    if (vkCreateBuffer(device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create buffer!");
+    VkResult bufferResult = vkCreateBuffer(device, &bufferInfo, nullptr, &buffer);
+    if (bufferResult != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create Vulkan buffer: " +
+                                VulkanCompatibility::getVulkanResultString(bufferResult));
     }
 
     VkMemoryRequirements memRequirements;
@@ -454,15 +506,19 @@ void EmbeddingVulkan::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
     allocInfo.allocationSize = memRequirements.size;
     allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
-    if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
+    VkResult allocResult = vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory);
+    if (allocResult != VK_SUCCESS) {
         vkDestroyBuffer(device, buffer, nullptr);
-        throw std::runtime_error("failed to allocate buffer memory!");
+        throw std::runtime_error("Failed to allocate Vulkan buffer memory: " +
+                                VulkanCompatibility::getVulkanResultString(allocResult));
     }
 
-    if (vkBindBufferMemory(device, buffer, bufferMemory, 0) != VK_SUCCESS) {
+    VkResult bindResult = vkBindBufferMemory(device, buffer, bufferMemory, 0);
+    if (bindResult != VK_SUCCESS) {
         vkDestroyBuffer(device, buffer, nullptr);
         vkFreeMemory(device, bufferMemory, nullptr);
-        throw std::runtime_error("failed to bind buffer memory!");
+        throw std::runtime_error("Failed to bind Vulkan buffer memory: " +
+                                VulkanCompatibility::getVulkanResultString(bindResult));
     }
 }
 

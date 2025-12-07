@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <vulkan/vulkan.h>
 
+#include "../vulkan/vulkan_compatibility.h"
 #include "../hrm/resource_aware_hrm.hpp"
 #include "../system/memory_compaction_system.hpp"
 #include "../system/cloud_storage_manager.hpp"
@@ -16,6 +17,8 @@
 #include "hrm_gui.hpp"
 #include "../training/character_language_trainer.hpp"
 #include "../system/hardware_profiler.hpp"
+#include "../utils/logger.hpp"
+#include "../utils/config_manager.hpp"
 
 namespace fs = std::filesystem;
 
@@ -36,8 +39,16 @@ ResourceAwareHRMConfig createDefaultHRMConfig(const HardwareCapabilities& hw_cap
     config.base_config.base_config.utf8_config.embedding_dim = 256;
     config.base_config.base_config.utf8_config.use_byte_fallback = true;
 
-    config.base_config.project_root = "C:/"; // Scan entire system
-    config.base_config.temp_compilation_dir = "./temp";
+    // Use environment variable for project root, default to system root for full scanning
+    if (const char* env_root = std::getenv("HRM_PROJECT_ROOT")) {
+        config.base_config.project_root = env_root;
+    } else {
+        // Default to system root for comprehensive scanning capability
+        config.base_config.project_root = "C:/"; // Windows system root
+    }
+
+    // Use temp directory for compilation
+    config.base_config.temp_compilation_dir = (fs::temp_directory_path() / "hrm_temp").string();
     config.base_config.enable_self_modification = true; // Enabled for autonomous learning
     config.base_config.enable_runtime_recompilation = true;
     config.base_config.self_analysis_frequency = 0.05f;
@@ -184,14 +195,32 @@ void adapt_config_to_hardware(ResourceAwareHRMConfig& config, const HardwareCapa
 VulkanResources initializeVulkan() {
     VulkanResources res;
 
-    // Create Vulkan instance
+    // Check Vulkan compatibility
+    VulkanCompatibilityInfo compat = VulkanCompatibility::checkCompatibility();
+
+    if (!compat.vulkanSupported) {
+        throw std::runtime_error("Vulkan is not supported on this system");
+    }
+
+    if (compat.devices.empty()) {
+        throw std::runtime_error("No Vulkan-compatible devices found");
+    }
+
+    if (!compat.selectedDevice) {
+        throw std::runtime_error("No suitable Vulkan device selected");
+    }
+
+    std::cout << "Selected Vulkan device: " << compat.selectedDevice->name << std::endl;
+    std::cout << "Device score: " << compat.selectedDevice->score << std::endl;
+
+    // Create Vulkan instance with negotiated API version
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "HRM System";
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.pEngineName = "HRM Engine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.apiVersion = VK_API_VERSION_1_1;
+    appInfo.apiVersion = compat.apiVersion;
 
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -207,34 +236,18 @@ VulkanResources initializeVulkan() {
         throw std::runtime_error("Failed to create Vulkan instance");
     }
 
-    // Select physical device
-    uint32_t deviceCount = 0;
-    vkEnumeratePhysicalDevices(res.instance, &deviceCount, nullptr);
-    if (deviceCount == 0) {
-        throw std::runtime_error("No Vulkan-compatible GPUs found");
+    // Use selected device
+    res.physicalDevice = compat.selectedDevice->device;
+
+    // Use compute queue family from compatibility check
+    if (compat.selectedDevice->computeQueueFamily == UINT32_MAX) {
+        throw std::runtime_error("Selected device does not have a compute queue family");
     }
+    res.computeQueueFamilyIndex = compat.selectedDevice->computeQueueFamily;
 
-    std::vector<VkPhysicalDevice> devices(deviceCount);
-    vkEnumeratePhysicalDevices(res.instance, &deviceCount, devices.data());
-    res.physicalDevice = devices[0]; // Use first device
-
-    // Find compute queue family
-    uint32_t queueFamilyCount = 0;
-    vkGetPhysicalDeviceQueueFamilyProperties(res.physicalDevice, &queueFamilyCount, nullptr);
-    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(res.physicalDevice, &queueFamilyCount, queueFamilies.data());
-
-    bool foundCompute = false;
-    for (uint32_t i = 0; i < queueFamilyCount; ++i) {
-        if (queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT) {
-            res.computeQueueFamilyIndex = i;
-            foundCompute = true;
-            break;
-        }
-    }
-
-    if (!foundCompute) {
-        throw std::runtime_error("No compute queue family found on this device");
+    // Check device features
+    if (!VulkanCompatibility::checkDeviceFeatures(res.physicalDevice)) {
+        std::cerr << "Warning: Selected device may not support all required features" << std::endl;
     }
 
     // Create logical device
@@ -252,8 +265,15 @@ VulkanResources initializeVulkan() {
     deviceCI.enabledLayerCount = static_cast<uint32_t>(layers.size());
     deviceCI.ppEnabledLayerNames = layers.data();
 
-    if (vkCreateDevice(res.physicalDevice, &deviceCI, nullptr, &res.device) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to create Vulkan device");
+    // Enable required features
+    VkPhysicalDeviceFeatures deviceFeatures{};
+    deviceFeatures.shaderInt64 = VK_TRUE; // For some operations
+    deviceCI.pEnabledFeatures = &deviceFeatures;
+
+    VkResult deviceResult = vkCreateDevice(res.physicalDevice, &deviceCI, nullptr, &res.device);
+    if (deviceResult != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create Vulkan device: " +
+                                VulkanCompatibility::getVulkanResultString(deviceResult));
     }
 
     // Get compute queue
@@ -271,101 +291,50 @@ VulkanResources initializeVulkan() {
     return res;
 }
 
-MemoryCompactionConfig createDefaultMemoryConfig(std::shared_ptr<CloudStorageManager> cloud_manager) {
+MemoryCompactionConfig createDefaultMemoryConfig(std::shared_ptr<CloudStorageManager> cloud_manager, ConfigManager& config_manager) {
     MemoryCompactionConfig config;
 
-    // Try to load from config file
-    std::ifstream config_file("./config/hrm_config.txt");
-    std::unordered_map<std::string, std::string> settings;
+    // Load settings from ConfigManager
+    auto& logger = Logger::getInstance();
 
-    if (config_file.is_open()) {
-        std::string line;
-        std::string current_section;
-        while (std::getline(config_file, line)) {
-            // Remove comments
-            size_t comment_pos = line.find('#');
-            if (comment_pos != std::string::npos) {
-                line = line.substr(0, comment_pos);
-            }
-            // Trim whitespace
-            line.erase(line.begin(), std::find_if(line.begin(), line.end(), [](int ch) { return !std::isspace(ch); }));
-            line.erase(std::find_if(line.rbegin(), line.rend(), [](int ch) { return !std::isspace(ch); }).base(), line.end());
-
-            if (line.empty()) continue;
-
-            if (line[0] == '[' && line.back() == ']') {
-                current_section = line.substr(1, line.size() - 2);
-            } else if (!current_section.empty()) {
-                size_t equals_pos = line.find('=');
-                if (equals_pos != std::string::npos) {
-                    std::string key = current_section + "." + line.substr(0, equals_pos);
-                    std::string value = line.substr(equals_pos + 1);
-                    // Trim whitespace
-                    key.erase(key.begin(), std::find_if(key.begin(), key.end(), [](int ch) { return !std::isspace(ch); }));
-                    key.erase(std::find_if(key.rbegin(), key.rend(), [](int ch) { return !std::isspace(ch); }).base(), key.end());
-                    value.erase(value.begin(), std::find_if(value.begin(), value.end(), [](int ch) { return !std::isspace(ch); }));
-                    value.erase(std::find_if(value.rbegin(), value.rend(), [](int ch) { return !std::isspace(ch); }).base(), value.end());
-                    settings[key] = value;
-                }
-            }
-        }
-    }
-
-    // Set defaults, override with config file values
+    // Set defaults, override with config values
     config.default_level = MemoryCompactionLevel::MEDIUM;
-    if (settings.count("memory_compaction.default_level")) {
-        std::string level = settings["memory_compaction.default_level"];
-        if (level == "LIGHT") config.default_level = MemoryCompactionLevel::LIGHT;
-        else if (level == "HEAVY") config.default_level = MemoryCompactionLevel::HEAVY;
-        else if (level == "EXTREME") config.default_level = MemoryCompactionLevel::EXTREME;
-    }
+    std::string level = config_manager.get_string("memory_compaction.default_level", "MEDIUM");
+    if (level == "LIGHT") config.default_level = MemoryCompactionLevel::LIGHT;
+    else if (level == "HEAVY") config.default_level = MemoryCompactionLevel::HEAVY;
+    else if (level == "EXTREME") config.default_level = MemoryCompactionLevel::EXTREME;
 
     config.preferred_algorithm = CompressionAlgorithm::LZ4;
-    if (settings.count("memory_compaction.preferred_algorithm")) {
-        std::string algo = settings["memory_compaction.preferred_algorithm"];
-        if (algo == "ZSTD") config.preferred_algorithm = CompressionAlgorithm::ZSTD;
-        else if (algo == "GZIP") config.preferred_algorithm = CompressionAlgorithm::GZIP;
-        else if (algo == "BROTLI") config.preferred_algorithm = CompressionAlgorithm::BROTLI;
-        else if (algo == "NONE") config.preferred_algorithm = CompressionAlgorithm::NONE;
-    }
+    std::string algo = config_manager.get_string("memory_compaction.preferred_algorithm", "LZ4");
+    if (algo == "ZSTD") config.preferred_algorithm = CompressionAlgorithm::ZSTD;
+    else if (algo == "GZIP") config.preferred_algorithm = CompressionAlgorithm::GZIP;
+    else if (algo == "BROTLI") config.preferred_algorithm = CompressionAlgorithm::BROTLI;
+    else if (algo == "NONE") config.preferred_algorithm = CompressionAlgorithm::NONE;
 
-    config.max_memory_before_compaction_mb = 1024;
-    if (settings.count("memory_compaction.max_memory_before_compaction_mb")) {
-        config.max_memory_before_compaction_mb = std::stoul(settings["memory_compaction.max_memory_before_compaction_mb"]);
-    }
+    config.max_memory_before_compaction_mb = config_manager.get_int("memory_compaction.max_memory_before_compaction_mb", 1024);
+    config.target_memory_after_compaction_mb = config_manager.get_int("memory_compaction.target_memory_after_compaction_mb", 512);
+    config.auto_compaction_enabled = config_manager.get_bool("memory_compaction.auto_compaction_enabled", true);
 
-    config.target_memory_after_compaction_mb = 512;
-    if (settings.count("memory_compaction.target_memory_after_compaction_mb")) {
-        config.target_memory_after_compaction_mb = std::stoul(settings["memory_compaction.target_memory_after_compaction_mb"]);
-    }
+    int interval_hours = config_manager.get_int("memory_compaction.compaction_interval_hours", 6);
+    config.compaction_interval = std::chrono::hours(interval_hours);
 
-    config.auto_compaction_enabled = true;
-    if (settings.count("memory_compaction.auto_compaction_enabled")) {
-        config.auto_compaction_enabled = settings["memory_compaction.auto_compaction_enabled"] == "true";
-    }
+    config.preserve_recent_conversations = config_manager.get_bool("memory_compaction.preserve_recent_conversations", true);
 
-    config.compaction_interval = std::chrono::hours(6);
-    if (settings.count("memory_compaction.compaction_interval_hours")) {
-        config.compaction_interval = std::chrono::hours(std::stoul(settings["memory_compaction.compaction_interval_hours"]));
-    }
+    int window_hours = config_manager.get_int("memory_compaction.recent_conversation_window_hours", 24);
+    config.recent_conversation_window = std::chrono::hours(window_hours);
 
-    config.preserve_recent_conversations = true;
-    if (settings.count("memory_compaction.preserve_recent_conversations")) {
-        config.preserve_recent_conversations = settings["memory_compaction.preserve_recent_conversations"] == "true";
+    // Use environment variable or temp directory for compaction
+    if (const char* env_dir = std::getenv("HRM_COMPACTION_DIR")) {
+        config.compaction_directory = env_dir;
+    } else {
+        config.compaction_directory = (fs::temp_directory_path() / "hrm_compactions").string();
     }
-
-    config.recent_conversation_window = std::chrono::hours(24);
-    if (settings.count("memory_compaction.recent_conversation_window_hours")) {
-        config.recent_conversation_window = std::chrono::hours(std::stoul(settings["memory_compaction.recent_conversation_window_hours"]));
-    }
-
-    config.compaction_directory = settings.count("general.compaction_directory") ?
-        settings["general.compaction_directory"] : (fs::temp_directory_path() / "hrm_compactions").string();
+    logger.info("Memory compaction directory: " + config.compaction_directory);
 
     config.cloud_storage_manager = cloud_manager;
     config.default_cloud_provider = CloudProvider::LOCAL_STORAGE;
-    if (settings.count("general.default_cloud_provider")) {
-        std::string provider = settings["general.default_cloud_provider"];
+    std::string provider = config_manager.get_string("general.default_cloud_provider");
+    if (!provider.empty()) {
         if (provider == "GOOGLE_DRIVE") config.default_cloud_provider = CloudProvider::GOOGLE_DRIVE;
         else if (provider == "DROPBOX") config.default_cloud_provider = CloudProvider::DROPBOX;
         else if (provider == "ONEDRIVE") config.default_cloud_provider = CloudProvider::ONEDRIVE;
@@ -545,6 +514,14 @@ int main(int argc, char* argv[]) {
     HardwareProfiler hw_profiler;
     HardwareCapabilities hw_caps = hw_profiler.profile_system();
 
+    // Initialize logging system
+    auto& logger = Logger::getInstance();
+    logger.info("HRM System starting up");
+
+    // Initialize configuration manager
+    ConfigManager config_manager;
+    logger.info("Configuration loaded from: " + config_manager.getConfigDir());
+
     // Parse command line arguments
     bool cli_mode = false;
     bool gui_mode = false;
@@ -589,7 +566,7 @@ int main(int argc, char* argv[]) {
         setupCloudStorage(*cloud_manager);
 
         // Initialize memory compaction system
-        auto memory_config = createDefaultMemoryConfig(cloud_manager);
+        auto memory_config = createDefaultMemoryConfig(cloud_manager, config_manager);
         auto memory_system = std::make_shared<MemoryCompactionSystem>(memory_config);
 
         std::shared_ptr<ResourceAwareHRM> hrm = nullptr;
@@ -599,10 +576,10 @@ int main(int argc, char* argv[]) {
             VulkanResources vulkan;
             try {
                 vulkan = initializeVulkan();
-                std::cout << "Vulkan initialized successfully" << std::endl;
+                logger.info("Vulkan initialized successfully");
             } catch (const std::exception& e) {
-                std::cerr << "Failed to initialize Vulkan: " << e.what() << std::endl;
-                std::cerr << "Falling back to CPU-only mode" << std::endl;
+                logger.error("Failed to initialize Vulkan: " + std::string(e.what()));
+                logger.warning("Falling back to CPU-only mode");
                 // Continue without Vulkan - HRM will use CPU fallbacks
             }
 
@@ -649,26 +626,29 @@ int main(int argc, char* argv[]) {
     }
 
             hrm = std::make_shared<ResourceAwareHRM>(hrm_config);
+            logger.info("HRM system initialized successfully");
         }
 
         if (test_mode) {
+            logger.info("Running basic system tests");
             runBasicTests(hrm, memory_system, cloud_manager);
+            logger.info("System tests completed");
             return 0;
         }
 
         if (train_mode) {
-            std::cout << "Starting HRM in Character Training mode..." << std::endl;
+            logger.info("Starting HRM in Character Training mode");
             runCharacterTraining(hrm);
         } else if (cli_mode) {
-            std::cout << "Starting HRM in CLI mode..." << std::endl;
+            logger.info("Starting HRM in CLI mode");
             runCLI(hrm);
         } else if (gui_mode) {
-            std::cout << "Starting HRM in GUI mode..." << std::endl;
+            logger.info("Starting HRM in GUI mode");
             runGUI(hrm);
         }
 
     } catch (const std::exception& e) {
-        std::cerr << "Error initializing HRM system: " << e.what() << std::endl;
+        logger.error("Error initializing HRM system: " + std::string(e.what()));
         return 1;
     }
 
