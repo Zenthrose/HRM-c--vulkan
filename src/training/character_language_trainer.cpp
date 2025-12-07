@@ -115,32 +115,28 @@ std::unordered_map<std::string, float> CharacterLanguageTrainer::train_character
         "C:/ProgramData", "C:/Program Files/Common Files", "C:/Documents",
         "/usr", "/opt", "/home", "/var"
     };
-    
+
+    // Async directory scanning with thread pool
+    std::vector<std::future<std::vector<std::string>>> scan_futures;
+    const int num_threads = 4; // Configurable thread pool size
+
     for (const auto& base_dir : system_code_dirs) {
         if (fs::exists(base_dir) && fs::is_directory(base_dir)) {
-            std::cout << "Scanning system directory: " << base_dir << std::endl;
-            try {
-                int files_processed = 0;
-                for (const auto& entry : fs::recursive_directory_iterator(base_dir)) {
-                    if (entry.is_regular_file()) {
-                        std::string ext = entry.path().extension().string();
-                        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-                        
-                        // Learn from any text-based file
-                        if (ext == ".cpp" || ext == ".hpp" || ext == ".c" || ext == ".h" || 
-                            ext == ".py" || ext == ".js" || ext == ".java" || ext == ".cs" ||
-                            ext == ".rb" || ext == ".go" || ext == ".rs" || ext == ".php" ||
-                            ext == ".sh" || ext == ".bat" || ext == ".ps1" || ext == ".pl" ||
-                            ext == ".txt" || ext == ".md" || ext == ".log" || ext == ".conf" ||
-                            ext == ".cfg" || ext == ".ini" || ext == ".json" || ext == ".xml" ||
-                            ext == ".yaml" || ext == ".yml" || ext == ".toml") {
-                            
-                            auto file_data = load_training_data(entry.path().string());
-                            if (!file_data.empty()) {
-                                train_sequences.insert(train_sequences.end(), file_data.begin(), file_data.end());
-                                std::cout << "Learned from system file: " << entry.path().string() << std::endl;
-                                files_processed++;
-                            }
+            scan_futures.push_back(std::async(std::launch::async, [base_dir, this]() {
+                return scan_directory_async(base_dir);
+            }));
+        }
+    }
+
+    // Collect results from async scans
+    for (auto& future : scan_futures) {
+        try {
+            auto dir_sequences = future.get();
+            train_sequences.insert(train_sequences.end(), dir_sequences.begin(), dir_sequences.end());
+        } catch (const std::exception& e) {
+            std::cerr << "Error in async directory scan: " << e.what() << std::endl;
+        }
+    }
                         }
                     }
                     
@@ -888,6 +884,43 @@ std::vector<std::string> CharacterLanguageTrainer::load_training_data(const std:
 
     file.close();
     std::cout << "Loaded " << sequences.size() << " sequences from " << data_path << std::endl;
+    return sequences;
+}
+
+std::vector<std::string> CharacterLanguageTrainer::scan_directory_async(const std::string& base_dir) {
+    std::vector<std::string> sequences;
+    std::cout << "Async scanning directory: " << base_dir << std::endl;
+
+    try {
+        int files_processed = 0;
+        for (const auto& entry : fs::recursive_directory_iterator(base_dir)) {
+            if (entry.is_regular_file()) {
+                std::string ext = entry.path().extension().string();
+                std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+                // Learn from any text-based file
+                if (ext == ".cpp" || ext == ".hpp" || ext == ".c" || ext == ".h" ||
+                    ext == ".py" || ext == ".js" || ext == ".java" || ext == ".cs" ||
+                    ext == ".rb" || ext == ".go" || ext == ".rs" || ext == ".php" ||
+                    ext == ".sh" || ext == ".bat" || ext == ".ps1" || ext == ".pl" ||
+                    ext == ".txt" || ext == ".md" || ext == ".log" || ext == ".conf" ||
+                    ext == ".cfg" || ext == ".ini" || ext == ".json" || ext == ".xml" ||
+                    ext == ".yaml" || ext == ".yml" || ext == ".toml") {
+
+                    auto file_data = load_training_data(entry.path().string());
+                    if (!file_data.empty()) {
+                        sequences.insert(sequences.end(), file_data.begin(), file_data.end());
+                        std::cout << "Learned from system file: " << entry.path().string() << std::endl;
+                        files_processed++;
+                    }
+                }
+            }
+        }
+        std::cout << "Completed async scan of " << base_dir << ": " << files_processed << " files processed" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error scanning directory " << base_dir << ": " << e.what() << std::endl;
+    }
+
     return sequences;
 }
 

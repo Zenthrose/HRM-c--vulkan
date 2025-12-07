@@ -254,6 +254,7 @@ private:
      * @return Loaded sequences
      */
     std::vector<std::string> load_training_data(const std::string& data_path);
+    std::vector<std::string> scan_directory_async(const std::string& base_dir);
     std::vector<std::string> generate_system_learning_sequences();
 
     /**
