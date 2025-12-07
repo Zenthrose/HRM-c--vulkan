@@ -306,15 +306,17 @@ HardwareProfile HardwareAbstractionLayer::detect_gpu_capabilities() {
                     break;
                 }
             }
-
+            }
+            profile.gpu_memory_mb = totalMemory / (1024 * 1024);
             profile.gpu_compute_units = deviceProperties.limits.maxComputeWorkGroupCount[0];
         }
-
         vkDestroyInstance(instance, nullptr);
     } else {
         profile.vulkan_supported = false;
         std::cout << "Vulkan not supported, GPU acceleration unavailable" << std::endl;
     }
+    // Check for CUDA (simplified)
+    profile.cuda_supported = false; // Would need CUDA runtime check
 #endif
 
     return profile;
