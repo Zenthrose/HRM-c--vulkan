@@ -1,11 +1,13 @@
 # Tests CMakeLists.txt - GTest integration for HRM system
 
 # Find GTest package (optional)
-find_package(GTest)
+find_package(GTest QUIET)
 if(GTest_FOUND)
     include(GoogleTest)
+    message(STATUS "GTest found - building tests")
 else()
-    message(WARNING "GTest not found. Tests will not be built. Install GTest to enable automated testing.")
+    message(WARNING "GTest not found. Tests will not be built. Install libgtest-dev to enable automated testing.")
+    # Return to skip building tests
     return()
 endif()
 
@@ -25,7 +27,6 @@ target_compile_definitions(hrm_system_test PRIVATE PORTABLE_BUILD)
 add_executable(self_mod_test integration/self_mod_test.cpp)
 target_link_libraries(self_mod_test PRIVATE
     GTest::gtest_main
-    GTest::gmock_main
     core hrm vulkan self_mod system training utils
     Vulkan::Vulkan
 )
