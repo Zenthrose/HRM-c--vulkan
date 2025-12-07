@@ -300,8 +300,10 @@ HardwareProfile HardwareAbstractionLayer::detect_gpu_capabilities() {
             VkPhysicalDeviceMemoryProperties memProperties;
             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProperties);
 
+            uint64_t totalMemory = 0;
             for (uint32_t i = 0; i < memProperties.memoryHeapCount; i++) {
                 if (memProperties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
+                    totalMemory += memProperties.memoryHeaps[i].size;
                     profile.gpu_memory_gb = memProperties.memoryHeaps[i].size / (1024ULL * 1024 * 1024);
                     break;
                 }
