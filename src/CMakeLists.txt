@@ -8,7 +8,7 @@ add_subdirectory(utils)
 
 # Main Vulkan test executable
 add_executable(hrm_vulkan main/main.cpp)
-target_link_libraries(hrm_vulkan PRIVATE utils core hrm vulkan self_mod system ${Vulkan_LIBRARIES})
+target_link_libraries(hrm_vulkan PRIVATE utils core hrm vulkan self_mod system Vulkan::Vulkan)
 target_compile_definitions(hrm_vulkan PRIVATE PORTABLE_BUILD)
 if(WIN32)
     target_link_libraries(hrm_vulkan PRIVATE ws2_32 iphlpapi pdh)
@@ -21,7 +21,7 @@ endif()
 
 # HRM system executable with CLI and GUI
 add_executable(hrm_system main/hrm_main.cpp main/hrm_cli.cpp main/hrm_gui.cpp)
-target_link_libraries(hrm_system PRIVATE utils core hrm vulkan self_mod system training ${Vulkan_LIBRARIES})
+target_link_libraries(hrm_system PRIVATE utils core hrm vulkan self_mod system training Vulkan::Vulkan)
 target_compile_definitions(hrm_system PRIVATE PORTABLE_BUILD)
 if(WIN32)
     target_link_libraries(hrm_system PRIVATE ws2_32 iphlpapi pdh)
