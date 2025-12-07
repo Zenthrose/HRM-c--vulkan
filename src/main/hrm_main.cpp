@@ -7,9 +7,10 @@
 #include <fstream>
 #include <unordered_map>
 #include <algorithm>
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
-
 #include "../vulkan/vulkan_compatibility.h"
+#endif
 #include "../hrm/resource_aware_hrm.hpp"
 #include "../system/memory_compaction_system.hpp"
 #include "../system/cloud_storage_manager.hpp"
@@ -66,6 +67,7 @@ ResourceAwareHRMConfig createDefaultHRMConfig(const HardwareCapabilities& hw_cap
     return config;
 }
 
+#ifndef NO_VULKAN
 struct VulkanResources {
     VkInstance instance = VK_NULL_HANDLE;
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
@@ -74,8 +76,13 @@ struct VulkanResources {
     uint32_t computeQueueFamilyIndex = 0;
     VkCommandPool commandPool = VK_NULL_HANDLE;
 };
+#endif
 
+#ifndef NO_VULKAN
 void adapt_config_to_hardware(ResourceAwareHRMConfig& config, const HardwareCapabilities& hw_caps, const VulkanResources& vulkan) {
+#else
+void adapt_config_to_hardware(ResourceAwareHRMConfig& config, const HardwareCapabilities& hw_caps) {
+#endif
     uint64_t ram_gb = hw_caps.total_ram_bytes / (1024ULL * 1024 * 1024);
     uint32_t cores = hw_caps.cpu_cores;
 
@@ -153,6 +160,7 @@ void adapt_config_to_hardware(ResourceAwareHRMConfig& config, const HardwareCapa
             break;
     }
 
+#ifndef NO_VULKAN
     // Vulkan availability adjustments
     if (!hw_caps.vulkan_supported || vulkan.device == VK_NULL_HANDLE) {
         std::cout << "Vulkan not available - enabling CPU-only mode" << std::endl;
@@ -162,6 +170,7 @@ void adapt_config_to_hardware(ResourceAwareHRMConfig& config, const HardwareCapa
         config.base_config.base_config.hrm_config.inner_config.L_layers = std::min(config.base_config.base_config.hrm_config.inner_config.L_layers, 2);
         config.base_config.enable_self_modification = false; // Too complex without GPU
     }
+#endif
 
     // Resource monitoring adjustments
     if (ram_gb < 2) {
@@ -192,6 +201,7 @@ void adapt_config_to_hardware(ResourceAwareHRMConfig& config, const HardwareCapa
               << ", Self-modification: " << (config.base_config.enable_self_modification ? "Enabled" : "Disabled") << std::endl;
 }
 
+#ifndef NO_VULKAN
 VulkanResources initializeVulkan() {
     VulkanResources res;
 
@@ -290,6 +300,7 @@ VulkanResources initializeVulkan() {
 
     return res;
 }
+#endif
 
 MemoryCompactionConfig createDefaultMemoryConfig(std::shared_ptr<CloudStorageManager> cloud_manager, ConfigManager& config_manager) {
     MemoryCompactionConfig config;
@@ -579,6 +590,7 @@ int main(int argc, char* argv[]) {
         std::shared_ptr<ResourceAwareHRM> hrm = nullptr;
 
         if (!test_mode) {
+#ifndef NO_VULKAN
             // Initialize Vulkan resources
             VulkanResources vulkan;
             try {
@@ -589,6 +601,7 @@ int main(int argc, char* argv[]) {
                 logger.warning("Falling back to CPU-only mode");
                 // Continue without Vulkan - HRM will use CPU fallbacks
             }
+#endif
 
             // HRM config already initialized above
 
@@ -612,6 +625,7 @@ int main(int argc, char* argv[]) {
             hrm_config.base_config.base_config.hrm_config.inner_config.halt_exploration_prob = 0.1f;
             hrm_config.base_config.base_config.hrm_config.inner_config.forward_dtype = "float32";
 
+#ifndef NO_VULKAN
     // Adapt configuration based on hardware capabilities
     adapt_config_to_hardware(hrm_config, hw_caps, vulkan);
 
@@ -630,6 +644,10 @@ int main(int argc, char* argv[]) {
         hrm_config.base_config.base_config.utf8_config.computeQueueFamilyIndex = vulkan.computeQueueFamilyIndex;
         hrm_config.base_config.base_config.utf8_config.commandPool = vulkan.commandPool;
     }
+#else
+    // Adapt configuration based on hardware capabilities (CPU-only)
+    adapt_config_to_hardware(hrm_config, hw_caps);
+#endif
 
             hrm = std::make_shared<ResourceAwareHRM>(hrm_config);
             logger.info("HRM system initialized successfully");

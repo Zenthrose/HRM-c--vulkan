@@ -1,6 +1,8 @@
 #include "embedding.hpp"
 #include "../utils/cpu_compatibility.h"
+#ifndef NO_VULKAN
 #include "../vulkan/vulkan_compatibility.h"
+#endif
 #include <iostream>
 #include <fstream>
 #include <stdexcept>

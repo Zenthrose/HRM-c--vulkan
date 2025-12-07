@@ -13,7 +13,9 @@
 #include <sys/sysinfo.h>
 #include <sys/statvfs.h>
 #endif
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
+#endif
 
 HardwareAbstractionLayer::HardwareAbstractionLayer()
     : current_backend_(ComputeBackend::AUTO), running_(false) {

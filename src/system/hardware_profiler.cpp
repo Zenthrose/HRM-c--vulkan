@@ -3,7 +3,9 @@
 #include <fstream>
 #include <thread>
 #include <filesystem>
+#ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
+#endif
 
 #ifdef _WIN32
 #include <windows.h>
