@@ -1,6 +1,17 @@
 # HRM Training Data Expansion
 # Generated for expanding character language training dataset
 
+## Safety Notice
+⚠️ **Full System Scan Opt-in Required**
+
+By default, HRM only scans user-specified data directories. To enable comprehensive system-wide scanning (including all drives and user directories), set the environment variable:
+
+```bash
+export HRM_SCAN_FULL=1
+```
+
+This opt-in is required for privacy and security. Full scanning may take significant time and resources.
+
 ## Current Status
 - Training sequences: 4 (minimum 256 chars each)
 - Validation sequences: 4

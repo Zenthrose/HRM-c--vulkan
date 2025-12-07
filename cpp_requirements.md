@@ -6,6 +6,22 @@
 - Vulkan SDK 1.3+ (https://vulkan.lunarg.com/sdk/home)
 - Git (for cloning and submodules)
 
+## Conda Environment Setup (Alternative)
+For users preferring conda environments:
+```bash
+# Create HRM development environment
+conda create -n hrm-dev python=3.10 -y
+conda activate hrm-dev
+
+# Install conda-forge packages
+conda install -c conda-forge cmake ninja vulkan-headers vulkan-tools -y
+
+# Note: Vulkan runtime libraries still need system installation
+# On Linux: sudo apt install libvulkan1 mesa-vulkan-drivers
+# On macOS: Vulkan SDK from LunarG
+# On Windows: Vulkan SDK installer
+```
+
 ## Linux (Ubuntu/Debian)
 ```bash
 # Update package list
