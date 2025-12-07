@@ -4,7 +4,7 @@
 
 ResourceAwareHRM::ResourceAwareHRM(const ResourceAwareHRMConfig& config)
     : SelfModifyingHRM(config.base_config), config_(config), resource_pressure_mode_(false),
-      memory_compaction_system_(config.memory_compaction_system) {
+      memory_compaction_system_(config.memory_compaction_system), cloud_storage_manager_(config.cloud_storage_manager) {
     std::cout << "Initializing Resource-Aware HRM System..." << std::endl;
 
     // Initialize resource monitoring
@@ -245,6 +245,42 @@ bool ResourceAwareHRM::perform_memory_compaction() {
 std::vector<std::string> ResourceAwareHRM::list_memory_compactions() const {
     if (memory_compaction_system_) {
         return memory_compaction_system_->list_compactions();
+    }
+    return {};
+}
+
+std::unordered_map<std::string, std::string> ResourceAwareHRM::get_cloud_storage_stats() const {
+    std::unordered_map<std::string, std::string> stats;
+    if (cloud_storage_manager_) {
+        // TODO: Implement cloud storage stats
+        stats["cloud_enabled"] = "true";
+        stats["cloud_provider"] = "multiple";
+    } else {
+        stats["cloud_enabled"] = "false";
+    }
+    return stats;
+}
+
+bool ResourceAwareHRM::upload_to_cloud(const std::string& data_id) {
+    if (cloud_storage_manager_) {
+        // TODO: Implement cloud upload
+        return true;
+    }
+    return false;
+}
+
+bool ResourceAwareHRM::download_from_cloud(const std::string& data_id) {
+    if (cloud_storage_manager_) {
+        // TODO: Implement cloud download
+        return true;
+    }
+    return false;
+}
+
+std::vector<std::string> ResourceAwareHRM::list_cloud_storage() const {
+    if (cloud_storage_manager_) {
+        // TODO: Implement cloud listing
+        return {"example_data_1", "example_data_2"};
     }
     return {};
 }

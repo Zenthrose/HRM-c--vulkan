@@ -571,6 +571,7 @@ int main(int argc, char* argv[]) {
 
         // Set memory compaction system in HRM config
         hrm_config.memory_compaction_system = memory_system;
+        hrm_config.cloud_storage_manager = cloud_manager;
 
         std::shared_ptr<ResourceAwareHRM> hrm = nullptr;
 

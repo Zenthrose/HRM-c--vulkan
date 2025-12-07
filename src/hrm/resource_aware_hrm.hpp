@@ -14,6 +14,7 @@ struct ResourceAwareHRMConfig {
     uint64_t max_memory_per_task_mb;
     double max_cpu_per_task_percent;
     std::shared_ptr<class MemoryCompactionSystem> memory_compaction_system;
+    std::shared_ptr<class CloudStorageManager> cloud_storage_manager;
 };
 
 struct ResourceAwareTask {
@@ -53,6 +54,12 @@ public:
     bool perform_memory_compaction();
     std::vector<std::string> list_memory_compactions() const;
 
+    // Cloud storage interface
+    std::unordered_map<std::string, std::string> get_cloud_storage_stats() const;
+    bool upload_to_cloud(const std::string& data_id);
+    bool download_from_cloud(const std::string& data_id);
+    std::vector<std::string> list_cloud_storage() const;
+
     // Adaptive behavior
     void adapt_to_resource_constraints();
     void optimize_for_current_resources();
@@ -85,6 +92,7 @@ private:
     std::shared_ptr<ResourceMonitor> resource_monitor_;
     std::shared_ptr<TaskManager> task_manager_;
     std::shared_ptr<class MemoryCompactionSystem> memory_compaction_system_;
+    std::shared_ptr<class CloudStorageManager> cloud_storage_manager_;
     std::unique_ptr<VulkanTrainer> vulkan_trainer_;
 
     // Resource-aware state

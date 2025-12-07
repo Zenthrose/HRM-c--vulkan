@@ -23,6 +23,7 @@ enum class GUIPage {
     CHAT_INTERFACE,
     SYSTEM_STATUS,
     MEMORY_MANAGEMENT,
+    CLOUD_STORAGE,
     SETTINGS,
     ABOUT
 };

@@ -56,6 +56,9 @@ void HRMGUI::run() {
                 case GUIPage::MEMORY_MANAGEMENT:
                     handle_memory_management();
                     break;
+                case GUIPage::CLOUD_STORAGE:
+                    handle_cloud_storage();
+                    break;
                 case GUIPage::SETTINGS:
                     handle_settings();
                     break;
@@ -116,6 +119,9 @@ void HRMGUI::process_input(const std::string& input) {
             break;
         case GUIPage::MEMORY_MANAGEMENT:
             handle_memory_management_input(input);
+            break;
+        case GUIPage::CLOUD_STORAGE:
+            handle_cloud_storage_input(input);
             break;
         case GUIPage::SETTINGS:
             handle_settings_input(input);
@@ -630,7 +636,44 @@ void HRMGUI::show_memory_compaction_options() {
 }
 
 void HRMGUI::show_cloud_storage_options() {
-    // TODO: Implement cloud storage options display
+    switch_page(GUIPage::CLOUD_STORAGE);
+}
+
+void HRMGUI::handle_cloud_storage() {
+    draw_cloud_storage();
+}
+
+void HRMGUI::draw_cloud_storage() {
+    int y = 3;
+    move_cursor(2, y++);
+    set_text_color(get_theme_color("title"));
+    std::cout << "Cloud Storage Operations";
+    reset_text_color();
+
+    // Get cloud stats
+    auto cloud_stats = hrm_system_->get_cloud_storage_stats();
+
+    move_cursor(2, y++);
+    std::cout << "Cloud Storage: " << (cloud_stats.count("cloud_enabled") && cloud_stats.at("cloud_enabled") == "true" ?
+        "Enabled" : "Disabled");
+    move_cursor(2, y++);
+    std::cout << "Provider: " << (cloud_stats.count("cloud_provider") ?
+        cloud_stats.at("cloud_provider") : "None");
+
+    y++;
+    move_cursor(2, y++);
+    set_text_color(get_theme_color("subtitle"));
+    std::cout << "Options:";
+    reset_text_color();
+
+    move_cursor(2, y++);
+    std::cout << "1. List Cloud Storage";
+    move_cursor(2, y++);
+    std::cout << "2. Upload Data to Cloud";
+    move_cursor(2, y++);
+    std::cout << "3. Download Data from Cloud";
+    move_cursor(2, y++);
+    std::cout << "4. Back to Memory Management";
 }
 
 void HRMGUI::perform_memory_compaction() {
@@ -895,6 +938,56 @@ void HRMGUI::handle_memory_management_input(const std::string& input) {
         show_cloud_storage_options();
     } else if (input == "5" || input == "b" || input == "back") {
         switch_page(GUIPage::MAIN_MENU);
+    }
+}
+
+void HRMGUI::handle_cloud_storage_input(const std::string& input) {
+    if (input == "1") {
+        // List cloud storage
+        auto items = hrm_system_->list_cloud_storage();
+        std::string list = "Cloud Storage Items:\n\n";
+        if (items.empty()) {
+            list += "No items found in cloud storage.\n";
+        } else {
+            for (const auto& item : items) {
+                list += "- " + item + "\n";
+            }
+        }
+        show_message_box("Cloud Storage List", list);
+    } else if (input == "2") {
+        // Upload to cloud
+        std::string data_id = show_input_dialog("Enter data ID to upload:");
+        if (!data_id.empty()) {
+            set_status_bar_text("Uploading to cloud...");
+            std::thread([this, data_id]() {
+                bool success = hrm_system_->upload_to_cloud(data_id);
+                if (success) {
+                    show_message_box("Cloud Upload", "Data uploaded successfully!");
+                } else {
+                    show_message_box("Cloud Upload", "Upload failed.");
+                }
+                set_status_bar_text("Ready");
+                redraw_needed_ = true;
+            }).detach();
+        }
+    } else if (input == "3") {
+        // Download from cloud
+        std::string data_id = show_input_dialog("Enter data ID to download:");
+        if (!data_id.empty()) {
+            set_status_bar_text("Downloading from cloud...");
+            std::thread([this, data_id]() {
+                bool success = hrm_system_->download_from_cloud(data_id);
+                if (success) {
+                    show_message_box("Cloud Download", "Data downloaded successfully!");
+                } else {
+                    show_message_box("Cloud Download", "Download failed.");
+                }
+                set_status_bar_text("Ready");
+                redraw_needed_ = true;
+            }).detach();
+        }
+    } else if (input == "4" || input == "b" || input == "back") {
+        switch_page(GUIPage::MEMORY_MANAGEMENT);
     }
 }
 
