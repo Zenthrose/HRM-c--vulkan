@@ -52,7 +52,7 @@ elseif(UNIX)
     target_link_libraries(hrm_system PRIVATE pthread dl)
 endif()
 
-# Copy MinGW and dependency DLLs for Windows portability
+# Copy MinGW, dependency, and Vulkan DLLs for Windows portability
 if(WIN32 AND MINGW)
     add_custom_command(TARGET hrm_system POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:hrm_system>
@@ -60,6 +60,7 @@ if(WIN32 AND MINGW)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:hrm_system>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libspdlog-1.15.dll $<TARGET_FILE_DIR:hrm_system>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libfmt-12.dll $<TARGET_FILE_DIR:hrm_system>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/Windows/System32/vulkan-1.dll $<TARGET_FILE_DIR:hrm_system>
     )
 endif()
 
@@ -82,7 +83,7 @@ elseif(UNIX)
     target_link_libraries(evaluate PRIVATE pthread dl)
 endif()
 
-# Copy MinGW and dependency DLLs for Windows portability
+# Copy MinGW, dependency, and Vulkan DLLs for Windows portability
 if(WIN32 AND MINGW)
     add_custom_command(TARGET evaluate POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:evaluate>
@@ -90,6 +91,7 @@ if(WIN32 AND MINGW)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:evaluate>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libspdlog-1.15.dll $<TARGET_FILE_DIR:evaluate>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libfmt-12.dll $<TARGET_FILE_DIR:evaluate>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/Windows/System32/vulkan-1.dll $<TARGET_FILE_DIR:evaluate>
     )
 endif()
 
@@ -110,7 +112,7 @@ elseif(UNIX)
     target_link_libraries(generate_test_data PRIVATE pthread dl)
 endif()
 
-# Copy MinGW and dependency DLLs for Windows portability
+# Copy MinGW, dependency, and Vulkan DLLs for Windows portability
 if(WIN32 AND MINGW)
     add_custom_command(TARGET generate_test_data POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:generate_test_data>
@@ -118,6 +120,7 @@ if(WIN32 AND MINGW)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:generate_test_data>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libspdlog-1.15.dll $<TARGET_FILE_DIR:generate_test_data>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libfmt-12.dll $<TARGET_FILE_DIR:generate_test_data>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/Windows/System32/vulkan-1.dll $<TARGET_FILE_DIR:generate_test_data>
     )
 endif()
 
@@ -138,7 +141,7 @@ elseif(UNIX)
     target_link_libraries(arc_eval PRIVATE pthread dl)
 endif()
 
-# Copy MinGW and dependency DLLs for Windows portability
+# Copy MinGW, dependency, and Vulkan DLLs for Windows portability
 if(WIN32 AND MINGW)
     add_custom_command(TARGET arc_eval POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:arc_eval>
@@ -146,6 +149,7 @@ if(WIN32 AND MINGW)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libwinpthread-1.dll $<TARGET_FILE_DIR:arc_eval>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libspdlog-1.15.dll $<TARGET_FILE_DIR:arc_eval>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/msys64/mingw64/bin/libfmt-12.dll $<TARGET_FILE_DIR:arc_eval>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different C:/Windows/System32/vulkan-1.dll $<TARGET_FILE_DIR:arc_eval>
     )
 endif()
 
