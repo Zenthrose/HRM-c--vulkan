@@ -191,3 +191,48 @@ foreach(ASSET ${ASSETS})
     configure_file(${ASSET} ${CMAKE_BINARY_DIR}/assets/${ASSET_NAME} COPYONLY)
 endforeach()
 
+# Windows NSIS Installer Configuration
+set(CPACK_PACKAGE_NAME "HRM")
+set(CPACK_PACKAGE_VENDOR "Your Organization")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Hierarchical Reasoning Module")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "HRM")
+set(CPACK_PACKAGE_EXECUTABLES "hrm_system" "HRM System")
+set(CPACK_CREATE_DESKTOP_LINKS "hrm_system")
+
+# NSIS Specific Settings
+set(CPACK_GENERATOR "NSIS")
+set(CPACK_NSIS_DISPLAY_NAME "HRM - Hierarchical Reasoning Module")
+set(CPACK_NSIS_PACKAGE_NAME "HRM")
+set(CPACK_NSIS_MODIFY_PATH ON)  # Allow PATH modification for Vulkan
+set(CPACK_NSIS_URL_INFO_ABOUT "https://github.com/Zenthrose/HRM-c--vulkan")
+set(CPACK_NSIS_CONTACT "your@email.com")
+
+# License
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+
+# Installation Rules
+install(TARGETS hrm_system evaluate generate_test_data arc_eval
+    RUNTIME DESTINATION bin
+    COMPONENT Runtime)
+
+# Install DLLs
+install(FILES
+    ${CMAKE_BINARY_DIR}/release/libgcc_s_seh-1.dll
+    ${CMAKE_BINARY_DIR}/release/libstdc++-6.dll
+    ${CMAKE_BINARY_DIR}/release/libwinpthread-1.dll
+    ${CMAKE_BINARY_DIR}/release/libspdlog-1.15.dll
+    ${CMAKE_BINARY_DIR}/release/libfmt-12.dll
+    ${CMAKE_BINARY_DIR}/release/vulkan-1.dll
+    DESTINATION bin
+    COMPONENT Runtime)
+
+# Install assets and shaders
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/ DESTINATION assets COMPONENT Runtime)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/shaders/ DESTINATION shaders COMPONENT Runtime)
+
+# Install documentation
+install(FILES ${CMAKE_SOURCE_DIR}/README.md ${CMAKE_SOURCE_DIR}/LICENSE
+    DESTINATION docs COMPONENT Runtime)
+
+include(CPack)
