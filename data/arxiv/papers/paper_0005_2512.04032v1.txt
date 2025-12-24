@@ -1,0 +1,8 @@
+Title: Jina-VLM: Small Multilingual Vision Language Model
+Authors: Andreas Koukounas, Georgios Mastrapas, Florian Hönicke, Sedigheh Eslami, Guillaume Roncari, Scott Martens, Han Xiao
+Date: 2025-12-03
+ArXiv ID: 2512.04032v1
+
+Jina-VLM: Small Multilingual Vision Language Model
+
+We present Jina-VLM, a 2.4B parameter vision-language model that achieves state-of-the-art multilingual visual question answering among open 2B-scale VLMs. The model couples a SigLIP2 vision encoder with a Qwen3 language backbone through an attention-pooling connector that enables token-efficient processing of arbitrary-resolution images. Across standard VQA benchmarks and multilingual evaluations, Jina-VLM outperforms comparable models while preserving competitive text-only performance.

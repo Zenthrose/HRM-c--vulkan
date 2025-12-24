@@ -1,0 +1,8 @@
+Title: Associative Memory using Attribute-Specific Neuron Groups-1: Learning between Multiple Cue Balls
+Authors: Hiroshi Inazawa
+Date: 2025-12-02
+ArXiv ID: 2512.02319v1
+
+Associative Memory using Attribute-Specific Neuron Groups-1: Learning between Multiple Cue Balls
+
+In this paper, we present a new neural network model based on attribute-specific representations (e.g., color, shape, size), a classic example of associative memory. The proposed model is based on a previous study on memory and recall of multiple images using the Cue Ball and Recall Net (referred to as the CB-RN system, or simply CB-RN) [1]. The system consists of three components, which are C.CB-RN for processing color, S.CB-RN for processing shape, and V.CB-RN for processing size. When an attribute data pattern is presented to the CB-RN system, the corresponding attribute pattern of the cue neurons within the Cue Balls is associatively recalled in the Recall Net. Each image pattern presented to these CB-RN systems is represented using a two-dimensional code, specifically a QR code [2].

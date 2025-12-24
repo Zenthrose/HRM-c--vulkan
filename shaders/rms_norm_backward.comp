@@ -1,0 +1,66 @@
+#version 450
+// RMS normalization backward pass compute shader
+// Computes gradients through RMS normalization operation
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 0) readonly buffer InputBuffer { float input_data[]; };
+layout(binding = 1) readonly buffer OutputGradBuffer { float output_grad[]; };
+layout(binding = 2) writeonly buffer InputGradBuffer { float input_grad[]; };
+layout(binding = 3) writeonly buffer WeightGradBuffer { float weight_grad[]; };
+
+// Push constants
+layout(push_constant) uniform PushConstants {
+    uint batch_size;
+    uint seq_len;
+    uint hidden_size;
+    float variance_epsilon;
+} pc;
+
+void main() {
+    uint global_id = gl_GlobalInvocationID.x;
+    uint total_threads = gl_WorkGroupSize.x * gl_NumWorkGroups.x;
+
+    // Process each sample in the batch
+    for (uint batch = 0; batch < pc.batch_size; ++batch) {
+        for (uint seq = global_id; seq < pc.seq_len; seq += total_threads) {
+
+            // Compute RMS for this sample
+            float sum_squares = 0.0;
+            for (uint h = 0; h < pc.hidden_size; ++h) {
+                uint idx = (batch * pc.seq_len + seq) * pc.hidden_size + h;
+                float val = input_data[idx];
+                sum_squares += val * val;
+            }
+            float rms = sqrt(sum_squares / float(pc.hidden_size) + pc.variance_epsilon);
+
+            // Compute gradients for this sample
+            float rms_cubed = rms * rms * rms;
+
+            for (uint h = 0; h < pc.hidden_size; ++h) {
+                uint idx = (batch * pc.seq_len + seq) * pc.hidden_size + h;
+                float input_val = input_data[idx];
+                float out_grad = output_grad[idx];
+
+                // Gradient w.r.t. input: dL/dx = dL/dy * (1/rms) - dL/dy * x^2 / (rms^3 * N)
+                // Simplified approximation for RMS norm backward
+                float input_grad_val = out_grad / rms;
+
+                // Contribution from RMS derivative (simplified)
+                float rms_contrib = 0.0;
+                for (uint h2 = 0; h2 < pc.hidden_size; ++h2) {
+                    uint idx2 = (batch * pc.seq_len + seq) * pc.hidden_size + h2;
+                    float input_val2 = input_data[idx2];
+                    float out_grad2 = output_grad[idx2];
+                    rms_contrib += out_grad2 * input_val2 * input_val2 / rms_cubed;
+                }
+                rms_contrib /= float(pc.hidden_size);
+
+                input_grad[idx] = input_grad_val - rms_contrib;
+
+                // Weight gradient (RMS norm typically has a learnable weight)
+                weight_grad[h] += out_grad * (input_val / rms);
+            }
+        }
+    }
+}

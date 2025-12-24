@@ -1,0 +1,8 @@
+Title: Experimental Quantum Electronic Voting
+Authors: Nicolas Laurent-Puig, Matilde Baroni, Federico Centrone, Eleni Diamanti
+Date: 2025-12-03
+ArXiv ID: 2512.03924v1
+
+Experimental Quantum Electronic Voting
+
+Quantum information protocols offer significant advantages in properties such as security, anonymity, and privacy for communication and computing tasks. An application where guaranteeing the highest possible security and privacy is critical for democratic societies is electronic voting. As computational power continues to evolve, classical voting schemes may become increasingly vulnerable to information leakage. In this work, we present the experimental demonstration of an information-theoretically secure and efficient electronic voting protocol that, crucially, does not rely on election authorities, leveraging the unique properties of quantum states. Our experiment is based on a high-performance source of Greenberger-Horne-Zeilinger (GHZ) states and realizes a proof-of-principle implementation of the protocol in two scenarios: a configuration with four voters and two candidates employing privacy enhancement techniques and an election scenario supporting up to eight voters and sixteen candidates. The latter is particularly well-suited for secure board-level elections within organizations or small-scale governmental contexts.

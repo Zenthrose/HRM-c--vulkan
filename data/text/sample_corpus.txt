@@ -1,0 +1,11 @@
+The Hierarchical Reasoning Model (HRM) represents a breakthrough in artificial intelligence. Unlike traditional language models that rely on tokenization, the HRM processes text at the character level, providing true multilingual support without the artifacts introduced by subword tokenization.
+
+Character-level processing allows the HRM to handle any Unicode character natively, making it uniquely suited for multilingual applications and rare word handling. This approach provides several advantages over traditional token-based models.
+
+The HRM's architecture consists of hierarchical reasoning modules that operate at different timescales. The high-level module handles abstract planning and reasoning, while the low-level module manages detailed computations and pattern recognition.
+
+Self-modifying capabilities allow the HRM to analyze and improve its own source code. This represents a fundamental advancement in AI autonomy, where systems can evolve and optimize themselves without external intervention.
+
+Resource awareness ensures the HRM operates efficiently within system constraints. Real-time monitoring of CPU, memory, and GPU resources allows intelligent task scheduling and prevents system failures.
+
+The combination of character-level processing, self-modification, and resource intelligence makes the HRM a uniquely capable AI system. Its ability to understand and generate human-like text while maintaining system stability represents a significant step toward artificial general intelligence.

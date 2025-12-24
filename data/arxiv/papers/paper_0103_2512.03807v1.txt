@@ -1,0 +1,8 @@
+Title: Algorithms for Boolean Matrix Factorization using Integer Programming and Heuristics
+Authors: Christos Kolomvakis, Thomas Bobille, Arnaud Vandaele, Nicolas Gillis
+Date: 2025-12-03
+ArXiv ID: 2512.03807v1
+
+Algorithms for Boolean Matrix Factorization using Integer Programming and Heuristics
+
+Boolean matrix factorization (BMF) approximates a given binary input matrix as the product of two smaller binary factors. Unlike binary matrix factorization based on standard arithmetic, BMF employs the Boolean OR and AND operations for the matrix product, which improves interpretability and reduces the approximation error. It is also used in role mining and computer vision. In this paper, we first propose algorithms for BMF that perform alternating optimization (AO) of the factor matrices, where each subproblem is solved via integer programming (IP). We then design different approaches to further enhance AO-based algorithms by selecting an optimal subset of rank-one factors from multiple runs. To address the scalability limits of IP-based methods, we introduce new greedy and local-search heuristics. We also construct a new C++ data structure for Boolean vectors and matrices that is significantly faster than existing ones and is of independent interest, allowing our heuristics to scale to large datasets. We illustrate the performance of all our proposed methods and compare them with the state of the art on various real datasets, both with and without missing data, including applications in topic modeling and imaging.

@@ -1,0 +1,8 @@
+Title: Sharp Self-Normalized Concentration Inequalities of Marginal Mean with Sample Variance Only
+Authors: Zihao Yuan
+Date: 2025-12-01
+ArXiv ID: 2512.01817v3
+
+Sharp Self-Normalized Concentration Inequalities of Marginal Mean with Sample Variance Only
+
+(This is the first version of a working paper. A more detailed follow-up with applications is in preparation.) We develop a family of self-normalized concentration inequalities for marginal mean under martingale-difference structure and -mixing conditions, where the latter includes many processes that are not strongly mixing. The variance term is fully data-observable: naive sample variance in the martingale case and an empirical block long-run variance under mixing conditions. Thus, no predictable variance proxy is required. No specific assumption on the decay of the mixing coefficients (e.g. summability) is needed for the validity. The constants are explicit and the bounds are ready to use.

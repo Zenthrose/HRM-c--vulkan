@@ -1,0 +1,8 @@
+Title: Simpson variational integrator for nonlinear systems: a tutorial on the Lagrange top
+Authors: Juan Antonio Rojas-Quintero, François Dubois, Frédéric Jourdan
+Date: 2025-12-03
+ArXiv ID: 2512.03330v1
+
+Simpson variational integrator for nonlinear systems: a tutorial on the Lagrange top
+
+This contribution presents an integration method based on the Simpson quadrature. The integrator is designed for finite-dimensional nonlinear mechanical systems that derive from variational principles. The action is discretized using quadratic finite elements interpolation of the state and Simpson's quadrature, leading to discrete motion equations. The scheme is implicit, symplectic, and fourth-order accurate. The proposed integrator is compared with the implicit midpoint variational integrator on two examples of systems with inseparable Hamiltonians. First, the example of the nonlinear double pendulum illustrates how the method can be applied to multibody systems. The analytical solution of the Lagrange top is then used as a reference to analyze accuracy, convergence, and precision of the numerical method. A reduced Lagrange top system is also proposed and solved with a classical fourth-order method. Its solution is compared with the Simpson solution of the complete system, and the convergence order of the difference between both is consistent with the order of the classical method.

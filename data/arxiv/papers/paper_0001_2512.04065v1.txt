@@ -1,0 +1,8 @@
+Title: Fare Comparison App of Uber, Ola and Rapido
+Authors: Ashlesha Gopinath Sawant, Sahil S. Jadhav, Vidhan R. Jain, Shriraj S. Jagtap, Prachi Jadhav, Soham Jadhav, Ichha Raina
+Date: 2025-12-03
+ArXiv ID: 2512.04065v1
+
+Fare Comparison App of Uber, Ola and Rapido
+
+In todays increasing world, it is very important to have good hailing services like Ola, Uber, and Rapido as it is very essential for our daily transportation. Users often face difficulties in choosing the most appropriate and efficient ride that would lead to both cost-effective and would take us to our destination in less time. This project provides you with the web application that helps you to select the most beneficial ride for you by providing users with the fare comparison between Ola, Uber, Rapido for the destination entered by the user. The backend is use to fetch the data, providing users with the fare comparison for the ride and finally providing with the best option using Python. This research paper also addresses the problem and challenges faced in accessing the data using APIs, Android Studios emulator, Appium and location comparison. Thus, the aim of the project is to provide transparency to the users in ride-hailing services and increase efficiency and provide users with better experience.

@@ -1,0 +1,23 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Buffers
+layout(binding = 0) readonly buffer InputBuffer { float data[]; };
+layout(binding = 1) writeonly buffer GateUp { float gate_up[]; };
+layout(binding = 2) writeonly buffer OutputBuffer { float out_data[]; };
+
+// Uniforms
+layout(binding = 3) uniform Params {
+    uint hidden_size;
+    float expansion;
+} params;
+
+void main() {
+    uint idx = gl_GlobalInvocationID.x;
+
+    // For now, just copy input to output
+    if (idx < params.hidden_size) {
+        out_data[idx] = data[idx];
+    }
+}

@@ -1,0 +1,8 @@
+Title: Optimal Transportation and Alignment Between Gaussian Measures
+Authors: Sanjit Dandapanthula, Aleksandr Podkopaev, Shiva Prasad Kasiviswanathan, Aaditya Ramdas, Ziv Goldfeld
+Date: 2025-12-03
+ArXiv ID: 2512.03579v1
+
+Optimal Transportation and Alignment Between Gaussian Measures
+
+Optimal transport (OT) and Gromov-Wasserstein (GW) alignment provide interpretable geometric frameworks for comparing, transforming, and aggregating heterogeneous datasets -- tasks ubiquitous in data science and machine learning. Because these frameworks are computationally expensive, large-scale applications often rely on closed-form solutions for Gaussian distributions under quadratic cost. This work provides a comprehensive treatment of Gaussian, quadratic cost OT and inner product GW (IGW) alignment, closing several gaps in the literature to broaden applicability. First, we treat the open problem of IGW alignment between uncentered Gaussians on separable Hilbert spaces by giving a closed-form expression up to a quadratic optimization over unitary operators, for which we derive tight analytic upper and lower bounds. If at least one Gaussian measure is centered, the solution reduces to a fully closed-form expression, which we further extend to an analytic solution for the IGW barycenter between centered Gaussians. We also present a reduction of Gaussian multimarginal OT with pairwise quadratic costs to a tractable optimization problem and provide an efficient algorithm to solve it using a rank-deficiency constraint. To demonstrate utility, we apply our results to knowledge distillation and heterogeneous clustering on synthetic and real-world datasets.

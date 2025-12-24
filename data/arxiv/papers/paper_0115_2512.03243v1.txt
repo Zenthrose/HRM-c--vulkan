@@ -1,0 +1,8 @@
+Title: Novelty detection on path space
+Authors: Ioannis Gasteratos, Antoine Jacquier, Maud Lemercier, Terry Lyons, Cristopher Salvi
+Date: 2025-12-02
+ArXiv ID: 2512.03243v1
+
+Novelty detection on path space
+
+We frame novelty detection on path space as a hypothesis testing problem with signature-based test statistics. Using transportation-cost inequalities of Gasteratos and Jacquier (2023), we obtain tail bounds for false positive rates that extend beyond Gaussian measures to laws of RDE solutions with smooth bounded vector fields, yielding estimates of quantiles and p-values. Exploiting the shuffle product, we derive exact formulae for smooth surrogates of conditional value-at-risk (CVaR) in terms of expected signatures, leading to new one-class SVM algorithms optimising smooth CVaR objectives. We then establish lower bounds on type- error for alternatives with finite first moment, giving general power bounds when the reference measure and the alternative are absolutely continuous with respect to each other. Finally, we evaluate numerically the type- error and statistical power of signature-based test statistic, using synthetic anomalous diffusion data and real-world molecular biology data.

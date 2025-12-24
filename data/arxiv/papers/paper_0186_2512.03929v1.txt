@@ -1,0 +1,8 @@
+Title: Rethinking Collapse: Coupling Quantum States to Classical Bits with quasi-probabilities
+Authors: Dagomir Kaszlikowski, Pawel Kurzynski
+Date: 2025-12-03
+ArXiv ID: 2512.03929v1
+
+Rethinking Collapse: Coupling Quantum States to Classical Bits with quasi-probabilities
+
+We propose a formulation of quantum measurement within a modified framework of frames, in which a quantum system - a single qubit - is directly coupled to a classical measurement bit. The qubit is represented as a positive probability distribution over two classical bits, a and a', denoted by p(aa'). The measurement apparatus is described by a classical bit , initialized in the pure distribution . The measurement interaction is modeled by a quasi-bistochastic process  - a bistochastic map that may include negative transition probabilities, while acting on an entirely positive state space. When this process acts on the joint initial state , it produces a collapsed state , yielding the measurement outcome  with the correct quantum-mechanical probability . This approach bypasses the von Neumann chain of infinite couplings by treating the measurement register classically, while capturing the nonclassical nature of measurement through the quasi-bistochastic structure of the interaction.

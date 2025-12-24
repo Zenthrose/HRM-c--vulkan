@@ -1,0 +1,8 @@
+Title: Teaching Old Tokenizers New Words: Efficient Tokenizer Adaptation for Pre-trained Models
+Authors: Taido Purason, Pavel Chizhov, Ivan P. Yamshchikov, Mark Fishel
+Date: 2025-12-03
+ArXiv ID: 2512.03989v1
+
+Teaching Old Tokenizers New Words: Efficient Tokenizer Adaptation for Pre-trained Models
+
+Tokenizer adaptation plays an important role in transferring pre-trained language models to new domains or languages. In this work, we address two complementary aspects of this process: vocabulary extension and pruning. The common approach to extension trains a new tokenizer on domain-specific text and appends the tokens that do not overlap with the existing vocabulary, which often results in many tokens that are unreachable or never used. We propose continued BPE training, which adapts a pre-trained tokenizer by continuing the BPE merge learning process on new data. Experiments across multiple languages and model families show that this approach improves tokenization efficiency and leads to better utilization of added vocabulary. We also introduce leaf-based vocabulary pruning, which removes redundant tokens while preserving model quality. Together, these methods provide practical tools for controlled vocabulary modification, which we release as an open-source package.

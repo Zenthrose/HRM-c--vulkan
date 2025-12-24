@@ -1,0 +1,8 @@
+Title: Diagonalizing the Softmax: Hadamard Initialization for Tractable Cross-Entropy Dynamics
+Authors: Connall Garrod, Jonathan P. Keating, Christos Thrampoulidis
+Date: 2025-12-03
+ArXiv ID: 2512.04006v1
+
+Diagonalizing the Softmax: Hadamard Initialization for Tractable Cross-Entropy Dynamics
+
+Cross-entropy (CE) training loss dominates deep learning practice, yet existing theory often relies on simplifications, either replacing it with squared loss or restricting to convex models, that miss essential behavior. CE and squared loss generate fundamentally different dynamics, and convex linear models cannot capture the complexities of non-convex optimization. We provide an in-depth characterization of multi-class CE optimization dynamics beyond the convex regime by analyzing a canonical two-layer linear neural network with standard-basis vectors as inputs: the simplest non-convex extension for which the implicit bias remained unknown. This model coincides with the unconstrained features model used to study neural collapse, making our work the first to prove that gradient flow on CE converges to the neural collapse geometry. We construct an explicit Lyapunov function that establishes global convergence, despite the presence of spurious critical points in the non-convex landscape. A key insight underlying our analysis is an inconspicuous finding: Hadamard Initialization diagonalizes the softmax operator, freezing the singular vectors of the weight matrices and reducing the dynamics entirely to their singular values. This technique opens a pathway for analyzing CE training dynamics well beyond our specific setting considered here.

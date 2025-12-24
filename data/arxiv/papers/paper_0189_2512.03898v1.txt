@@ -1,0 +1,8 @@
+Title: Polylogarithmic-Depth Quantum Algorithm for Simulating the Extended Hubbard Model on a Two-Dimensional Lattice Using the Fast Multipole Method
+Authors: Yu Wang, Martina Nibbi, Maxine Luo, Isabel Nha Minh Le, Yanbin Chen, J. Ignacio Cirac, Christian Mendl
+Date: 2025-12-03
+ArXiv ID: 2512.03898v1
+
+Polylogarithmic-Depth Quantum Algorithm for Simulating the Extended Hubbard Model on a Two-Dimensional Lattice Using the Fast Multipole Method
+
+The extended Hubbard model on a two-dimensional lattice captures key physical phenomena, but is challenging to simulate due to the presence of long-range interactions. In this work, we present an efficient quantum algorithm for simulating the time evolution of this model. Our approach, inspired by the fast multipole method, approximates pairwise interactions by interactions between hierarchical levels of coarse-graining boxes. We discuss how to leverage recent advances in two-dimensional neutral atom quantum computing, supporting non-local operations such as long-range gates and shuttling. The resulting circuit depth for a single Trotter step scales polylogarithmically with system size.

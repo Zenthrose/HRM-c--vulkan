@@ -1,0 +1,8 @@
+Title: A comparison between initialization strategies for the infinite hidden Markov model
+Authors: Federico P. Cortese, Luca Rossini
+Date: 2025-12-03
+ArXiv ID: 2512.03777v1
+
+A comparison between initialization strategies for the infinite hidden Markov model
+
+Infinite hidden Markov models provide a flexible framework for modelling time series with structural changes and complex dynamics, without requiring the number of latent states to be specified in advance. This flexibility is achieved through the hierarchical Dirichlet process prior, while efficient Bayesian inference is enabled by the beam sampler, which combines dynamic programming with slice sampling to truncate the infinite state space adaptively. Despite extensive methodological developments, the role of initialization in this framework has received limited attention. This study addresses this gap by systematically evaluating initialization strategies commonly used for finite hidden Markov models and assessing their suitability in the infinite setting. Results from both simulated and real datasets show that distance-based clustering initializations consistently outperform model-based and uniform alternatives, the latter being the most widely adopted in the existing literature.

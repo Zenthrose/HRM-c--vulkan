@@ -1,0 +1,8 @@
+Title: Inference for location and height of peaks of a standardized field after selection
+Authors: Alden Green, Jonathan Taylor
+Date: 2025-12-03
+ArXiv ID: 2512.04059v1
+
+Inference for location and height of peaks of a standardized field after selection
+
+Peak inference concerns the use of local maxima ("peaks") of a noisy random field to detect and localize regions where underlying signal is present. We propose a peak inference method that first subjects observed peaks to a significance test of the null hypothesis that no signal is present, and then uses the peaks that are declared significant to construct post-selectively valid confidence regions for the location and height of nearby true peaks. We analyze the performance of this method in a smooth signal plus constant variance noise model under a high-curvature asymptotic assumption, and prove that it asymptotically controls both the number of false discoveries, and the number of confidence regions that do not contain a true peak, relative to the number of points at which inference is conducted. An important intermediate theoretical result uses the Kac-Rice formula to derive a novel approximation to the intensity function of a point process that counts local maxima, which is second-order accurate under the alternative, nearby high-curvature true peaks.

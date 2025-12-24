@@ -1,0 +1,8 @@
+Title: Probabilistic Foundations of Fuzzy Simplicial Sets for Nonlinear Dimensionality Reduction
+Authors: Janis Keck, Lukas Silvester Barth, Fatemeh, Fahimi, Parvaneh Joharinad, Jürgen Jost
+Date: 2025-12-03
+ArXiv ID: 2512.03899v1
+
+Probabilistic Foundations of Fuzzy Simplicial Sets for Nonlinear Dimensionality Reduction
+
+Fuzzy simplicial sets have become an object of interest in dimensionality reduction and manifold learning, most prominently through their role in UMAP. However, their definition through tools from algebraic topology without a clear probabilistic interpretation detaches them from commonly used theoretical frameworks in those areas. In this work we introduce a framework that explains fuzzy simplicial sets as marginals of probability measures on simplicial sets. In particular, this perspective shows that the fuzzy weights of UMAP arise from a generative model that samples Vietoris-Rips filtrations at random scales, yielding cumulative distribution functions of pairwise distances. More generally, the framework connects fuzzy simplicial sets to probabilistic models on the face poset, clarifies the relation between Kullback-Leibler divergence and fuzzy cross-entropy in this setting, and recovers standard t-norms and t-conorms via Boolean operations on the underlying simplicial sets. We then show how new embedding methods may be derived from this framework and illustrate this on an example where we generalize UMAP using Čech filtrations with triplet sampling. In summary, this probabilistic viewpoint provides a unified probabilistic theoretical foundation for fuzzy simplicial sets, clarifies the role of UMAP within this framework, and enables the systematic derivation of new dimensionality reduction methods.

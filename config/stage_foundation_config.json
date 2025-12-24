@@ -1,0 +1,36 @@
+{
+  "model": {
+    "char_vocab_size": 1000,
+    "hidden_size": 128,
+    "num_layers": 2,
+    "num_heads": 4,
+    "max_seq_length": 512
+  },
+  "training": {
+    "learning_rate": 0.001,
+    "batch_size": 1,
+    "gradient_accumulation_steps": 1,
+    "max_epochs": 1,
+    "context_length": 128,
+    "save_every_epochs": 1
+  },
+  "data": {
+    "dataset_path": "./data/text",
+    "train_val_split": 0.9,
+    "shuffle_sequences": true,
+    "data_percentage": 0.005
+  },
+  "quantization": {
+    "mixing_enabled": true,
+    "function_quantizations": {
+      "attention": "system_default",
+      "mlp": "system_default",
+      "embeddings": "system_default"
+    }
+  },
+  "generation": {
+    "temperature": 1.0,
+    "top_p": 0.9,
+    "max_length": 500
+  }
+}

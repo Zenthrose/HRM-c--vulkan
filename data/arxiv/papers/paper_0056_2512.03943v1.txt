@@ -1,0 +1,8 @@
+Title: Is Lying Only Sinful in Islam? Exploring Religious Bias in Multilingual Large Language Models Across Major Religions
+Authors: Kazi Abrab Hossain, Jannatul Somiya Mahmud, Maria Hossain Tuli, Anik Mitra, S. M. Taiabul Haque, Farig Y. Sadeque
+Date: 2025-12-03
+ArXiv ID: 2512.03943v1
+
+Is Lying Only Sinful in Islam? Exploring Religious Bias in Multilingual Large Language Models Across Major Religions
+
+While recent developments in large language models have improved bias detection and classification, sensitive subjects like religion still present challenges because even minor errors can result in severe misunderstandings. In particular, multilingual models often misrepresent religions and have difficulties being accurate in religious contexts. To address this, we introduce BRAND: Bilingual Religious Accountable Norm Dataset, which focuses on the four main religions of South Asia: Buddhism, Christianity, Hinduism, and Islam, containing over 2,400 entries, and we used three different types of prompts in both English and Bengali. Our results indicate that models perform better in English than in Bengali and consistently display bias toward Islam, even when answering religion-neutral questions. These findings highlight persistent bias in multilingual models when similar questions are asked in different languages. We further connect our findings to the broader issues in HCI regarding religion and spirituality.

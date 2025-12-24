@@ -1,0 +1,8 @@
+Title: ATHENA: Agentic Team for Hierarchical Evolutionary Numerical Algorithms
+Authors: Juan Diego Toscano, Daniel T. Chen, George Em Karniadakis
+Date: 2025-12-03
+ArXiv ID: 2512.03476v1
+
+ATHENA: Agentic Team for Hierarchical Evolutionary Numerical Algorithms
+
+Bridging the gap between theoretical conceptualization and computational implementation is a major bottleneck in Scientific Computing (SciC) and Scientific Machine Learning (SciML). We introduce ATHENA (Agentic Team for Hierarchical Evolutionary Numerical Algorithms), an agentic framework designed as an Autonomous Lab to manage the end-to-end computational research lifecycle. Its core is the HENA loop, a knowledge-driven diagnostic process framed as a Contextual Bandit problem. Acting as an online learner, the system analyzes prior trials to select structural `actions' () from combinatorial spaces guided by expert blueprints (e.g., Universal Approximation, Physics-Informed constraints). These actions are translated into executable code () to generate scientific rewards (). ATHENA transcends standard automation: in SciC, it autonomously identifies mathematical symmetries for exact analytical solutions or derives stable numerical solvers where foundation models fail. In SciML, it performs deep diagnosis to tackle ill-posed formulations and combines hybrid symbolic-numeric workflows (e.g., coupling PINNs with FEM) to resolve multiphysics problems. The framework achieves super-human performance, reaching validation errors of . Furthermore, collaborative ``human-in-the-loop" intervention allows the system to bridge stability gaps, improving results by an order of magnitude. This paradigm shift focuses from implementation mechanics to methodological innovation, accelerating scientific discovery.

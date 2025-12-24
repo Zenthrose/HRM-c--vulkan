@@ -1,0 +1,8 @@
+Title: Emergent Riemannian geometry over learning discrete computations on continuous manifolds
+Authors: Julian Brandon, Angus Chadwick, Arthur Pellegrino
+Date: 2025-11-28
+ArXiv ID: 2512.00196v1
+
+Emergent Riemannian geometry over learning discrete computations on continuous manifolds
+
+Many tasks require mapping continuous input data (e.g. images) to discrete task outputs (e.g. class labels). Yet, how neural networks learn to perform such discrete computations on continuous data manifolds remains poorly understood. Here, we show that signatures of such computations emerge in the representational geometry of neural networks as they learn. By analysing the Riemannian pullback metric across layers of a neural network, we find that network computation can be decomposed into two functions: discretising continuous input features and performing logical operations on these discretised variables. Furthermore, we demonstrate how different learning regimes (rich vs. lazy) have contrasting metric and curvature structures, affecting the ability of the networks to generalise to unseen inputs. Overall, our work provides a geometric framework for understanding how neural networks learn to perform discrete computations on continuous manifolds.

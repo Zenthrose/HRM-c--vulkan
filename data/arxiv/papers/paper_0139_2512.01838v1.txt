@@ -1,0 +1,8 @@
+Title: Goodness-of-fit testing from observations with multiplicative measurement error
+Authors: Jan Johannes, Bianca Neubert
+Date: 2025-12-01
+ArXiv ID: 2512.01838v1
+
+Goodness-of-fit testing from observations with multiplicative measurement error
+
+Given observations from a positive random variable contaminated by multiplicative measurement error, we consider a nonparametric goodness-of-fit testing task for its unknown density in a non-asymptotic framework. We propose a testing procedure based on estimating a quadratic functional of the Mellin transform of the unknown density and the null. We derive non-asymptotic testing radii and testing rates over Mellin-Sobolev spaces, which naturally characterize regularity and ill-posedness in this model. By employing a multiple testing procedure with Bonferroni correction, we obtain data-driven procedures and analyze their performance. Compared with the non-adaptive tests, their testing radii deteriorate by at most a logarithmic factor. We illustrate the testing procedures with a simulation study using various choices of densities.

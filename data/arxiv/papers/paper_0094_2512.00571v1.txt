@@ -1,0 +1,8 @@
+Title: Enhancing Analogy-Based Software Effort Estimation with Firefly Algorithm Optimization
+Authors: Tarun Chintada, Uday Kiran Cheera
+Date: 2025-11-29
+ArXiv ID: 2512.00571v1
+
+Enhancing Analogy-Based Software Effort Estimation with Firefly Algorithm Optimization
+
+Analogy-Based Estimation (ABE) is a popular method for non-algorithmic estimation due to its simplicity and effectiveness. The Analogy-Based Estimation (ABE) model was proposed by researchers, however, no optimal approach for reliable estimation was developed. Achieving high accuracy in the ABE might be challenging for new software projects that differ from previous initiatives. This study (conducted in June 2024) proposes a Firefly Algorithm-guided Analogy-Based Estimation (FAABE) model that combines FA with ABE to improve estimation accuracy. The FAABE model was tested on five publicly accessible datasets: Cocomo81, Desharnais, China, Albrecht, Kemerer and Maxwell. To improve prediction efficiency, feature selection was used. The results were measured using a variety of evaluation metrics; various error measures include MMRE, MAE, MSE, and RMSE. Compared to conventional models, the experimental results show notable increases in prediction precision, demonstrating the efficacy of the Firefly-Analogy ensemble.

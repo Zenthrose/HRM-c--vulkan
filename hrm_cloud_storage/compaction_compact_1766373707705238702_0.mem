@@ -1,0 +1,38 @@
+compact_1766373707705238702_0
+1766373707
+1
+0
+220
+309
+0.711974
+3
+entry_count
+2
+algorithm
+0
+compaction_level
+1
+2
+test1
+test2
+309
+ENTRY_START
+ID:test1
+TIMESTAMP:1766373707
+USER:User: Hello
+HRM:HRM: Hi there!
+CONFIDENCE:0.95
+TOPICS:
+ENTITIES:User,Hello,Hi,
+SIZE:100
+ENTRY_END
+ENTRY_START
+ID:test2
+TIMESTAMP:1766373707
+USER:User: How are you?
+HRM:HRM: I'm doing well, thank you!
+CONFIDENCE:0.92
+TOPICS:
+ENTITIES:User,How,
+SIZE:120
+ENTRY_END

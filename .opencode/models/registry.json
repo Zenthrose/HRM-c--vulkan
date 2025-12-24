@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "models": {
+    "fc0f0a22-8abc-4bd6-bd2b-d7dabb5b4dc6": {
+      "id": "fc0f0a22-8abc-4bd6-bd2b-d7dabb5b4dc6",
+      "name": "deepseek coder 1.3b instruct.Q5_K_M",
+      "path": "/home/michael/Downloads/opencode-ggufloader-master/packages/opencode/dist/opencode-linux-x64/bin/models/deepseek-coder-1.3b-instruct.Q5_K_M.gguf",
+      "size": 1001967648,
+      "metadata": {},
+      "compatibility": {
+        "compatible": true,
+        "reason": "Manual addition",
+        "warnings": [],
+        "performance_tier": "fair",
+        "recommendations": []
+      },
+      "provider": "gguf-local",
+      "addedAt": "2025-12-16T02:46:05.022Z"
+    },
+    "d5262b7f-f9d5-4ea6-89ff-8e6d9833ab50": {
+      "id": "d5262b7f-f9d5-4ea6-89ff-8e6d9833ab50",
+      "name": "Phi 3 medium 128k instruct Q4_K_M",
+      "path": "/home/michael/Downloads/opencode-ggufloader-master/packages/opencode/dist/opencode-linux-x64/bin/models/Phi-3-medium-128k-instruct-Q4_K_M.gguf",
+      "size": 8566821952,
+      "metadata": {},
+      "compatibility": {
+        "compatible": false,
+        "reason": "Insufficient memory",
+        "warnings": [],
+        "performance_tier": "unusable",
+        "recommendations": []
+      },
+      "provider": "gguf-local",
+      "addedAt": "2025-12-16T02:46:43.255Z"
+    },
+    "1c0d7eff-b8ab-4f27-b964-891435d16520": {
+      "id": "1c0d7eff-b8ab-4f27-b964-891435d16520",
+      "name": "Phi 3 medium 128k instruct Q4_K_M",
+      "path": "/home/michael/Downloads/opencode-ggufloader-master/packages/opencode/dist/opencode-linux-x64/bin/models/Phi-3-medium-128k-instruct-Q4_K_M.gguf",
+      "size": 8566821952,
+      "metadata": {},
+      "compatibility": {
+        "compatible": false,
+        "reason": "Insufficient memory",
+        "warnings": [],
+        "performance_tier": "unusable",
+        "recommendations": []
+      },
+      "provider": "gguf-local",
+      "addedAt": "2025-12-16T02:47:01.595Z"
+    },
+    "fba51723-c0e5-4a5c-8e03-d771eb1f45ea": {
+      "id": "fba51723-c0e5-4a5c-8e03-d771eb1f45ea",
+      "name": "starcoder2 3b.Q4_K_M",
+      "path": "/home/michael/Downloads/opencode-ggufloader-master/packages/opencode/dist/opencode-linux-x64/bin/models/starcoder2-3b.Q4_K_M.gguf",
+      "size": 1887905664,
+      "metadata": {},
+      "compatibility": {
+        "compatible": false,
+        "reason": "Insufficient memory",
+        "warnings": [],
+        "performance_tier": "unusable",
+        "recommendations": []
+      },
+      "provider": "gguf-local",
+      "addedAt": "2025-12-16T02:52:08.139Z"
+    }
+  },
+  "lastUpdated": "2025-12-16T02:52:08.139Z"
+}

@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential cmake ninja-build libspdlog-dev
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_VULKAN=ON
+        make -j2
+
+    - name: Test
+      run: |
+        cd build
+        ls -la
+        if [ -f "hrm_system" ]; then
+          echo "✅ Build successful!"
+        else
+          echo "❌ Build failed - no executable found"
+          exit 1
+        fi

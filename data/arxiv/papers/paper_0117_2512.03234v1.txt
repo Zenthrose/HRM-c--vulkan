@@ -1,0 +1,8 @@
+Title: Iterative Tilting for Diffusion Fine-Tuning
+Authors: Jean Pachebat, Giovanni Conforti, Alain Durmus, Yazid Janati
+Date: 2025-12-02
+ArXiv ID: 2512.03234v1
+
+Iterative Tilting for Diffusion Fine-Tuning
+
+We introduce iterative tilting, a gradient-free method for fine-tuning diffusion models toward reward-tilted distributions. The method decomposes a large reward tilt  into  sequential smaller tilts, each admitting a tractable score update via first-order Taylor expansion. This requires only forward evaluations of the reward function and avoids backpropagating through sampling chains. We validate on a two-dimensional Gaussian mixture with linear reward, where the exact tilted distribution is available in closed form.

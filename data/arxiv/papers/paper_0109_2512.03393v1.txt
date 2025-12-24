@@ -1,0 +1,8 @@
+Title: Tuning-Free Structured Sparse Recovery of Multiple Measurement Vectors using Implicit Regularization
+Authors: Lakshmi Jayalal, Sheetal Kalyani
+Date: 2025-12-03
+ArXiv ID: 2512.03393v1
+
+Tuning-Free Structured Sparse Recovery of Multiple Measurement Vectors using Implicit Regularization
+
+Recovering jointly sparse signals in the multiple measurement vectors (MMV) setting is a fundamental problem in machine learning, but traditional methods like multiple measurement vectors orthogonal matching pursuit (M-OMP) and multiple measurement vectors FOCal Underdetermined System Solver (M-FOCUSS) often require careful parameter tuning or prior knowledge of the sparsity of the signal and/or noise variance. We introduce a novel tuning-free framework that leverages Implicit Regularization (IR) from overparameterization to overcome this limitation. Our approach reparameterizes the estimation matrix into factors that decouple the shared row-support from individual vector entries. We show that the optimization dynamics inherently promote the desired row-sparse structure by applying gradient descent to a standard least-squares objective on these factors. We prove that with a sufficiently small and balanced initialization, the optimization dynamics exhibit a "momentum-like" effect, causing the norms of rows in the true support to grow significantly faster than others. This formally guarantees that the solution trajectory converges towards an idealized row-sparse solution. Additionally, empirical results demonstrate that our approach achieves performance comparable to established methods without requiring any prior information or tuning.

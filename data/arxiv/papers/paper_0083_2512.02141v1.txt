@@ -1,0 +1,8 @@
+Title: Feature Selection Empowered BERT for Detection of Hate Speech with Vocabulary Augmentation
+Authors: Pritish N. Desai, Tanay Kewalramani, Srimanta Mandal
+Date: 2025-12-01
+ArXiv ID: 2512.02141v1
+
+Feature Selection Empowered BERT for Detection of Hate Speech with Vocabulary Augmentation
+
+Abusive speech on social media poses a persistent and evolving challenge, driven by the continuous emergence of novel slang and obfuscated terms designed to circumvent detection systems. In this work, we present a data efficient strategy for fine tuning BERT on hate speech classification by significantly reducing training set size without compromising performance. Our approach employs a TF IDF-based sample selection mechanism to retain only the most informative 75 percent of examples, thereby minimizing training overhead. To address the limitations of BERT's native vocabulary in capturing evolving hate speech terminology, we augment the tokenizer with domain-specific slang and lexical variants commonly found in abusive contexts. Experimental results on a widely used hate speech dataset demonstrate that our method achieves competitive performance while improving computational efficiency, highlighting its potential for scalable and adaptive abusive content moderation.

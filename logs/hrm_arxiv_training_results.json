@@ -1,0 +1,79 @@
+{
+  "training_metadata": {
+    "dataset": "arXiv Research Papers",
+    "total_characters": 241356,
+    "epochs_trained": 3,
+    "model_architecture": "2-layer character-level network",
+    "scientific_mode": true,
+    "final_loss": 4.201134525785775,
+    "final_perplexity": 66.76203133689887,
+    "final_accuracy": 0.02362420806289598,
+    "scientific_terms_learned": 4
+  },
+  "learning_curves": {
+    "loss_history": [
+      5.215929156003263,
+      4.606057146017653,
+      4.201134525785775
+    ],
+    "perplexity_history": [
+      184.1828761239318,
+      100.08873534949294,
+      66.76203133689887
+    ],
+    "accuracy_history": [
+      0.005782470965829628,
+      0.012881842357761169,
+      0.02362420806289598
+    ]
+  },
+  "generated_samples": [
+    {
+      "prompt": "The neural network",
+      "generated": "The neural networke o\u000bTi  + \u0005g  \u000f i ueb  me t \u001ceioito   \ri e i    ee   e' i       o     te      ee o  e ett      eo   ti(       t     ee  o  i    i       i   e   e    "
+    },
+    {
+      "prompt": "Our algorithm demonstrates",
+      "generated": "Our algorithm demonstratesnK-  n\u000eY  \u0018\u0005 FiQk  oe\fiIo  o     e c\u0011et9en o n_ i  tte     eo   & i       a oeo t  \u001ci   e or o      ci     e e o    e e         n   ee e  ie  ee  e  "
+    },
+    {
+      "prompt": "The mathematical framework",
+      "generated": "The mathematical framework+BeR99;Eqoeaa\u001b) t Ynt o\u001az\\ r\u001c$jneh <\u0014Keo\to4i\u0004ao\u000eewaw tl'tIg@3ntoi\u0013.\u0011\u0007\u0016 bis s\u0000 `\u001e erbeW. o\u0004\u0013*eeK,{)eiexOo \u0000?ooe)\u0018hia\" t o |e t\u0002 _    r eVesiw a 1 s>een"
+    },
+    {
+      "prompt": "In this paper we show",
+      "generated": "In this paper we show oa  eeee\bi od se' h\u000eq  (=ti h \u001b `e)e 4o\u0006.a \u0005c\u0019ta tAheWi? eo=) tes#\u001ao!i \u0007 ~opeE dU qio E~er lK/i B\u0010tleee`\u0007 iv r=x~i   apn2   oE  ti\u0000t9Q\u001d\u0004H9o Bs n\u0019\u001f i"
+    },
+    {
+      "prompt": "The optimization method",
+      "generated": "The optimization method  ot   s  ii t   ce  o e\t   i   a         eoo         i     i     i          e                   e   h    e       e             e             o    e  "
+    },
+    {
+      "prompt": "Statistical analysis reveals",
+      "generated": "Statistical analysis revealst   \u000b iuse i esii H@odn^qi\rie} c b[ SMzi  [   lti`e  ros s e \u0018 o  e  e    o   z    o  i e oee N es ;       eeoi  i    ei i  ii     is        oe ei    "
+    }
+  ],
+  "character_analysis": {
+    " ": 32186,
+    "e": 22925,
+    "i": 17191,
+    "t": 17038,
+    "a": 16317,
+    "n": 15202,
+    "o": 14168,
+    "s": 13354,
+    "r": 13156,
+    "l": 8713,
+    "c": 7646,
+    "d": 6857,
+    "h": 6083,
+    "u": 5476,
+    "m": 5472
+  },
+  "scientific_terms": [
+    "model",
+    "algorithm",
+    "framework",
+    "performance"
+  ]
+}

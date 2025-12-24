@@ -1,0 +1,87 @@
+Logic and Reasoning Examples
+
+Syllogisms - Deductive Reasoning:
+
+All men are mortal.
+Socrates is a man.
+Therefore, Socrates is mortal.
+
+This is a valid syllogism with the following structure:
+Major premise: All A are B
+Minor premise: C is A
+Conclusion: Therefore, C is B
+
+The reasoning is sound because if both premises are true, the conclusion must be true.
+
+Inductive Reasoning:
+
+The sun has risen every day for thousands of years.
+Therefore, the sun will rise tomorrow.
+
+This is inductive reasoning because it moves from specific observations to general conclusions. While the conclusion is likely true, it's not guaranteed - it's based on probability rather than certainty.
+
+Abductive Reasoning:
+
+The grass is wet.
+If it rained, the grass would be wet.
+Therefore, it probably rained.
+
+This is abductive reasoning, which seeks the most likely explanation for observed facts. It's commonly used in scientific discovery and medical diagnosis.
+
+Critical Thinking Skills:
+
+1. Identify assumptions: What is taken for granted in an argument?
+2. Evaluate evidence: Is the evidence relevant, sufficient, and reliable?
+3. Recognize biases: Are there personal, cultural, or logical biases affecting the reasoning?
+4. Consider alternatives: Are there other explanations or viewpoints?
+5. Draw logical conclusions: Does the evidence support the conclusion?
+
+Problem-Solving Strategies:
+
+1. Define the problem clearly
+2. Gather relevant information
+3. Generate multiple solutions
+4. Evaluate options systematically
+5. Implement the best solution
+6. Review and learn from the outcome
+
+Scientific Method:
+
+1. Observe a phenomenon
+2. Form a hypothesis
+3. Design experiments to test the hypothesis
+4. Collect and analyze data
+5. Draw conclusions based on evidence
+6. Share findings and allow peer review
+7. Refine or reject the hypothesis based on new evidence
+
+Mathematical Reasoning:
+
+Theorem: In a right triangle, the square of the hypotenuse equals the sum of the squares of the other two sides.
+
+Proof by contradiction:
+Assume the theorem is false. Then either:
+- a² + b² > c², or
+- a² + b² < c²
+
+But geometric constructions show that both cases lead to contradictions. Therefore, the theorem must be true.
+
+This demonstrates deductive reasoning in mathematics, where conclusions are proven with absolute certainty from given axioms.
+
+Ethical Reasoning:
+
+When faced with a moral dilemma, consider:
+
+1. Consequences: What outcomes will result from each action?
+2. Duties: What obligations do you have to others?
+3. Character: What would a virtuous person do?
+4. Rights: Whose rights are affected?
+5. Fairness: Is the solution equitable?
+
+Ethical frameworks:
+- Utilitarianism: Maximize overall happiness
+- Deontology: Follow moral rules regardless of consequences
+- Virtue ethics: Cultivate good character traits
+- Care ethics: Prioritize relationships and compassion
+
+These reasoning frameworks help us make better decisions in complex situations.

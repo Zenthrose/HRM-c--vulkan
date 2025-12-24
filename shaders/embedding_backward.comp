@@ -1,0 +1,38 @@
+#version 450
+// Embedding backward pass compute shader
+// Computes gradients for embedding matrix
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 0) readonly buffer InputTokensBuffer { uint input_tokens[]; };
+layout(binding = 1) readonly buffer OutputGradBuffer { float output_grad[]; };
+layout(binding = 2) writeonly buffer EmbeddingGradBuffer { float embedding_grad[]; };
+
+// Push constants
+layout(push_constant) uniform PushConstants {
+    uint seq_len;
+    uint embedding_dim;
+    uint num_embeddings;
+} pc;
+
+void main() {
+    uint global_id = gl_GlobalInvocationID.x;
+    uint total_threads = gl_WorkGroupSize.x * gl_NumWorkGroups.x;
+
+    // Each thread processes one embedding dimension
+    for (uint dim = global_id; dim < pc.embedding_dim; dim += total_threads) {
+        // Accumulate gradients for each token in the sequence
+        for (uint seq_pos = 0; seq_pos < pc.seq_len; ++seq_pos) {
+            uint token_id = input_tokens[seq_pos];
+
+            if (token_id < pc.num_embeddings) {
+                // Accumulate output gradient into embedding gradient
+                uint output_grad_idx = seq_pos * pc.embedding_dim + dim;
+                uint embedding_grad_idx = token_id * pc.embedding_dim + dim;
+
+                // Atomic add for thread safety (simplified - in practice would use atomic operations)
+                embedding_grad[embedding_grad_idx] += output_grad[output_grad_idx];
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+  "dataset_name": "arxiv_recent_papers",
+  "total_papers": 200,
+  "total_characters": 268174,
+  "unique_characters": 97,
+  "training_file": "data/text/processed/arxiv_training_corpus.txt",
+  "validation_file": "data/text/processed/arxiv_validation_corpus.txt",
+  "categories": [
+    "cs.AI",
+    "cs.LG",
+    "cs.CL",
+    "cs.NE",
+    "stat.ML",
+    "math.ST",
+    "physics.comp-ph",
+    "quant-ph"
+  ],
+  "download_date": "2025-12-04 04:09:28"
+}

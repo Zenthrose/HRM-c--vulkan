@@ -1,0 +1,8 @@
+Title: Comparing time and frequency domain numerical methods with Born-Rytov approximations for far-field electromagnetic scattering from single biological cells
+Authors: Cael Warner
+Date: 2025-12-03
+ArXiv ID: 2512.03858v1
+
+Comparing time and frequency domain numerical methods with Born-Rytov approximations for far-field electromagnetic scattering from single biological cells
+
+The Born-Rytov approximation estimates effective refractive index of biological cells from measurements of scattered light intensity, polarization and phase. Effective refractive index is useful for estimating a biological cell's dry mass, volume, and internal morphology directly from its elastic light scattering pattern. This work compares the Born-Rytov approximation with analytical, Yee-lattice finite-difference time-domain, and discrete-dipole approximations to Maxwell's equations in the cases of electromagnetic scattering from a sphere and a tomographic reconstruction of Saccharomyces cerevisiae. Practical advantages and limitations of each numerical method are compared for modeling electromagnetic scattering of both near-field intensity and the far-field projected intensity, in terms of accuracy, memory, and compute time. When compared with a commercial software implementation of the Yee-lattice finite-difference time domain method, the Born-Rytov scattering approximation and discrete dipole approximation show better agreement with the far-field light scattering pattern from Saccharomyces cerevisiae.

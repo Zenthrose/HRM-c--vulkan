@@ -1,0 +1,8 @@
+Title: Guided Flow Policy: Learning from High-Value Actions in Offline Reinforcement Learning
+Authors: Franki Nguimatsia Tiofack, Théotime Le Hellard, Fabian Schramm, Nicolas Perrin-Gilbert, Justin Carpentier
+Date: 2025-12-03
+ArXiv ID: 2512.03973v1
+
+Guided Flow Policy: Learning from High-Value Actions in Offline Reinforcement Learning
+
+Offline reinforcement learning often relies on behavior regularization that enforces policies to remain close to the dataset distribution. However, such approaches fail to distinguish between high-value and low-value actions in their regularization components. We introduce Guided Flow Policy (GFP), which couples a multi-step flow-matching policy with a distilled one-step actor. The actor directs the flow policy through weighted behavior cloning to focus on cloning high-value actions from the dataset rather than indiscriminately imitating all state-action pairs. In turn, the flow policy constrains the actor to remain aligned with the dataset's best transitions while maximizing the critic. This mutual guidance enables GFP to achieve state-of-the-art performance across 144 state and pixel-based tasks from the OGBench, Minari, and D4RL benchmarks, with substantial gains on suboptimal datasets and challenging tasks. Webpage: https://simple-robotics.github.io/publications/guided-flow-policy/

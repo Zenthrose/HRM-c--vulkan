@@ -1,0 +1,8 @@
+Title: The Klebanov theorem for the group 
+Authors: Margaryta Myronyuk
+Date: 2025-12-01
+ArXiv ID: 2512.01689v1
+
+The Klebanov theorem for the group 
+
+L. Klebanov proved the following theorem. Let  be independent random variables. Consider linear forms     where the coefficients  are real numbers. If the random vectors  and  are identically distributed, then all  for which  for all  are Gaussian random variables. The present article is devoted to an analogue of the Klebanov theorem in the case when random variables take values in the group  and the coefficients of the linear forms are topological endomorphisms of this group.

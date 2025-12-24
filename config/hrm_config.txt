@@ -1,0 +1,81 @@
+# HRM Configuration File
+# This file contains settings for the HRM system
+
+[general]
+# General HRM settings
+compaction_directory=./hrm_compactions
+cloud_storage_directory=./hrm_cloud_storage
+default_cloud_provider=LOCAL_STORAGE
+
+[memory_compaction]
+# Memory compaction settings
+default_level=MEDIUM
+preferred_algorithm=LZ4
+max_memory_before_compaction_mb=1024
+target_memory_after_compaction_mb=512
+auto_compaction_enabled=true
+compaction_interval_hours=6
+preserve_recent_conversations=true
+recent_conversation_window_hours=24
+
+[cloud_providers]
+# Cloud storage provider settings
+# To enable a provider, set enabled=true and provide the required credentials
+
+[google_drive]
+enabled=false
+client_id=your_google_client_id
+client_secret=your_google_client_secret
+refresh_token=your_google_refresh_token
+root_folder_id=your_google_root_folder
+
+[dropbox]
+enabled=false
+api_key=your_dropbox_api_key
+refresh_token=your_dropbox_refresh_token
+root_folder_id=your_dropbox_root_folder
+
+[onedrive]
+enabled=false
+client_id=your_onedrive_client_id
+client_secret=your_onedrive_client_secret
+refresh_token=your_onedrive_refresh_token
+root_folder_id=your_onedrive_root_folder
+
+[mega]
+enabled=false
+api_key=your_mega_api_key
+refresh_token=your_mega_refresh_token
+root_folder_id=your_mega_root_folder
+
+[quantization]
+# Quantization settings for Nyx evolution and efficiency optimization
+# NOTE: All quantization features disabled by default for safety
+enabled=false
+precision_level=FP32
+adaptive_precision=true
+memory_threshold_mb=4096
+accuracy_threshold=0.85
+fallback_to_fp32=true
+
+# Mixed precision settings
+mixed_precision_enabled=false
+attention_precision=FP16
+mlp_precision=INT8
+embedding_precision=INT4
+
+# Training quantization
+quantized_training_enabled=false
+gradient_precision=FP16
+weight_precision=INT4
+activation_precision=FP16
+
+# Evolution and learning
+quantization_evolution_enabled=false
+learning_in_quantized_state=false
+self_modification_during_quantization=false
+
+# Performance targets
+target_accuracy_preservation=0.87
+memory_reduction_target=0.75
+speedup_target=2.0

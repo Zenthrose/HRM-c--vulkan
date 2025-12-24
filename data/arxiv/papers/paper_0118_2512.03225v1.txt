@@ -1,0 +1,8 @@
+Title: Convergence of a class of gradient-free optimisation schemes when the objective function is noisy, irregular, or both
+Authors: Christophe Andrieu, Nicolas Chopin, Ettore Fincato, Mathieu Gerber
+Date: 2025-12-02
+ArXiv ID: 2512.03225v1
+
+Convergence of a class of gradient-free optimisation schemes when the objective function is noisy, irregular, or both
+
+We investigate the convergence properties of a class of iterative algorithms designed to minimize a potentially non-smooth and noisy objective function, which may be algebraically intractable and whose values may be obtained as the output of a black box. The algorithms considered can be cast under the umbrella of a generalised gradient descent recursion, where the gradient is that of a smooth approximation of the objective function. The framework we develop includes as special cases model-based and mollification methods, two classical approaches to zero-th order optimisation. The convergence results are obtained under very weak assumptions on the regularity of the objective function and involve a trade-off between the degree of smoothing and size of the steps taken in the parameter updates. As expected, additional assumptions are required in the stochastic case. We illustrate the relevance of these algorithms and our convergence results through a challenging classification example from machine learning.

@@ -1,0 +1,8 @@
+Title: The brain-AI convergence: Predictive and generative world models for general-purpose computation
+Authors: Shogo Ohmae, Keiko Ohmae
+Date: 2025-12-02
+ArXiv ID: 2512.02419v1
+
+The brain-AI convergence: Predictive and generative world models for general-purpose computation
+
+Recent advances in general-purpose AI systems with attention-based transformers offer a potential window into how the neocortex and cerebellum, despite their relatively uniform circuit architectures, give rise to diverse functions and, ultimately, to human intelligence. This Perspective provides a cross-domain comparison between the brain and AI that goes beyond the traditional focus on visual processing, adopting the emerging perspecive of world-model-based computation. Here, we identify shared computational mechanisms in the attention-based neocortex and the non-attentional cerebellum: both predict future world events from past inputs and construct internal world models through prediction-error learning. These predictive world models are repurposed for seemingly distinct functions -- understanding in sensory processing and generation in motor processing -- enabling the brain to achieve multi-domain capabilities and human-like adaptive intelligence. Notably, attention-based AI has independently converged on a similar learning paradigm and world-model-based computation. We conclude that these shared mechanisms in both biological and artificial systems constitute a core computational foundation for realizing diverse functions including high-level intelligence, despite their relatively uniform circuit structures. Our theoretical insights bridge neuroscience and AI, advancing our understanding of the computational essence of intelligence.

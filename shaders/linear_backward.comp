@@ -1,0 +1,67 @@
+#version 450
+// Linear layer backward pass compute shader
+// Computes gradients for weights, bias, and input
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 0) readonly buffer InputBuffer { float input_data[]; };
+layout(binding = 1) readonly buffer WeightBuffer { float weights[]; };
+layout(binding = 2) readonly buffer OutputGradBuffer { float output_grad[]; };
+layout(binding = 3) writeonly buffer WeightGradBuffer { float weight_grad[]; };
+layout(binding = 4) writeonly buffer BiasGradBuffer { float bias_grad[]; };
+layout(binding = 5) writeonly buffer InputGradBuffer { float input_grad[]; };
+
+// Push constants for layer dimensions
+layout(push_constant) uniform PushConstants {
+    uint batch_size;
+    uint input_size;
+    uint output_size;
+    uint has_bias;
+} pc;
+
+void main() {
+    uint global_id = gl_GlobalInvocationID.x;
+    uint total_threads = gl_WorkGroupSize.x * gl_NumWorkGroups.x;
+
+    // Each thread handles one element of the weight gradient matrix
+    // Weight gradient: dL/dW[i,j] = sum over batch (input[batch,j] * output_grad[batch,i])
+
+    for (uint out_idx = 0; out_idx < pc.output_size; ++out_idx) {
+        for (uint in_idx = global_id; in_idx < pc.input_size; in_idx += total_threads) {
+            float grad_sum = 0.0;
+            for (uint batch = 0; batch < pc.batch_size; ++batch) {
+                uint input_idx = batch * pc.input_size + in_idx;
+                uint output_grad_idx = batch * pc.output_size + out_idx;
+                grad_sum += input_data[input_idx] * output_grad[output_grad_idx];
+            }
+            uint weight_grad_idx = out_idx * pc.input_size + in_idx;
+            weight_grad[weight_grad_idx] = grad_sum;
+        }
+    }
+
+    // Compute bias gradients: dL/db[i] = sum over batch (output_grad[batch,i])
+    if (pc.has_bias != 0) {
+        for (uint out_idx = global_id; out_idx < pc.output_size; out_idx += total_threads) {
+            float grad_sum = 0.0;
+            for (uint batch = 0; batch < pc.batch_size; ++batch) {
+                uint output_grad_idx = batch * pc.output_size + out_idx;
+                grad_sum += output_grad[output_grad_idx];
+            }
+            bias_grad[out_idx] = grad_sum;
+        }
+    }
+
+    // Compute input gradients: dL/dinput[batch,j] = sum over output (output_grad[batch,i] * weights[i,j])
+    for (uint batch = 0; batch < pc.batch_size; ++batch) {
+        for (uint in_idx = global_id; in_idx < pc.input_size; in_idx += total_threads) {
+            float grad_sum = 0.0;
+            for (uint out_idx = 0; out_idx < pc.output_size; ++out_idx) {
+                uint output_grad_idx = batch * pc.output_size + out_idx;
+                uint weight_idx = out_idx * pc.input_size + in_idx;
+                grad_sum += output_grad[output_grad_idx] * weights[weight_idx];
+            }
+            uint input_grad_idx = batch * pc.input_size + in_idx;
+            input_grad[input_grad_idx] = grad_sum;
+        }
+    }
+}

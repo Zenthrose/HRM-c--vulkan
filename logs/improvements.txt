@@ -1,0 +1,65 @@
+Root & Build Files (High Priority: Ensure Clone/Build Works on Any OS/Rig)
+
+.gitignore: Covers build/logs/caches well, but misses IDE/OS noise. Change: Add *.user, /.vscode/, /caches/, /temp_*, .DS_Store, __pycache__/, *.pyc, *.exe~, *.o~, /.vs/. Rationale: macOS/Windows users clone, get polluted—pristine for any OS. OpenCode.ai Prompt: "Update .gitignore to include cross-platform IDE/OS files as listed, keeping existing entries."
+.gitmodules: Empty (self-contained)—perfect. Change: None. Rationale: Zero deps = universal pull—no submodule hell.
+CMakeLists.txt: Recent portability commits added find_program for DLLs, but still has conditional WIN32 blocks and no multi-arch. Change: Add set(CMAKE_CXX_STANDARD 17) and target_compile_features(hrm_core PUBLIC cxx_std_17). Use target_link_libraries(hrm_system PUBLIC Vulkan::Vulkan) after find_package(Vulkan REQUIRED). For shaders, add glslc multi-target (glslc --target-env vulkan1.3 -o shaders/attention.spv shaders/attention.comp). Rationale: Detects Clang/MSVC on macOS—builds on ARM M1 without tweaks. OpenCode.ai Prompt: "Update CMakeLists.txt for C++17 standard, Vulkan linking, and multi-arch glslc, based on current file."
+AGENTS.md: Commit snapshot—transparent. Change: Evolve to CHANGELOG.md with semantic versions (v1.0.0: "Vulkan port"), auto-gen via CI. Rationale: Users on forks need diffs—portable history. OpenCode.ai Prompt: "Convert AGENTS.md to CHANGELOG.md with semantic versioning from recent commits."
+HRM_ENHANCEMENT_ROADMAP.md: Visionary, with portability milestones. Change: Add "Universal Deployment" section (e.g., "Q2 2026: Docker multi-arch + WASM for web"). Rationale: Flags Linux/macOS gaps for world adoption. OpenCode.ai Prompt: "Expand HRM_ENHANCEMENT_ROADMAP.md with Universal Deployment section as described."
+LANGUAGE_TRAINING_PREP.md: Prep steps—solid. Change: Add OS-agnostic pip with virtualenv (python -m venv hrm_env; source hrm_env/bin/activate; pip install -r requirements.txt). Rationale: Linux users hit path issues—copy-paste universal. OpenCode.ai Prompt: "Update LANGUAGE_TRAINING_PREP.md with OS-agnostic virtualenv pip install example."
+
+README.md: Hooks users, with portability notes. Change: Add Docker compose.yaml snippet (services: hrm: build: . volumes: - ./data:/data). Rationale: Screams "runs anywhere"—one-command setup. OpenCode.ai Prompt: "Add Docker compose example to README.md portability section."
+
+Data & Scripts (Medium Priority: User Data Independence Without Breaking Scans)
+
+arc_eval.ipynb: ARC eval—ad-hoc. Change: Port to src/arc_eval.cpp with std::filesystem for data (std::filesystem::current_path() / "data/arc"). Rationale: Jupyter locks to install—C++ universal. OpenCode.ai Prompt: "Port arc_eval.ipynb to src/arc_eval.cpp with portable paths."
+cpp_requirements.md: Versions—helpful. Change: Add "Setup Script" with conda (conda create -n hrm python=3.10; conda install -c conda-forge vulkan-headers). Rationale: New OS skips SDK—portable. OpenCode.ai Prompt: "Add conda setup script to cpp_requirements.md."
+data_expansion_plan.md: Drive-scan—ambitious. Change: Add opt-in note ("Set $HRM_SCAN_FULL=1 for full scan; defaults to $HRM_DATA_ROOT"). Rationale: Keeps omniscience but user-controlled—portable privacy. OpenCode.ai Prompt: "Update data_expansion_plan.md with $HRM_SCAN_FULL opt-in for full scans."
+evaluate.py: Loss calc—simple. Change: Port to src/evaluate.cpp with std::filesystem for inputs (std::filesystem::path("data/eval.txt")). Rationale: Python deps lock—C++ universal. OpenCode.ai Prompt: "Port evaluate.py to src/evaluate.cpp with portable paths."
+generate_attention_test_data.py: Synthetic gen—aid. Change: Add --output-dir arg default pathlib.Path('.') / 'test_data'. Rationale: Hard-coded breaks dirs—portable. OpenCode.ai Prompt: "Add --output-dir arg to generate_attention_test_data.py."
+hrm.service: Systemd—Linux daemon. Change: Add install_service.py for cross-OS (subprocess for nssm/New-Service). Rationale: Windows key—single script everywhere. OpenCode.ai Prompt: "Create scripts/install_service.py for cross-OS service install from hrm.service."
+install_systemd.sh: Install—Linux. Change: #!/usr/bin/env bash, set -euo pipefail, detect OS (if [[ "$OSTYPE" == "msys" ]]; then exec powershell install_service.ps1). Rationale: WSL hits errors—run anywhere. OpenCode.ai Prompt: "Update install_systemd.sh for cross-OS detect and env bash."
+install_windows_service.bat: Registration—Windows. Change: Rewrite as install_service.py with PowerShell. Rationale: Batch brittle—Python portable. OpenCode.ai Prompt: "Rewrite install_windows_service.bat as install_service.py with PowerShell."
+prepare_language_dataset.sh: Chunks—solid. Change: #!/usr/bin/env bash, --data-dir arg default pwd/data. Rationale: Hard-coded breaks—portable. OpenCode.ai Prompt: "Add --data-dir arg to prepare_language_dataset.sh."
+pretrain.py: Legacy—scaffold. Change: Mark "deprecated—use C++ Vulkan"; migration to vulkan_trainer.cpp. Rationale: Users confuse—clarify. OpenCode.ai Prompt: "Mark pretrain.py deprecated with C++ migration note."
+puzzle_dataset.py: Gen—data. Change: --output arg with pathlib.Path('data/puzzles'). Rationale: Hard-coded breaks—portable. OpenCode.ai Prompt: "Add --output arg to puzzle_dataset.py."
+puzzle_visualizer.html: Viz—static. Change: Embed in docs/; add python -m http.server note. Rationale: Linux can't open—portable serve. OpenCode.ai Prompt: "Move puzzle_visualizer.html to docs/ with serve note."
+setup_character_training.sh: Dir creation—prep. Change: #!/usr/bin/env bash, --install-deps for pip. Rationale: Assumes data—self-setup. OpenCode.ai Prompt: "Add --install-deps to setup_character_training.sh."
+test_data_*.txt: Samples—good. Change: Move to tests/data/; CMake copy. Rationale: Scattered confuses—portable. OpenCode.ai Prompt: "Move test_data_*.txt to tests/data/ with CMake copy."
+test_hrm_system.bat/sh: Runners—basic. Change: Unify to test_hrm.py with subprocess, --verbose. Rationale: Batch fails Linux—Python portable. OpenCode.ai Prompt: "Unify test_hrm_system.bat/sh to test_hrm.py with subprocess."
+
+Directories (High Priority: Structure for Universal Clones)
+
+assets/: UI—static. Change: CMake copy to build/assets (file(GLOB ASSETS assets/*)). Rationale: Self-mod GUI bundled—users don't hunt. OpenCode.ai Prompt: "Add CMake copy for assets/ to build/."
+config/: Hyperparams—INI/JSON. Change: Load from $HRM_CONFIG_DIR or ~/.hrm/config. Rationale: Hard-coded breaks homes—portable. OpenCode.ai Prompt: "Implement $HRM_CONFIG_DIR loading in config_manager.hpp."
+data/: Corpora—samples. Change: .gitignore *.bin; data/README.md with fetch scripts. Rationale: Drive-scans dump—portable structure. OpenCode.ai Prompt: "Add .gitignore and README.md to data/."
+dataset/: Puzzles—gens. Change: CMake add_subdirectory(dataset). Rationale: Users run tests—integrated. OpenCode.ai Prompt: "Add CMake subdirectory for dataset/."
+hrm_cloud_storage/: Sync—providers. Change: $HRM_CLOUD_API_KEY for keys, local fallback. Rationale: Hard-coded locks—portable secrets. OpenCode.ai Prompt: "Add $HRM_CLOUD_API_KEY to hrm_cloud_storage/."
+hrm_compactions/: Compaction—runtime. Change: $TMPDIR/hrm_compactions or temp_directory_path(). Rationale: ./ breaks non-writable—portable. OpenCode.ai Prompt: "Use temp_directory_path() for hrm_compactions/."
+logs/: Runtime—logs. Change: $HRM_LOG_DIR or current_path()/logs. Rationale: Drive-scans log—user-settable. OpenCode.ai Prompt: "Implement $HRM_LOG_DIR in logger.hpp."
+models/: Checkpoints—saves. Change: $HRM_MODEL_DIR or ~/.hrm/models. Rationale: Self-evo saves—portable. OpenCode.ai Prompt: "Add $HRM_MODEL_DIR to model loading."
+scripts/: Helpers—bash/Python. Change: All #!/usr/bin/env bash/python, --root-dir default pwd, set -euo pipefail. Rationale: Hard-coded breaks—portable root. OpenCode.ai Prompt: "Add --root-dir and env shebang to all scripts/."
+shaders/: GLSL/SPIR-V—compute. Change: glslc multi-arch (--target-env vulkan1.3), embed as byte arrays. Rationale: Self-mod recompiles—portable build. OpenCode.ai Prompt: "Add multi-arch glslc to shaders/ build."
+src/: Core—74 files. Change: Subdirs (core/vulkan/self_mod/training) with add_subdirectory. Rationale: Monolith scales—portable navigation. OpenCode.ai Prompt: "Restructure src/ into subdirs with CMake add_subdirectory."
+utils/: Misc—timers/loggers. Change: Singleton Logger with $HRM_LOG_LEVEL=debug, thread-safe. Rationale: Autonomous logging—user-tunable. OpenCode.ai Prompt: "Implement thread-safe Logger in utils/ with env level."
+
+Missing Files (Gaps to Fill for Universal Usability)
+
+.env.example: Template (HRM_CLOUD_API_KEY=your_key, HRM_ROOT=/path/to/hrm, HRM_SCAN_FULL=1). Rationale: Env vars without edits—portable secrets, opt-in scans. OpenCode.ai Prompt: "Create .env.example with all env vars."
+docker/Dockerfile: Multi-stage Vulkan deps, multi-arch (--platform linux/amd64,linux/arm64). Rationale: Clone on any OS, docker build runs anywhere. OpenCode.ai Prompt: "Create docker/Dockerfile multi-arch for Vulkan."
+tests/CMakeLists.txt: GTest with enable_testing(), cross-OS self-mod tests. Rationale: Self-mod verified—portable CI. OpenCode.ai Prompt: "Add tests/CMakeLists.txt with GTest for self-mod."
+docs/install.md: OS-specific setup (AMD drivers, Vulkan runtime, env vars). Rationale: New rigs—step-by-step. OpenCode.ai Prompt: "Create docs/install.md with OS setups."
+.clang-format: Style guide (snake_case, 4-space). Rationale: Self-mod gen clean code universally. OpenCode.ai Prompt: "Create .clang-format for snake_case C++."
+pre-commit-config.yaml: Hooks for lint/format on commit. Rationale: Users contrib—quality gate. OpenCode.ai Prompt: "Create pre-commit-config.yaml for clang-format."
+
+Performance & Robustness Improvements (Medium Priority: Keep It Fast & Stable Everywhere)
+
+src/attention.cpp: Add VK_CHECK macro (#define VK_CHECK(x) if ((x) != VK_SUCCESS) throw VulkanError((x))). Rationale: Silent failures kill debugging—explicit portable. OpenCode.ai Prompt: "Add VK_CHECK macro to attention.cpp and all Vulkan files."
+src/character_language_trainer.cpp: Add --parallel-batches=N with OpenMP (#pragma omp parallel for). Rationale: 8GB rigs parallel 4—2x throughput any CPU. OpenCode.ai Prompt: "Add OpenMP parallel batches to character_language_trainer.cpp."
+src/self_modifying_hrm.cpp: Add AST validation before hot-swap (clang -fsyntax-only). Rationale: Self-mod breaks build—sandbox portable. OpenCode.ai Prompt: "Add AST validation in self_modifying_hrm.cpp before hot-swap."
+src/vulkan_trainer.cpp: Add async I/O for drive-scans with std::async/thread pool (4 threads). Rationale: Scans 1TB in minutes—responsive any rig. OpenCode.ai Prompt: "Add std::async for drive-scans in vulkan_trainer.cpp."
+src/utils/logger.hpp: Centralize to spdlog with $HRM_LOG_LEVEL=debug, thread-safe. Rationale: Drive-scans spew—structured portable. OpenCode.ai Prompt: "Implement thread-safe spdlog Logger in utils/logger.hpp with env level."
+
+Testing & CI Improvements (High Priority: Verify Portability)
+
+.github/workflows/ci.yml: Matrix for OS (ubuntu-latest, windows-latest, macos-latest), compilers (GCC/Clang/MSVC), with build/test steps. Rationale: Users trust—CI verifies Vulkan all OS. OpenCode.ai Prompt: "Create .github/workflows/ci.yml with OS/compiler matrix for build/test."
+tests/integration/self_mod_test.cpp: Mock AST for hot-swap verification. Rationale: Self-mod breaks—portable tests catch. OpenCode.ai Prompt: "Create tests/integration/self_mod_test.cpp with mock AST."

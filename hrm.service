@@ -1,0 +1,39 @@
+[Unit]
+Description=HRM Self-Evolving AI System
+Documentation=https://github.com/Zenthrose/HRM-c--vulkan
+After=network.target graphical-session.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/hrm_system --daemon --auto-boot
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=10
+User=hrm
+Group=hrm
+WorkingDirectory=/opt/hrm
+Environment=HRM_HOME=/opt/hrm
+Environment=HRM_LOG_LEVEL=info
+Environment=HRM_AUTO_BOOT=true
+Environment=HRM_IDLE_PROCESSING=true
+
+# Resource limits for safety
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=8G
+CPUQuota=200%
+IOSchedulingClass=best-effort
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/hrm /var/log/hrm /tmp/hrm
+
+[Install]
+WantedBy=multi-user.target
+Alias=hrm.service

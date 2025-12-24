@@ -1,0 +1,8 @@
+Title: Predicting parameters of a model cuprate superconductor using machine learning
+Authors: V. A. Ulitko, D. N. Yasinskaya, S. A. Bezzubin, A. A. Koshelev, Y. D. Panov
+Date: 2025-12-03
+ArXiv ID: 2512.04024v1
+
+Predicting parameters of a model cuprate superconductor using machine learning
+
+The computational complexity of calculating phase diagrams for multi-parameter models significantly limits the ability to select parameters that correspond to experimental data. This work presents a machine learning method for solving the inverse problem - forecasting the parameters of a model Hamiltonian for a cuprate superconductor based on its phase diagram. A comparative study of three deep learning architectures was conducted: VGG, ResNet, and U-Net. The latter was adapted for regression tasks and demonstrated the best performance. Training the U-Net model was performed on an extensive dataset of phase diagrams calculated within the mean-field approximation, followed by validation on data obtained using a semi-classical heat bath algorithm for Monte Carlo simulations. It is shown that the model accurately predicts all considered Hamiltonian parameters, and areas of low prediction accuracy correspond to regions of parametric insensitivity in the phase diagrams. This allows for the extraction of physically interpretable patterns and validation of the significance of parameters for the system. The results confirm the promising potential of applying machine learning to analyze complex physical models in condensed matter physics.

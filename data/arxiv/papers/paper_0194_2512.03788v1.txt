@@ -1,0 +1,8 @@
+Title: Quantum Algorithm for Searching for the Longest Segment and the Largest Empty Rectangle
+Authors: Kamil Khadiev, Vladislav Remidovskii, Timur Bikmullin, Aliya Khadieva
+Date: 2025-12-03
+ArXiv ID: 2512.03788v1
+
+Quantum Algorithm for Searching for the Longest Segment and the Largest Empty Rectangle
+
+In the paper, we consider the problem of searching for the Largest empty rectangle in a 2D map, and the one-dimensional version of the problem is the problem of searching for the largest empty segment. We present a quantum algorithm for the Largest Empty Square problem and the Largest Empty Rectangle of a fixed width  for -rectangular map. Query complexity of the algorithm is  for the square case, and  for the rectangle with a fixed width  case, respectively. At the same time, the lower bounds for the classical case are , and , respectively. The Quantum algorithm for the one-dimensional version of the problem has  query complexity. The quantum lower bound for the problem is  which is almost equal to the upper bound up to a log factor. The classical lower bound is . So, we obtain the quadratic speed-up for the problem.

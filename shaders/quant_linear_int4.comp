@@ -1,0 +1,74 @@
+#version 450
+// INT4 quantized linear layer compute shader
+// Performs: output = input @ dequantize(weights) + bias
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 0) readonly buffer InputBuffer {
+    float input_data[];
+};
+
+layout(binding = 1) readonly buffer WeightBuffer {
+    uint8_t quantized_weights[];  // INT4 weights packed as 2 values per byte
+};
+
+layout(binding = 2) readonly buffer ScaleBuffer {
+    float weight_scales[];  // Dequantization scales per output channel
+};
+
+layout(binding = 3) readonly buffer ZeroPointBuffer {
+    float weight_zero_points[];  // Dequantization zero points per output channel
+};
+
+layout(binding = 4) readonly buffer BiasBuffer {
+    float bias_data[];
+};
+
+layout(binding = 5) writeonly buffer OutputBuffer {
+    float output_data[];
+};
+
+// Push constants for layer dimensions
+layout(push_constant) uniform PushConstants {
+    uint input_size;      // Input feature dimension
+    uint output_size;     // Output feature dimension
+    uint batch_size;      // Number of input samples
+} pc;
+
+void main() {
+    uint global_id = gl_GlobalInvocationID.x;
+    uint total_threads = gl_WorkGroupSize.x * gl_NumWorkGroups.x;
+
+    // Each thread processes one output element per batch
+    for (uint batch_idx = 0; batch_idx < pc.batch_size; ++batch_idx) {
+        for (uint out_idx = global_id; out_idx < pc.output_size; out_idx += total_threads) {
+            float sum = 0.0f;
+
+            // Perform matrix multiplication with dequantized weights
+            for (uint in_idx = 0; in_idx < pc.input_size; ++in_idx) {
+                // Load input value
+                float input_val = input_data[batch_idx * pc.input_size + in_idx];
+
+                // Load and dequantize weight
+                // INT4 weights are packed: 2 values per byte, 4 bits each
+                uint weight_byte_idx = (out_idx * pc.input_size + in_idx) / 2;
+                uint8_t packed_weight = quantized_weights[weight_byte_idx];
+
+                // Extract the appropriate 4-bit value
+                uint nibble_idx = (out_idx * pc.input_size + in_idx) % 2;
+                uint8_t int4_weight = (packed_weight >> (nibble_idx * 4)) & 0x0F;
+
+                // Convert to signed INT4 (-8 to 7) and dequantize to float
+                int8_t signed_int4 = int8_t(int4_weight) - 8;
+                float dequantized_weight = (float(signed_int4) - weight_zero_points[out_idx]) * weight_scales[out_idx];
+
+                // Accumulate
+                sum += input_val * dequantized_weight;
+            }
+
+            // Add bias and write output
+            uint output_idx = batch_idx * pc.output_size + out_idx;
+            output_data[output_idx] = sum + bias_data[out_idx];
+        }
+    }
+}

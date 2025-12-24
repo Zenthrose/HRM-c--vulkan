@@ -1,0 +1,8 @@
+Title: Exploring Definitions of Quality and Diversity in Sonic Measurement Spaces
+Authors: Björn Þór Jónsson, Çağrı Erdem, Stefano Fasciani, Kyrre Glette
+Date: 2025-12-02
+ArXiv ID: 2512.02783v1
+
+Exploring Definitions of Quality and Diversity in Sonic Measurement Spaces
+
+Digital sound synthesis presents the opportunity to explore vast parameter spaces containing millions of configurations. Quality diversity (QD) evolutionary algorithms offer a promising approach to harness this potential, yet their success hinges on appropriate sonic feature representations. Existing QD methods predominantly employ handcrafted descriptors or supervised classifiers, potentially introducing unintended exploration biases and constraining discovery to familiar sonic regions. This work investigates unsupervised dimensionality reduction methods for automatically defining and dynamically reconfiguring sonic behaviour spaces during QD search. We apply Principal Component Analysis (PCA) and autoencoders to project high-dimensional audio features onto structured grids for MAP-Elites, implementing dynamic reconfiguration through model retraining at regular intervals. Comparison across two experimental scenarios shows that automatic approaches achieve significantly greater diversity than handcrafted behaviour spaces while avoiding expert-imposed biases. Dynamic behaviour-space reconfiguration maintains evolutionary pressure and prevents stagnation, with PCA proving most effective among the dimensionality reduction techniques. These results contribute to automated sonic discovery systems capable of exploring vast parameter spaces without manual intervention or supervised training constraints.

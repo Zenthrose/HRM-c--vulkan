@@ -1,0 +1,8 @@
+Title: Rational regulation strategies of interstitial localized electrons in electride: A density functional theory study
+Authors: L. Zhang, D. Wang, H. Wang, J. Li, Y. F. Wang, Q. Wu, Hua Y. Geng
+Date: 2025-12-02
+ArXiv ID: 2512.02674v1
+
+Rational regulation strategies of interstitial localized electrons in electride: A density functional theory study
+
+As a class of electron-rich materials, electrides demonstrate promising applications in many fields. However, the required high pressure restricts the practical applications to some extent. This study reveals that the unique feature of electride, i.e., the localization of interstitial electrons, can be greatly enhanced and tuned by self-defective doping, applying tensile/compressive stress, or shear stress. Moreover, the requirement of orbital orthogonality between the valence and core electron wave functions, as well as the Pauli exclusion principle, should be the driven force for the electron interstitial localization; and the exertion of external pressure modifies the available space to accommodate the electronic wave functions, thus enhances the interstitial localization. These discoveries lay down the ground for searching for promising electrides that are practicable at ambient conditions.

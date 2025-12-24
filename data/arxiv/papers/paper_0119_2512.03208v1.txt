@@ -1,0 +1,8 @@
+Title: Uncertainty Quantification for Large Language Model Reward Learning under Heterogeneous Human Feedback
+Authors: Pangpang Liu, Junwei Lu, Will Wei Sun
+Date: 2025-12-02
+ArXiv ID: 2512.03208v1
+
+Uncertainty Quantification for Large Language Model Reward Learning under Heterogeneous Human Feedback
+
+We study estimation and statistical inference for reward models used in aligning large language models (LLMs). A key component of LLM alignment is reinforcement learning from human feedback (RLHF), where humans compare pairs of model-generated answers and their preferences are used to train a reward model. However, human feedback is inherently heterogeneous, creating significant challenges for reliable reward learning. To address this, we adopt a heterogeneous preference framework that jointly models the latent reward of answers and human rationality. This leads to a challenging biconvex optimization problem, which we solve via an alternating gradient descent algorithm. We establish theoretical guarantees for the resulting estimator, including its convergence and asymptotic distribution. These results enable the construction of confidence intervals for reward estimates. Leveraging these uncertainty quantification results, we conduct valid statistical comparisons between rewards and incorporate uncertainty into the best-of- (BoN) policy framework. Extensive simulations demonstrate the effectiveness of our method, and applications to real LLM data highlight the practical value of accounting for uncertainty in reward modeling for LLM alignment.

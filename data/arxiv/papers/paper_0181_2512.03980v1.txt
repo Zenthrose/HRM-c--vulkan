@@ -1,0 +1,8 @@
+Title: Quantum Diplomacy within the Southeast Asia Quantum Ecosystem
+Authors: Pak Shen Choong, Nurisya Mohd Shah, Yung Szen Yap
+Date: 2025-12-03
+ArXiv ID: 2512.03980v1
+
+Quantum Diplomacy within the Southeast Asia Quantum Ecosystem
+
+Amid the International Year of Quantum Science and Technology 2025 (IYQ 2025), a significant portion of global funding has been dedicated to various quantum initiatives, with over 30 countries announcing their respective quantum strategies. Within the Southeast Asia context, Singapore, Thailand, and the Philippines have launched their respective quantum strategies and roadmaps. Meanwhile, six out of eleven Southeast Asia countries have expressed interest in formulating a regional quantum ecosystem to pursue a set of common goals. Quantum technologies, though still in their infancy within the second quantum revolution, have advanced rapidly in recent years. Due to their dual-use nature, quantum technologies are considered emerging and disruptive, often raising concerns from the cybersecurity perspective. While several discussions regarding Malaysia's quantum initiative and strategy are ongoing, it is vital to broaden the conversation and position Malaysia within the regional ecosystem. This paper provides an overview of Malaysia's quantum landscape and a summary of the regional initiatives since the establishment of Southeast Asia Quantum Network. We then analyse Malaysia's strengths in quantum research and provide four recommendations to strengthen the regional ecosystem.

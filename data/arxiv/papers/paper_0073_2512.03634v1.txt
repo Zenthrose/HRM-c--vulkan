@@ -1,0 +1,8 @@
+Title: AlignCheck: a Semantic Open-Domain Metric for Factual Consistency Assessment
+Authors: Ahmad Aghaebrahimian
+Date: 2025-12-03
+ArXiv ID: 2512.03634v1
+
+AlignCheck: a Semantic Open-Domain Metric for Factual Consistency Assessment
+
+Large Language Models have significantly advanced natural language processing tasks, but remain prone to generating incorrect or misleading but plausible arguments. This issue, known as hallucination, is particularly concerning in high-stakes domains like clinical applications, where factual inaccuracies can have severe consequences. Existing evaluation metrics fail to adequately assess factual consistency and lack interpretability, making diagnosing and mitigating errors difficult. We propose an interpretable framework for factual consistency assessment for in-domain and open-domain texts to address these limitations. Our approach decomposes text into atomic facts and introduces a flexible, schema-free methodology. Unlike previous methods with an absolute metric, we incorporate a weighted metric to enhance factual evaluation. Additionally, we propose a mechanism to control assessment complexity in intricate domains. We benchmark our approach on popular general and clinical datasets and release our code to support fact-aware model training in future research.

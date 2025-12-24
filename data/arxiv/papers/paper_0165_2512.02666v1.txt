@@ -1,0 +1,8 @@
+Title: Efficient Simulation of the 2D Hubbard Model via Hilbert Space-Filling Curve Mapping
+Authors: Ashkan Abedi, Vittorio Giovannetti, Dario De Santis
+Date: 2025-12-02
+ArXiv ID: 2512.02666v1
+
+Efficient Simulation of the 2D Hubbard Model via Hilbert Space-Filling Curve Mapping
+
+We investigate tensor network simulations of the two-dimensional Hubbard model by mapping the lattice onto a one-dimensional chain using space-filling curves. In particular, we focus on the Hilbert curve, whose locality-preserving structure minimizes the range of effective interactions in the mapped model. This enables a more compact matrix product state (MPS) representation compared to conventional snake mapping. Through systematic benchmarks, we show that the Hilbert curve consistently yields lower ground-state energies at fixed bond dimension, with the advantage increasing for larger system sizes and in physically relevant interaction regimes. Our implementation reaches clusters up to  sites with open and periodic boundary conditions, delivering reliable ground-state energies and correlation functions in agreement with established results, but at significantly reduced computational cost. These findings establish space-filling curve mappings, particularly the Hilbert curve, as a powerful tool for extending tensor-network studies of strongly correlated two-dimensional quantum systems beyond the limits accessible with standard approaches.

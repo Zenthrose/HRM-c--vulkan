@@ -1,0 +1,50 @@
+#version 450
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// Buffers
+layout(binding = 0) readonly buffer InputBuffer { uint data[]; };
+layout(binding = 1) readonly buffer WeightBuffer0 { float weights[]; } weight_buffers0;
+layout(binding = 2) readonly buffer WeightBuffer1 { float weights[]; } weight_buffers1;
+layout(binding = 3) readonly buffer WeightBuffer2 { float weights[]; } weight_buffers2;
+layout(binding = 4) readonly buffer WeightBuffer3 { float weights[]; } weight_buffers3;
+layout(binding = 5) readonly buffer WeightBuffer4 { float weights[]; } weight_buffers4;
+layout(binding = 6) readonly buffer WeightBuffer5 { float weights[]; } weight_buffers5;
+layout(binding = 7) readonly buffer WeightBuffer6 { float weights[]; } weight_buffers6;
+layout(binding = 8) readonly buffer WeightBuffer7 { float weights[]; } weight_buffers7;
+layout(binding = 9) readonly buffer WeightBuffer8 { float weights[]; } weight_buffers8;
+layout(binding = 10) readonly buffer WeightBuffer9 { float weights[]; } weight_buffers9;
+layout(binding = 11) readonly buffer WeightBuffer10 { float weights[]; } weight_buffers10;
+layout(binding = 12) writeonly buffer OutputBuffer { float out_data[]; };
+
+// Uniforms
+layout(binding = 13) uniform Params {
+    uint seq_len;
+    uint embedding_dim;
+    uint chunk_size;
+};
+
+void main() {
+    uint idx = gl_GlobalInvocationID.x;
+    uint seq_idx = idx / embedding_dim;
+    uint dim_idx = idx % embedding_dim;
+
+    if (seq_idx >= seq_len) return;
+
+    uint token_id = data[seq_idx];
+    uint chunk = token_id / chunk_size;
+    uint local_token = token_id % chunk_size;
+    uint weight_idx = local_token * embedding_dim + dim_idx;
+    
+    if (chunk == 0) out_data[idx] = weight_buffers0.weights[weight_idx];
+    else if (chunk == 1) out_data[idx] = weight_buffers1.weights[weight_idx];
+    else if (chunk == 2) out_data[idx] = weight_buffers2.weights[weight_idx];
+    else if (chunk == 3) out_data[idx] = weight_buffers3.weights[weight_idx];
+    else if (chunk == 4) out_data[idx] = weight_buffers4.weights[weight_idx];
+    else if (chunk == 5) out_data[idx] = weight_buffers5.weights[weight_idx];
+    else if (chunk == 6) out_data[idx] = weight_buffers6.weights[weight_idx];
+    else if (chunk == 7) out_data[idx] = weight_buffers7.weights[weight_idx];
+    else if (chunk == 8) out_data[idx] = weight_buffers8.weights[weight_idx];
+    else if (chunk == 9) out_data[idx] = weight_buffers9.weights[weight_idx];
+    else if (chunk == 10) out_data[idx] = weight_buffers10.weights[weight_idx];
+}

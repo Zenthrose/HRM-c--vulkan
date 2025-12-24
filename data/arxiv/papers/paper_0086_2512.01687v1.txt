@@ -1,0 +1,8 @@
+Title: Revisiting Direct Encoding: Learnable Temporal Dynamics for Static Image Spiking Neural Networks
+Authors: Huaxu He
+Date: 2025-12-01
+ArXiv ID: 2512.01687v1
+
+Revisiting Direct Encoding: Learnable Temporal Dynamics for Static Image Spiking Neural Networks
+
+Handling static images that lack inherent temporal dynamics remains a fundamental challenge for spiking neural networks (SNNs). In directly trained SNNs, static inputs are typically repeated across time steps, causing the temporal dimension to collapse into a rate like representation and preventing meaningful temporal modeling. This work revisits the reported performance gap between direct and rate based encodings and shows that it primarily stems from convolutional learnability and surrogate gradient formulations rather than the encoding schemes themselves. To illustrate this mechanism level clarification, we introduce a minimal learnable temporal encoding that adds adaptive phase shifts to induce meaningful temporal variation from static inputs.

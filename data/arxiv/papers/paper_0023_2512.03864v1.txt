@@ -1,0 +1,8 @@
+Title: Hyperdimensional Computing for Sustainable Manufacturing: An Initial Assessment
+Authors: Danny Hoang, Anandkumar Patel, Ruimen Chen, Rajiv Malhotra, Farhad Imani
+Date: 2025-12-03
+ArXiv ID: 2512.03864v1
+
+Hyperdimensional Computing for Sustainable Manufacturing: An Initial Assessment
+
+Smart manufacturing can significantly improve efficiency and reduce energy consumption, yet the energy demands of AI models may offset these gains. This study utilizes in-situ sensing-based prediction of geometric quality in smart machining to compare the energy consumption, accuracy, and speed of common AI models. HyperDimensional Computing (HDC) is introduced as an alternative, achieving accuracy comparable to conventional models while drastically reducing energy consumption, 200 for training and 175 to 1000 for inference. Furthermore, HDC reduces training times by 200 and inference times by 300 to 600, showcasing its potential for energy-efficient smart manufacturing.

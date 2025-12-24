@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-12-21 12:44:19",
+  "system_info": {
+    "cpu_cores": 12,
+    "total_memory_gb": 15.281097412109375,
+    "platform": "linux"
+  },
+  "results": [
+    {
+      "precision": "FP32",
+      "avg_time": 0.35293827056884763,
+      "avg_memory_mb": 0.01796875,
+      "iterations_completed": 5,
+      "success_rate": 1.0
+    },
+    {
+      "precision": "INT4 (simulated)",
+      "avg_time": 0.29241337776184084,
+      "avg_memory_mb": 0.00390625,
+      "iterations_completed": 5,
+      "success_rate": 1.0
+    }
+  ],
+  "summary": {
+    "speedup_ratio": 1.2069840076068679,
+    "memory_savings_percent": 78.26086956521739,
+    "targets_met": {
+      "speedup_1_5x": false,
+      "memory_60_percent": true
+    }
+  }
+}

@@ -1,0 +1,8 @@
+Title: GaussDetect-LiNGAM:Causal Direction Identification without Gaussianity test
+Authors: Ziyi Ding, Xiao-Ping Zhang
+Date: 2025-12-03
+ArXiv ID: 2512.03428v1
+
+GaussDetect-LiNGAM:Causal Direction Identification without Gaussianity test
+
+We propose GaussDetect-LiNGAM, a novel approach for bivariate causal discovery that eliminates the need for explicit Gaussianity tests by leveraging a fundamental equivalence between noise Gaussianity and residual independence in the reverse regression. Under the standard LiNGAM assumptions of linearity, acyclicity, and exogeneity, we prove that the Gaussianity of the forward-model noise is equivalent to the independence between the regressor and residual in the reverse model. This theoretical insight allows us to replace fragile and sample-sensitive Gaussianity tests with robust kernel-based independence tests. Experimental results validate the equivalence and demonstrate that GaussDetect-LiNGAM maintains high consistency across diverse noise types and sample sizes, while reducing the number of tests per decision (TPD). Our method enhances both the efficiency and practical applicability of causal inference, making LiNGAM more accessible and reliable in real-world scenarios.

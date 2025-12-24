@@ -1,0 +1,8 @@
+Title: Density-Informed VAE (DiVAE): Reliable Log-Prior Probability via Density Alignment Regularization
+Authors: Michele Alessi, Alessio Ansuini, Alex Rodriguez
+Date: 2025-12-03
+ArXiv ID: 2512.03928v1
+
+Density-Informed VAE (DiVAE): Reliable Log-Prior Probability via Density Alignment Regularization
+
+We introduce Density-Informed VAE (DiVAE), a lightweight, data-driven regularizer that aligns the VAE log-prior probability  with a log-density estimated from data. Standard VAEs match latents to a simple prior, overlooking density structure in the data-space. DiVAE encourages the encoder to allocate posterior mass in proportion to data-space density and, when the prior is learnable, nudges the prior toward high-density regions. This is realized by adding a robust, precision-weighted penalty to the ELBO, incurring negligible computational overhead. On synthetic datasets, DiVAE (i) improves distributional alignment of latent log-densities to its ground truth counterpart, (ii) improves prior coverage, and (iii) yields better OOD uncertainty calibration. On MNIST, DiVAE improves alignment of the prior with external estimates of the density, providing better interpretability, and improves OOD detection for learnable priors.

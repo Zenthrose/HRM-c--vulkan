@@ -1,0 +1,8 @@
+Title: Convergence for Discrete Parameter Updates
+Authors: Paul Wilson, Fabio Zanasi, George Constantinides
+Date: 2025-12-03
+ArXiv ID: 2512.04051v1
+
+Convergence for Discrete Parameter Updates
+
+Modern deep learning models require immense computational resources, motivating research into low-precision training. Quantised training addresses this by representing training components in low-bit integers, but typically relies on discretising real-valued updates. We introduce an alternative approach where the update rule itself is discrete, avoiding the quantisation of continuous updates by design. We establish convergence guarantees for a general class of such discrete schemes, and present a multinomial update rule as a concrete example, supported by empirical evaluation. This perspective opens new avenues for efficient training, particularly for models with inherently discrete structure.

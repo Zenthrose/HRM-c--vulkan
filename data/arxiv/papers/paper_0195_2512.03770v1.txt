@@ -1,0 +1,8 @@
+Title: Quantum Simulations of Opinion Dynamics
+Authors: Xingyu Guo, Xiaoyang Wang, Lingxiao Wang
+Date: 2025-12-03
+ArXiv ID: 2512.03770v1
+
+Quantum Simulations of Opinion Dynamics
+
+Quantum computing offers powerful new approaches for modeling complex social phenomena. Here, we propose and demonstrate quantum simulations of opinion dynamics, leveraging quantum superposition, measurement-induced state collapse, and entanglement to model realistic psychological and social processes. Specifically, we develop quantum models of opinion dynamics, solving exactly and simulating on IBM Quantum hardware. Our results, based on quantum devices and validated with practical quantum circuits, illustrate how quantum effects can enhance understanding of consensus formation, polarization, and collective decision-making. These findings pave the way for further exploration into quantum-enhanced social modeling, highlighting the potential of near-term quantum computers for simulating collective behavior in complex systems.

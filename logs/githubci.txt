@@ -1,0 +1,280 @@
+Run mkdir build
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Performing Test COMPILER_SUPPORTS_AVX
+-- Performing Test COMPILER_SUPPORTS_AVX - Success
+-- Performing Test COMPILER_SUPPORTS_AVX2
+-- Performing Test COMPILER_SUPPORTS_AVX2 - Success
+-- Performing Test COMPILER_SUPPORTS_NEON
+-- Performing Test COMPILER_SUPPORTS_NEON - Failed
+-- Building without Vulkan support
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (2.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/HRM-c--vulkan/HRM-c--vulkan/build
+[  1%] Building CXX object src/utils/CMakeFiles/utils.dir/character_cache.cpp.o
+[  3%] Building CXX object src/system/CMakeFiles/system.dir/cloud_storage_manager.cpp.o
+[  5%] Building CXX object src/utils/CMakeFiles/utils.dir/config_manager.cpp.o
+[  7%] Building CXX object src/utils/CMakeFiles/utils.dir/cpu_compatibility.cpp.o
+[  9%] Building CXX object src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o
+[ 11%] Building CXX object src/utils/CMakeFiles/utils.dir/http_client.cpp.o
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:325:5: error: expected unqualified-id before ‘return’
+  325 |     return profile;
+      |     ^~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:326:1: error: expected declaration before ‘}’ token
+  326 | }
+      | ^
+make[2]: *** [src/system/CMakeFiles/system.dir/build.make:93: src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:514: src/system/CMakeFiles/system.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+[ 13%] Building CXX object src/utils/CMakeFiles/utils.dir/utf8_processor.cpp.o
+[ 15%] Linking CXX static library libutils.a
+[ 15%] Built target utils
+make: *** [Makefile:91: all] Error 2
+Error: Process completed with exit code 2.
+
+
+Run mkdir build
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Performing Test COMPILER_SUPPORTS_AVX
+-- Performing Test COMPILER_SUPPORTS_AVX - Success
+-- Performing Test COMPILER_SUPPORTS_AVX2
+-- Performing Test COMPILER_SUPPORTS_AVX2 - Success
+-- Performing Test COMPILER_SUPPORTS_NEON
+-- Performing Test COMPILER_SUPPORTS_NEON - Failed
+-- Building without Vulkan support
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (2.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/HRM-c--vulkan/HRM-c--vulkan/build
+[  1%] Building CXX object src/utils/CMakeFiles/utils.dir/character_cache.cpp.o
+[  3%] Building CXX object src/system/CMakeFiles/system.dir/cloud_storage_manager.cpp.o
+[  5%] Building CXX object src/utils/CMakeFiles/utils.dir/config_manager.cpp.o
+[  7%] Building CXX object src/utils/CMakeFiles/utils.dir/cpu_compatibility.cpp.o
+[  9%] Building CXX object src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o
+[ 11%] Building CXX object src/utils/CMakeFiles/utils.dir/http_client.cpp.o
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:325:5: error: expected unqualified-id before ‘return’
+  325 |     return profile;
+      |     ^~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:326:1: error: expected declaration before ‘}’ token
+  326 | }
+      | ^
+make[2]: *** [src/system/CMakeFiles/system.dir/build.make:93: src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:514: src/system/CMakeFiles/system.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+[ 13%] Building CXX object src/utils/CMakeFiles/utils.dir/utf8_processor.cpp.o
+[ 15%] Linking CXX static library libutils.a
+[ 15%] Built target utils
+make: *** [Makefile:91: all] Error 2
+Error: Process completed with exit code 2.
+
+
+
+Run mkdir build
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Performing Test COMPILER_SUPPORTS_AVX
+-- Performing Test COMPILER_SUPPORTS_AVX - Success
+-- Performing Test COMPILER_SUPPORTS_AVX2
+-- Performing Test COMPILER_SUPPORTS_AVX2 - Success
+-- Performing Test COMPILER_SUPPORTS_NEON
+-- Performing Test COMPILER_SUPPORTS_NEON - Failed
+-- Building without Vulkan support
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (3.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/runner/work/HRM-c--vulkan/HRM-c--vulkan/build
+[  1%] Building CXX object src/utils/CMakeFiles/utils.dir/character_cache.cpp.o
+[  3%] Building CXX object src/system/CMakeFiles/system.dir/cloud_storage_manager.cpp.o
+[  5%] Building CXX object src/utils/CMakeFiles/utils.dir/config_manager.cpp.o
+[  7%] Building CXX object src/utils/CMakeFiles/utils.dir/cpu_compatibility.cpp.o
+[  9%] Building CXX object src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o
+[ 11%] Building CXX object src/utils/CMakeFiles/utils.dir/http_client.cpp.o
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:327:5: error: expected unqualified-id before ‘return’
+  327 |     return profile;
+      |     ^~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_abstraction_layer.cpp:328:1: error: expected declaration before ‘}’ token
+  328 | }
+      | ^
+make[2]: *** [src/system/CMakeFiles/system.dir/build.make:93: src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:514: src/system/CMakeFiles/system.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+[ 13%] Building CXX object src/utils/CMakeFiles/utils.dir/utf8_processor.cpp.o
+[ 15%] Linking CXX static library libutils.a
+[ 15%] Built target utils
+make: *** [Makefile:91: all] Error 2
+Error: Process completed with exit code 2.
+
+
+13s
+Run mkdir build
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Performing Test COMPILER_SUPPORTS_AVX
+-- Performing Test COMPILER_SUPPORTS_AVX - Success
+-- Performing Test COMPILER_SUPPORTS_AVX2
+-- Performing Test COMPILER_SUPPORTS_AVX2 - Success
+-- Performing Test COMPILER_SUPPORTS_NEON
+-- Performing Test COMPILER_SUPPORTS_NEON - Failed
+-- Building without Vulkan support
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (2.6s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/HRM-c--vulkan/HRM-c--vulkan/build
+[  1%] Building CXX object src/utils/CMakeFiles/utils.dir/character_cache.cpp.o
+[  3%] Building CXX object src/system/CMakeFiles/system.dir/cloud_storage_manager.cpp.o
+[  5%] Building CXX object src/utils/CMakeFiles/utils.dir/config_manager.cpp.o
+[  7%] Building CXX object src/utils/CMakeFiles/utils.dir/cpu_compatibility.cpp.o
+[  9%] Building CXX object src/system/CMakeFiles/system.dir/hardware_abstraction_layer.cpp.o
+[ 11%] Building CXX object src/utils/CMakeFiles/utils.dir/http_client.cpp.o
+[ 13%] Building CXX object src/utils/CMakeFiles/utils.dir/utf8_processor.cpp.o
+[ 15%] Building CXX object src/system/CMakeFiles/system.dir/hardware_profiler.cpp.o
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp: In member function ‘HardwareCapabilities HardwareProfiler::detect_gpu()’:
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:101:5: error: ‘VkInstance’ was not declared in this scope
+  101 |     VkInstance instance;
+      |     ^~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:102:5: error: ‘VkApplicationInfo’ was not declared in this scope
+  102 |     VkApplicationInfo appInfo{};
+      |     ^~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:103:5: error: ‘appInfo’ was not declared in this scope
+  103 |     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+      |     ^~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:103:21: error: ‘VK_STRUCTURE_TYPE_APPLICATION_INFO’ was not declared in this scope
+  103 |     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:104:26: error: ‘VK_API_VERSION_1_1’ was not declared in this scope
+  104 |     appInfo.apiVersion = VK_API_VERSION_1_1;
+      |                          ^~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:106:5: error: ‘VkInstanceCreateInfo’ was not declared in this scope
+  106 |     VkInstanceCreateInfo createInfo{};
+      |     ^~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:107:5: error: ‘createInfo’ was not declared in this scope
+  107 |     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+      |     ^~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:107:24: error: ‘VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO’ was not declared in this scope
+  107 |     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:110:5: error: ‘VkResult’ was not declared in this scope
+  110 |     VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+      |     ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:111:30: error: ‘result’ was not declared in this scope
+  111 |     caps.vulkan_supported = (result == VK_SUCCESS);
+      |                              ^~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:111:40: error: ‘VK_SUCCESS’ was not declared in this scope; did you mean ‘EXIT_SUCCESS’?
+  111 |     caps.vulkan_supported = (result == VK_SUCCESS);
+      |                                        ^~~~~~~~~~
+      |                                        EXIT_SUCCESS
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:115:36: error: ‘instance’ was not declared in this scope
+  115 |         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+      |                                    ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:115:9: error: ‘vkEnumeratePhysicalDevices’ was not declared in this scope
+  115 |         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:119:25: error: ‘VkPhysicalDevice’ was not declared in this scope
+  119 |             std::vector<VkPhysicalDevice> devices(deviceCount);
+      |                         ^~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:119:41: error: template argument 1 is invalid
+  119 |             std::vector<VkPhysicalDevice> devices(deviceCount);
+      |                                         ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:119:41: error: template argument 2 is invalid
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:120:72: error: request for member ‘data’ in ‘devices’, which is of non-class type ‘int’
+  120 |             vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+      |                                                                        ^~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:122:13: error: ‘VkPhysicalDeviceProperties’ was not declared in this scope
+  122 |             VkPhysicalDeviceProperties props;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:123:50: error: invalid types ‘int[int]’ for array subscript
+  123 |             vkGetPhysicalDeviceProperties(devices[0], &props);
+      |                                                  ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:123:56: error: ‘props’ was not declared in this scope
+  123 |             vkGetPhysicalDeviceProperties(devices[0], &props);
+      |                                                        ^~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:123:13: error: ‘vkGetPhysicalDeviceProperties’ was not declared in this scope
+  123 |             vkGetPhysicalDeviceProperties(devices[0], &props);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:126:13: error: ‘VkPhysicalDeviceMemoryProperties’ was not declared in this scope
+  126 |             VkPhysicalDeviceMemoryProperties memProps;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:127:56: error: invalid types ‘int[int]’ for array subscript
+  127 |             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProps);
+      |                                                        ^
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:127:62: error: ‘memProps’ was not declared in this scope
+  127 |             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProps);
+      |                                                              ^~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:127:13: error: ‘vkGetPhysicalDeviceMemoryProperties’ was not declared in this scope
+  127 |             vkGetPhysicalDeviceMemoryProperties(devices[0], &memProps);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:130:53: error: ‘VK_MEMORY_HEAP_DEVICE_LOCAL_BIT’ was not declared in this scope
+  130 |                 if (memProps.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/HRM-c--vulkan/HRM-c--vulkan/src/system/hardware_profiler.cpp:140:9: error: ‘vkDestroyInstance’ was not declared in this scope
+  140 |         vkDestroyInstance(instance, nullptr);
+      |         ^~~~~~~~~~~~~~~~~
+make[2]: *** [src/system/CMakeFiles/system.dir/build.make:107: src/system/CMakeFiles/system.dir/hardware_profiler.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:514: src/system/CMakeFiles/system.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+[ 17%] Linking CXX static library libutils.a
+[ 17%] Built target utils
+make: *** [Makefile:91: all] Error 2
+Error: Process completed with exit code 2.

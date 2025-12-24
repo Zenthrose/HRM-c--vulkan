@@ -1,0 +1,49 @@
+{
+  "configuration": {
+    "batch_size": 4,
+    "num_heads": 12,
+    "head_dim": 64
+  },
+  "results": [
+    {
+      "seq_len": 512,
+      "flash_speedup": 2.0,
+      "linear_speedup": 512.0,
+      "flash_memory_savings": 50.0,
+      "linear_memory_savings": 87.5
+    },
+    {
+      "seq_len": 1024,
+      "flash_speedup": 4.0,
+      "linear_speedup": 1024.0,
+      "flash_memory_savings": 75.0,
+      "linear_memory_savings": 93.75
+    },
+    {
+      "seq_len": 2048,
+      "flash_speedup": 8.0,
+      "linear_speedup": 2048.0,
+      "flash_memory_savings": 87.5,
+      "linear_memory_savings": 96.875
+    },
+    {
+      "seq_len": 4096,
+      "flash_speedup": 16.0,
+      "linear_speedup": 4096.0,
+      "flash_memory_savings": 93.75,
+      "linear_memory_savings": 98.4375
+    },
+    {
+      "seq_len": 8192,
+      "flash_speedup": 32.0,
+      "linear_speedup": 8192.0,
+      "flash_memory_savings": 96.875,
+      "linear_memory_savings": 99.21875
+    }
+  ],
+  "benefits": {
+    "speedup_range": "2-10x",
+    "memory_savings": "10-50x",
+    "context_extension": "2-4x"
+  }
+}

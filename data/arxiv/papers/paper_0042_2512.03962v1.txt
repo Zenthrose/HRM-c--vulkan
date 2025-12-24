@@ -1,0 +1,8 @@
+Title: Tada-DIP: Input-adaptive Deep Image Prior for One-shot 3D Image Reconstruction
+Authors: Evan Bell, Shijun Liang, Ismail Alkhouri, Saiprasad Ravishankar
+Date: 2025-12-03
+ArXiv ID: 2512.03962v1
+
+Tada-DIP: Input-adaptive Deep Image Prior for One-shot 3D Image Reconstruction
+
+Deep Image Prior (DIP) has recently emerged as a promising one-shot neural-network based image reconstruction method. However, DIP has seen limited application to 3D image reconstruction problems. In this work, we introduce Tada-DIP, a highly effective and fully 3D DIP method for solving 3D inverse problems. By combining input-adaptation and denoising regularization, Tada-DIP produces high-quality 3D reconstructions while avoiding the overfitting phenomenon that is common in DIP. Experiments on sparse-view X-ray computed tomography reconstruction validate the effectiveness of the proposed method, demonstrating that Tada-DIP produces much better reconstructions than training-data-free baselines and achieves reconstruction performance on par with a supervised network trained using a large dataset with fully-sampled volumes.

@@ -1,0 +1,8 @@
+Title: Pascal-Weighted Genetic Algorithms: A Binomially-Structured Recombination Framework
+Authors: Otman A. Basir
+Date: 2025-12-01
+ArXiv ID: 2512.01249v1
+
+Pascal-Weighted Genetic Algorithms: A Binomially-Structured Recombination Framework
+
+This paper introduces a new family of multi-parent recombination operators for Genetic Algorithms (GAs), based on normalized Pascal (binomial) coefficients. Unlike classical two-parent crossover operators, Pascal-Weighted Recombination (PWR) forms offsprings as structured convex combination of multiple parents, using binomially shaped weights that emphasize central inheritance while suppressing disruptive variance. We develop a mathematical framework for PWR, derive variance-transfer properties, and analyze its effect on schema survival. The operator is extended to real-valued, binary/logit, and permutation representations. We evaluate the proposed method on four representative benchmarks: (i) PID controller tuning evaluated using the ITAE metric, (ii) FIR low-pass filter design under magnitude-response constraints, (iii) wireless power-modulation optimization under SINR coupling, and (iv) the Traveling Salesman Problem (TSP). We demonstrate how, across these benchmarks, PWR consistently yields smoother convergence, reduced variance, and achieves 9-22% performance gains over standard recombination operators. The approach is simple, algorithm-agnostic, and readily integrable into diverse GA architectures.

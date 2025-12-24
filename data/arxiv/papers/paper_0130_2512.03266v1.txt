@@ -1,0 +1,8 @@
+Title: Invited Discussion of "Model Uncertainty and Missing Data: An Objective Bayesian Perspective" by Gonzalo García-Donato , María Eugenia Castellanos , Stefano Cabras Alicia Quirós , and Anabel Forte
+Authors: Merlise A Clyde
+Date: 2025-12-02
+ArXiv ID: 2512.03266v1
+
+Invited Discussion of "Model Uncertainty and Missing Data: An Objective Bayesian Perspective" by Gonzalo García-Donato , María Eugenia Castellanos , Stefano Cabras Alicia Quirós , and Anabel Forte
+
+The article by Garc{í}a-Donato and co-authors addresses the dual challenges of accounting for model uncertainty and missing data within the Gaussian regression frameworks from an objective Bayesian perspective. Thru the use of an imputation -prior that replaces  for model  in the covariance of  with , the authors develop a coherent approach to addressing the missing data problem and model uncertainty simultaneously with random  in the missing at random (MAR) or missing completely at random (MCAR) settings, while still being computationally tractable. I discuss the connection of the imputation -prior to the -prior with imputed , and to model selection for graphical models that provide an alternative justification for the -prior for random s.

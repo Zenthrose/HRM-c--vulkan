@@ -1,0 +1,8 @@
+Title: Domain Feature Collapse: Implications for Out-of-Distribution Detection and Solutions
+Authors: Hong Yang, Devroop Kar, Qi Yu, Alex Ororbia, Travis Desell
+Date: 2025-12-03
+ArXiv ID: 2512.04034v1
+
+Domain Feature Collapse: Implications for Out-of-Distribution Detection and Solutions
+
+Why do state-of-the-art OOD detection methods exhibit catastrophic failure when models are trained on single-domain datasets? We provide the first theoretical explanation for this phenomenon through the lens of information theory. We prove that supervised learning on single-domain data inevitably produces domain feature collapse -- representations where I(x_d; z) = 0, meaning domain-specific information is completely discarded. This is a fundamental consequence of information bottleneck optimization: models trained on single domains (e.g., medical images) learn to rely solely on class-specific features while discarding domain features, leading to catastrophic failure when detecting out-of-domain samples (e.g., achieving only 53% FPR@95 on MNIST). We extend our analysis using Fano's inequality to quantify partial collapse in practical scenarios. To validate our theory, we introduce Domain Bench, a benchmark of single-domain datasets, and demonstrate that preserving I(x_d; z) > 0 through domain filtering (using pretrained representations) resolves the failure mode. While domain filtering itself is conceptually straightforward, its effectiveness provides strong empirical evidence for our information-theoretic framework. Our work explains a puzzling empirical phenomenon, reveals fundamental limitations of supervised learning in narrow domains, and has broader implications for transfer learning and when to fine-tune versus freeze pretrained models.

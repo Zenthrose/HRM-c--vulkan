@@ -1,0 +1,8 @@
+Title: Technical Report on Text Dataset Distillation
+Authors: Keith Ando Ogawa, Bruno Lopes Yamamoto, Lucas Lauton de Alcantara, Victor Zacarias, Edson Bollis, Lucas Pellicer, Rosimeire Pereira Costa, Anna Helena Reali Costa, Artur Jordao
+Date: 2025-12-03
+ArXiv ID: 2512.03967v1
+
+Technical Report on Text Dataset Distillation
+
+In the vision domain, dataset distillation arises as a technique to condense a large dataset into a smaller synthetic one that exhibits a similar result in the training process. While image data presents an extensive literature of distillation methods, text dataset distillation has fewer works in comparison. Text dataset distillation initially grew as an adaptation of efforts from the vision universe, as the particularities of the modality became clear obstacles, it rose into a separate branch of research. Several milestones mark the development of this area, such as the introduction of methods that use transformer models, the generation of discrete synthetic text, and the scaling to decoder-only models with over 1B parameters. Despite major advances in modern approaches, the field remains in a maturing phase, with room for improvement on benchmarking standardization, approaches to overcome the discrete nature of text, handling complex tasks, and providing explicit examples of real-world applications. In this report, we review past and recent advances in dataset distillation for text, highlighting different distillation strategies, key contributions, and general challenges.
