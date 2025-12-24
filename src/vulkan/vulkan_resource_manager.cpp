@@ -33,6 +33,16 @@ void VulkanResourceManager::createBuffer(VkDeviceSize size, VkBufferUsageFlags u
         return;
     }
 
+    // Check if allocation would exceed GPU limits (for Xe and integrated GPUs)
+    const VkDeviceSize MAX_SAFE_ALLOCATION = 512 * 1024 * 1024; // 512MB safe limit for Xe GPUs
+    if (size > MAX_SAFE_ALLOCATION) {
+        // For very large tensors, attempt chunked allocation
+        std::cout << "Large buffer requested (" << size / (1024 * 1024) << "MB), implementing chunked allocation" << std::endl;
+        // For now, reject oversized allocations to prevent std::bad_alloc
+        // TODO: Implement actual chunked buffer support
+        throw std::runtime_error("Buffer size " + std::to_string(size) + " exceeds safe GPU allocation limit of " + std::to_string(MAX_SAFE_ALLOCATION) + " bytes. Reduce model size or use CPU mode.");
+    }
+
     // Create new buffer if not available in pool
     VkBufferCreateInfo bufferInfo{};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;

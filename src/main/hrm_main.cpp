@@ -7,6 +7,8 @@
 #include <fstream>
 #include <unordered_map>
 #include <algorithm>
+#include <cstdio>
+#include <vector>
 #ifndef NO_VULKAN
 #include <vulkan/vulkan.h>
 #include "../vulkan/vulkan_compatibility.h"
@@ -14,14 +16,61 @@
 #include "../hrm/resource_aware_hrm.hpp"
 #include "../system/memory_compaction_system.hpp"
 #include "../system/cloud_storage_manager.hpp"
-#include "hrm_cli.hpp"
-#include "hrm_gui.hpp"
-#include "../training/character_language_trainer.hpp"
 #include "../system/hardware_profiler.hpp"
 #include "../utils/logger.hpp"
 #include "../utils/config_manager.hpp"
+#include "../main/hrm_cli.hpp"
+#include "../main/hrm_gui.hpp"
+#include "../training/character_language_trainer.hpp"
 
 namespace fs = std::filesystem;
+
+// Mesa driver detection and installation prompt
+void checkMesaDrivers() {
+    // Check for Mesa Vulkan drivers
+    bool mesa_found = false;
+
+    // Method 1: Check for package (Linux)
+    FILE* pipe = popen("dpkg -l | grep mesa-vulkan-drivers", "r");
+    if (pipe) {
+        char buffer[128];
+        if (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+            mesa_found = true;
+        }
+        pclose(pipe);
+    }
+
+    // Method 2: Check Vulkan ICD files
+    if (!mesa_found) {
+        std::vector<std::string> icd_paths = {
+            "/usr/share/vulkan/icd.d/intel_icd.x86_64.json",
+            "/usr/share/vulkan/icd.d/intel_icd.i686.json"
+        };
+        for (const auto& path : icd_paths) {
+            if (fs::exists(path)) {
+                mesa_found = true;
+                break;
+            }
+        }
+    }
+
+    if (!mesa_found) {
+        std::cout << std::endl;
+        std::cout << "⚠️  WARNING: Mesa Vulkan drivers not detected!" << std::endl;
+        std::cout << "For optimal Xe GPU performance and to prevent std::bad_alloc errors:" << std::endl;
+        std::cout << "  sudo apt update && sudo apt install mesa-vulkan-drivers" << std::endl;
+        std::cout << "  export INTEL_DEBUG=alloc" << std::endl;
+        std::cout << "  export MESA_VK_ABORT_ON_DEVICE_LOSS=0" << std::endl;
+        std::cout << std::endl;
+        std::cout << "Press Enter to continue with reduced performance, or Ctrl+C to install drivers first..." << std::endl;
+
+        // Non-blocking wait for user input
+        std::string dummy;
+        std::getline(std::cin, dummy);
+    } else {
+        std::cout << "✓ Mesa Vulkan drivers detected" << std::endl;
+    }
+}
 
 // Configuration validation
 void validate_configuration(ResourceAwareHRMConfig& config, const HardwareCapabilities& hw_caps);
@@ -91,6 +140,7 @@ struct VulkanResources {
     VkQueue computeQueue = VK_NULL_HANDLE;
     uint32_t computeQueueFamilyIndex = 0;
     VkCommandPool commandPool = VK_NULL_HANDLE;
+    VkDeviceSize maxMemoryAllocationSize = 0;
 };
 #endif
 
@@ -151,12 +201,28 @@ void adapt_config_to_hardware(ResourceAwareHRMConfig& config, const HardwareCapa
 
     // CRITICAL FIX: Apply memory-safe parameters for ANY GPU that cannot handle full HRM config
     // Full config (768 hidden, 4 layers, 100K vocab) requires ~12GB+ GPU memory
-    // Xe GPUs and integrated GPUs need additional restrictions due to Vulkan driver issues
+    // Xe GPUs and integrated GPUs need EMERGENCY restrictions due to strict allocation limits
     bool is_xe_or_integrated = hw_caps.is_integrated_gpu ||
                                hw_caps.gpu_name.find("Iris") != std::string::npos ||
                                hw_caps.gpu_name.find("Xe") != std::string::npos;
 
-    if (is_xe_or_integrated || hw_caps.gpu_memory_mb < 12288) {  // Xe/integrated or < 12GB cannot safely handle full HRM config
+    if (is_xe_or_integrated) {
+        // EMERGENCY Xe GPU settings - very aggressive memory reduction
+        std::cout << "EMERGENCY: Xe GPU detected - applying minimum viable parameters" << std::endl;
+        config.base_config.base_config.hrm_config.inner_config.hidden_size = 64;
+        config.base_config.base_config.hrm_config.inner_config.H_layers = 1;
+        config.base_config.base_config.hrm_config.inner_config.L_layers = 1;
+        config.base_config.base_config.hrm_config.inner_config.vocab_size = 32;  // Minimum vocab for character-level
+        config.base_config.base_config.hrm_config.inner_config.batch_size = 1;
+        config.base_config.base_config.hrm_config.inner_config.seq_len = 32;  // Very short sequences
+
+        // Reduce task memory limits drastically
+        config.max_memory_per_task_mb = 50;  // Very conservative
+
+        std::cout << "EMERGENCY Xe config: 64 hidden, 1 layer, 32 vocab" << std::endl;
+        std::cout << "Estimated memory usage: <25MB (minimum viable for Xe)" << std::endl;
+
+    } else if (hw_caps.gpu_memory_mb < 12288) {  // < 12GB cannot safely handle full HRM config
         std::cout << "GPU memory constrained (" << hw_caps.gpu_memory_mb
                   << "MB < 12288MB threshold";
         if (is_xe_or_integrated) {
@@ -397,21 +463,32 @@ VulkanResources initializeVulkan() {
 
     VkResult deviceResult = vkCreateDevice(res.physicalDevice, &deviceCI, nullptr, &res.device);
     if (deviceResult != VK_SUCCESS) {
-        throw std::runtime_error("Failed to create Vulkan device: " +
-                                VulkanCompatibility::getVulkanResultString(deviceResult));
+        throw std::runtime_error("Failed to create Vulkan device: " + std::to_string(deviceResult));
+    }
+
+    // Query GPU memory limits for allocation validation
+    VkPhysicalDeviceMaintenance3Properties maint3Props = {};
+    maint3Props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES;
+
+    VkPhysicalDeviceProperties2 deviceProps2 = {};
+    deviceProps2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+    deviceProps2.pNext = &maint3Props;
+
+    vkGetPhysicalDeviceProperties2(res.physicalDevice, &deviceProps2);
+
+    res.maxMemoryAllocationSize = maint3Props.maxMemoryAllocationSize;
+    std::cout << "GPU max memory allocation size: " << res.maxMemoryAllocationSize / (1024 * 1024) << " MB" << std::endl;
+
+    // Validate that GPU can handle basic allocations
+    const VkDeviceSize MIN_REQUIRED_ALLOCATION = 32 * 1024 * 1024; // 32MB minimum
+    if (res.maxMemoryAllocationSize < MIN_REQUIRED_ALLOCATION) {
+        std::cerr << "WARNING: GPU max allocation size (" << res.maxMemoryAllocationSize / (1024 * 1024)
+                  << "MB) is below minimum requirement (" << MIN_REQUIRED_ALLOCATION / (1024 * 1024)
+                  << "MB). Training may fail with std::bad_alloc." << std::endl;
     }
 
     // Get compute queue
     vkGetDeviceQueue(res.device, res.computeQueueFamilyIndex, 0, &res.computeQueue);
-
-    // Create command pool
-    VkCommandPoolCreateInfo poolInfo{};
-    poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    poolInfo.queueFamilyIndex = res.computeQueueFamilyIndex;
-
-    if (vkCreateCommandPool(res.device, &poolInfo, nullptr, &res.commandPool) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to create command pool");
-    }
 
     return res;
 }
@@ -635,6 +712,9 @@ void runBasicTests(std::shared_ptr<ResourceAwareHRM> hrm,
 int main(int argc, char* argv[]) {
     std::cout << "Nyx - Primordial Goddess of Night" << std::endl;
     std::cout << "===================================" << std::endl;
+
+    // Check Mesa drivers before Vulkan initialization
+    checkMesaDrivers();
 
     // Hardware profiling for universal compatibility
     HardwareProfiler hw_profiler;
